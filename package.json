@@ -1,6 +1,6 @@
 {
   "name": "acquired-com-for-woocommerce",
-  "version": "2.0.0-beta",
+  "version": "2.0.1-beta",
   "description": "Securely accept Cards, Apple Pay & Google Pay on your store using Acquired.com",
   "scripts": {
     "lint": "npm run lint:js",

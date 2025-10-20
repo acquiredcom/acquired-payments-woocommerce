@@ -61,7 +61,7 @@ Our UK-based support team is available to help you. [Contact support](https://ww
 
 == Changelog ==
 
-= 2.0.0 =
+= 2.0.0 - 2025/10/25 =
 * Release version 2.0.0
 
 = 1.3.3 - 2024/08/09 =

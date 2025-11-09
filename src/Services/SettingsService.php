@@ -455,8 +455,8 @@ class SettingsService {
 			'description' => __( 'Enter your Acquired.com staging App Key.', 'acquired-com-for-woocommerce' ),
 			'desc_tip'    => true,
 		],
-		'webhook_signing_keys'    => [
-			'title'       => __( 'Webhook Signing Keys', 'acquired-com-for-woocommerce' ),
+		'signing_keys'            => [
+			'title'       => __( 'Signing Keys', 'acquired-com-for-woocommerce' ),
 			'description' => __( 'Optional signing keys for webhook and redirect hash validation. If not provided, the App Key will be used instead.', 'acquired-com-for-woocommerce' ),
 			'type'        => 'title',
 		],

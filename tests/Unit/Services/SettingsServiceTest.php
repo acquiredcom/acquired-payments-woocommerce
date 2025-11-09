@@ -58,7 +58,7 @@ class SettingsServiceTest extends TestCase {
 		'contact_url',
 		'submit_type',
 		'update_card_webhook_url',
-		'webhook_signing_keys',
+		'signing_keys',
 		'signing_key_production',
 		'signing_key_staging',
 		'order',

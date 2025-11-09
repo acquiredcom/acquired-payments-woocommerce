@@ -24,8 +24,9 @@ class IncomingDataHandler {
 	 *
 	 * @param LoggerService $logger_service
 	 * @param string $app_key
+	 * @param string $signing_key
 	 */
-	public function __construct( private LoggerService $logger_service, private string $app_key ) {}
+	public function __construct( private LoggerService $logger_service, private string $app_key, private string $signing_key = '' ) {}
 
 	/**
 	 * Sanitize data recursively.
@@ -89,15 +90,25 @@ class IncomingDataHandler {
 	 * @return bool
 	 */
 	private function validate_redirect_hash( array $data ) : bool {
-		if ( ! $this->app_key ) {
+		// Determine which key to use: signing_key takes precedence, fallback to app_key for backward compatibility
+		$key = ( ! empty( $this->signing_key ) ) ? $this->signing_key : $this->app_key;
+
+		if ( ! $key ) {
 			return false;
 		}
 
-		$first_hash = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
+		$first_hash  = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
+		$expected_hash = hash( 'sha256', $first_hash . $key );
 
-		$final_hash = hash( 'sha256', $first_hash . $this->app_key );
+		// Support comma-delimited hashes for key rotation. If ANY hash matches, validation passes.
+		$hashes = array_map( 'trim', explode( ',', $data['hash'] ) );
+		foreach ( $hashes as $candidate_hash ) {
+			if ( hash_equals( $expected_hash, $candidate_hash ) ) {
+				return true;
+			}
+		}
 
-		return hash_equals( $data['hash'], $final_hash );
+		return false;
 	}
 
 	/**
@@ -108,11 +119,25 @@ class IncomingDataHandler {
 	 * @return bool
 	 */
 	private function validate_webhook_hash( string $data, string $hash ) : bool {
-		if ( ! $this->app_key ) {
+		// Determine which key to use: signing_key takes precedence, fallback to app_key for backward compatibility
+		$key = ( ! empty( $this->signing_key ) ) ? $this->signing_key : $this->app_key;
+
+		if ( ! $key ) {
 			return false;
 		}
 
-		return hash_equals( hash_hmac( 'sha256', preg_replace( '/\s+/', '', $data ), $this->app_key ), $hash );
+		$sanitized_data = preg_replace( '/\s+/', '', $data );
+		$expected_hash  = hash_hmac( 'sha256', $sanitized_data, $key );
+
+		// Support comma-delimited hashes for key rotation. If ANY hash matches, validation passes.
+		$hashes = array_map( 'trim', explode( ',', $hash ) );
+		foreach ( $hashes as $candidate_hash ) {
+			if ( hash_equals( $expected_hash, $candidate_hash ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

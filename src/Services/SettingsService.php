@@ -263,6 +263,25 @@ class SettingsService {
 	}
 
 	/**
+	 * Get signing key for specific environment.
+	 *
+	 * @param string $environment
+	 * @return string
+	 */
+	public function get_signing_key_for_environment( string $environment ) : string {
+		return $this->get_option( 'signing_key_' . $environment, '' );
+	}
+
+	/**
+	 * Get signing key for current environment.
+	 *
+	 * @return string
+	 */
+	public function get_signing_key() : string {
+		return $this->get_signing_key_for_environment( $this->is_environment_production() ? 'production' : 'staging' );
+	}
+
+	/**
 	 * Get payment reference.
 	 *
 	 * @return string
@@ -430,16 +449,33 @@ class SettingsService {
 				'description' => __( 'Enter your Acquired.com staging App ID.', 'acquired-com-for-woocommerce' ),
 				'desc_tip'    => true,
 			],
-			'app_key_staging'         => [
-				'title'       => __( 'Staging App Key', 'acquired-com-for-woocommerce' ),
-				'type'        => 'password',
-				'description' => __( 'Enter your Acquired.com staging App Key.', 'acquired-com-for-woocommerce' ),
-				'desc_tip'    => true,
-			],
-			'additional'              => [
-				'title' => __( 'Additional settings', 'acquired-com-for-woocommerce' ),
-				'type'  => 'title',
-			],
+		'app_key_staging'         => [
+			'title'       => __( 'Staging App Key', 'acquired-com-for-woocommerce' ),
+			'type'        => 'password',
+			'description' => __( 'Enter your Acquired.com staging App Key.', 'acquired-com-for-woocommerce' ),
+			'desc_tip'    => true,
+		],
+		'webhook_signing_keys'    => [
+			'title'       => __( 'Webhook Signing Keys', 'acquired-com-for-woocommerce' ),
+			'description' => __( 'Optional signing keys for webhook and redirect hash validation. If not provided, the App Key will be used instead.', 'acquired-com-for-woocommerce' ),
+			'type'        => 'title',
+		],
+		'signing_key_production'  => [
+			'title'       => __( 'Live Signing Key', 'acquired-com-for-woocommerce' ),
+			'type'        => 'password',
+			'description' => __( 'Enter your Acquired.com production signing key (format: sk_{32-bit hex}).', 'acquired-com-for-woocommerce' ),
+			'desc_tip'    => true,
+		],
+		'signing_key_staging'     => [
+			'title'       => __( 'Staging Signing Key', 'acquired-com-for-woocommerce' ),
+			'type'        => 'password',
+			'description' => __( 'Enter your Acquired.com staging signing key (format: sk_{32-bit hex}).', 'acquired-com-for-woocommerce' ),
+			'desc_tip'    => true,
+		],
+		'additional'              => [
+			'title' => __( 'Additional settings', 'acquired-com-for-woocommerce' ),
+			'type'  => 'title',
+		],
 			'transaction_type'        => [
 				'title'       => __( 'Transaction type', 'acquired-com-for-woocommerce' ),
 				'type'        => 'select',

@@ -611,14 +611,14 @@ class IncomingDataHandlerTest extends TestCase {
 		$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data ) );
 
 		// Test: comma-delimited hash where second hash matches (alternate key).
-		$alt_key            = 'old_key_987654321';
-		$redirect_data_alt  = $this->get_test_redirect_data_multi( $alt_key );
+		$alt_key           = 'old_key_987654321';
+		$redirect_data_alt = $this->get_test_redirect_data_multi( $alt_key );
 		$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data_alt ) );
 
 		// Test: comma-delimited hash with whitespace.
 		$hashes = array_filter( explode( ',', $redirect_data['hash'] ) );
 		if ( count( $hashes ) === 2 ) {
-			$redirect_data_ws = $redirect_data;
+			$redirect_data_ws         = $redirect_data;
 			$redirect_data_ws['hash'] = $hashes[0] . ' , ' . $hashes[1];
 			$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data_ws ) );
 		}
@@ -630,16 +630,16 @@ class IncomingDataHandlerTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_webhook_hash
 	 */
 	public function test_validate_webhook_hash_with_comma_delimited_hashes() : void {
-		$webhook_data  = $this->get_test_webhook_data( 'status_update' );
-		$webhook_json  = json_encode( $webhook_data );
+		$webhook_data = $this->get_test_webhook_data( 'status_update' );
+		$webhook_json = json_encode( $webhook_data );
 
 		// Test: comma-delimited hash where first hash matches (primary key).
 		$hash_multi = $this->calculate_test_webhook_hash_multi( $webhook_data );
 		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash_multi ) );
 
 		// Test: comma-delimited hash where second hash matches (alternate key).
-		$alt_key   = 'old_key_987654321';
-		$hash_alt  = $this->calculate_test_webhook_hash_multi( $webhook_data, $alt_key );
+		$alt_key  = 'old_key_987654321';
+		$hash_alt = $this->calculate_test_webhook_hash_multi( $webhook_data, $alt_key );
 		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash_alt ) );
 
 		// Test: comma-delimited hash with whitespace.
@@ -658,7 +658,7 @@ class IncomingDataHandlerTest extends TestCase {
 	public function test_validate_redirect_hash_signing_key_precedence() : void {
 		// Create handler with both app_key and signing_key
 		$signing_key = 'sk_new_signing_key_123';
-		$handler = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, $signing_key );
+		$handler     = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, $signing_key );
 		$this->initialize_reflection( $handler );
 
 		// Generate redirect data using signing_key
@@ -677,14 +677,14 @@ class IncomingDataHandlerTest extends TestCase {
 	public function test_validate_webhook_hash_signing_key_precedence() : void {
 		// Create handler with both app_key and signing_key
 		$signing_key = 'sk_new_signing_key_123';
-		$handler = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, $signing_key );
+		$handler     = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, $signing_key );
 		$this->initialize_reflection( $handler );
 
 		// Generate webhook data using signing_key
 		$this->set_hash_key( $signing_key );
 		$webhook_data = $this->get_test_webhook_data( 'status_update' );
 		$webhook_json = json_encode( $webhook_data );
-		$hash = $this->calculate_test_webhook_hash( $webhook_data );
+		$hash         = $this->calculate_test_webhook_hash( $webhook_data );
 
 		// Validation should pass (uses signing_key, not app_key)
 		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash, $handler ) );
@@ -722,7 +722,7 @@ class IncomingDataHandlerTest extends TestCase {
 		$this->set_hash_key( $this->test_app_key );
 		$webhook_data = $this->get_test_webhook_data( 'status_update' );
 		$webhook_json = json_encode( $webhook_data );
-		$hash = $this->calculate_test_webhook_hash( $webhook_data );
+		$hash         = $this->calculate_test_webhook_hash( $webhook_data );
 
 		// Validation should pass (falls back to app_key since signing_key is empty)
 		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash, $handler ) );

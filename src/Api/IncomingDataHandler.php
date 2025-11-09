@@ -97,7 +97,7 @@ class IncomingDataHandler {
 			return false;
 		}
 
-		$first_hash  = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
+		$first_hash    = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
 		$expected_hash = hash( 'sha256', $first_hash . $key );
 
 		// Support comma-delimited hashes for key rotation. If ANY hash matches, validation passes.

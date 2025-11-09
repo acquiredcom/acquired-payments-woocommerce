@@ -457,7 +457,7 @@ class SettingsService {
 		],
 		'signing_keys'            => [
 			'title'       => __( 'Signing Keys', 'acquired-com-for-woocommerce' ),
-			'description' => __( 'Optional signing keys for webhook and redirect hash validation. If not provided, the App Key will be used instead.', 'acquired-com-for-woocommerce' ),
+			'description' => __( 'Signing keys for webhook and redirect hash validation. For backward compatibility, the App Key will be used if no signing key is provided.', 'acquired-com-for-woocommerce' ),
 			'type'        => 'title',
 		],
 		'signing_key_production'  => [

@@ -68,7 +68,7 @@ $builder->addDefinitions(
 		},
 		CustomerService::class      => autowire(),
 		IncomingDataHandler::class  => function( $container ) {
-			return new IncomingDataHandler( $container->get( LoggerService::class ), $container->get( SettingsService::class )->get_app_key() );
+			return new IncomingDataHandler( $container->get( LoggerService::class ), $container->get( SettingsService::class )->get_app_key(), $container->get( SettingsService::class )->get_signing_key() );
 		},
 		LoggerService::class        => function( $container ) {
 			return new LoggerService( $container->get( SettingsService::class ), wc_get_logger() );

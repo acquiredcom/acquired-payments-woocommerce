@@ -599,4 +599,132 @@ class IncomingDataHandlerTest extends TestCase {
 
 		$this->test_class->get_webhook_data( json_encode( $data ), $hash );
 	}
+
+	/**
+	 * Test validate_redirect_hash with comma-delimited hashes (key rotation).
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_redirect_hash
+	 */
+	public function test_validate_redirect_hash_with_comma_delimited_hashes() : void {
+		// Test: comma-delimited hash where first hash matches (primary key).
+		$redirect_data = $this->get_test_redirect_data_multi();
+		$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data ) );
+
+		// Test: comma-delimited hash where second hash matches (alternate key).
+		$alt_key           = 'old_key_987654321';
+		$redirect_data_alt = $this->get_test_redirect_data_multi( $alt_key );
+		$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data_alt ) );
+
+		// Test: comma-delimited hash with whitespace.
+		$hashes = array_filter( explode( ',', $redirect_data['hash'] ) );
+		if ( count( $hashes ) === 2 ) {
+			$redirect_data_ws         = $redirect_data;
+			$redirect_data_ws['hash'] = $hashes[0] . ' , ' . $hashes[1];
+			$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data_ws ) );
+		}
+	}
+
+	/**
+	 * Test validate_webhook_hash with comma-delimited hashes (key rotation).
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_webhook_hash
+	 */
+	public function test_validate_webhook_hash_with_comma_delimited_hashes() : void {
+		$webhook_data = $this->get_test_webhook_data( 'status_update' );
+		$webhook_json = json_encode( $webhook_data );
+
+		// Test: comma-delimited hash where first hash matches (primary key).
+		$hash_multi = $this->calculate_test_webhook_hash_multi( $webhook_data );
+		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash_multi ) );
+
+		// Test: comma-delimited hash where second hash matches (alternate key).
+		$alt_key  = 'old_key_987654321';
+		$hash_alt = $this->calculate_test_webhook_hash_multi( $webhook_data, $alt_key );
+		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash_alt ) );
+
+		// Test: comma-delimited hash with whitespace.
+		$hashes = array_filter( explode( ',', $hash_multi ) );
+		if ( count( $hashes ) === 2 ) {
+			$hash_ws = $hashes[0] . ' , ' . $hashes[1];
+			$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash_ws ) );
+		}
+	}
+
+	/**
+	 * Test validate_redirect_hash with signing_key takes precedence over app_key.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_redirect_hash
+	 */
+	public function test_validate_redirect_hash_signing_key_precedence() : void {
+		// Create handler with both app_key and signing_key
+		$signing_key = 'sk_new_signing_key_123';
+		$handler     = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, $signing_key );
+		$this->initialize_reflection( $handler );
+
+		// Generate redirect data using signing_key
+		$this->set_hash_key( $signing_key );
+		$redirect_data = $this->get_test_redirect_data();
+
+		// Validation should pass (uses signing_key, not app_key)
+		$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data, $handler ) );
+	}
+
+	/**
+	 * Test validate_webhook_hash with signing_key takes precedence over app_key.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_webhook_hash
+	 */
+	public function test_validate_webhook_hash_signing_key_precedence() : void {
+		// Create handler with both app_key and signing_key
+		$signing_key = 'sk_new_signing_key_123';
+		$handler     = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, $signing_key );
+		$this->initialize_reflection( $handler );
+
+		// Generate webhook data using signing_key
+		$this->set_hash_key( $signing_key );
+		$webhook_data = $this->get_test_webhook_data( 'status_update' );
+		$webhook_json = json_encode( $webhook_data );
+		$hash         = $this->calculate_test_webhook_hash( $webhook_data );
+
+		// Validation should pass (uses signing_key, not app_key)
+		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash, $handler ) );
+	}
+
+	/**
+	 * Test validate_redirect_hash with signing_key empty falls back to app_key.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_redirect_hash
+	 */
+	public function test_validate_redirect_hash_fallback_to_app_key() : void {
+		// Create handler with app_key but empty signing_key (backward compatibility)
+		$handler = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, '' );
+		$this->initialize_reflection( $handler );
+
+		// Generate redirect data using app_key
+		$this->set_hash_key( $this->test_app_key );
+		$redirect_data = $this->get_test_redirect_data();
+
+		// Validation should pass (falls back to app_key since signing_key is empty)
+		$this->assertTrue( $this->get_private_method_value( 'validate_redirect_hash', $redirect_data, $handler ) );
+	}
+
+	/**
+	 * Test validate_webhook_hash with signing_key empty falls back to app_key.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\IncomingDataHandler::validate_webhook_hash
+	 */
+	public function test_validate_webhook_hash_fallback_to_app_key() : void {
+		// Create handler with app_key but empty signing_key (backward compatibility)
+		$handler = new IncomingDataHandler( $this->get_logger_service(), $this->test_app_key, '' );
+		$this->initialize_reflection( $handler );
+
+		// Generate webhook data using app_key
+		$this->set_hash_key( $this->test_app_key );
+		$webhook_data = $this->get_test_webhook_data( 'status_update' );
+		$webhook_json = json_encode( $webhook_data );
+		$hash         = $this->calculate_test_webhook_hash( $webhook_data );
+
+		// Validation should pass (falls back to app_key since signing_key is empty)
+		$this->assertTrue( $this->get_private_method_value( 'validate_webhook_hash', $webhook_json, $hash, $handler ) );
+	}
 }

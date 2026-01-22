@@ -4,7 +4,7 @@ Tags: acquired, acquired payment, payments, gateway, payment gateway, credit car
 Requires at least: 6.5
 Tested up to: 6.8.3
 Requires PHP: 8.1
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: MIT License
 License URI: https://opensource.org/license/mit
 
@@ -60,6 +60,9 @@ Not at this time. The plugin currently supports one-off and stored card payments
 Our UK-based support team is available to help you. [Contact support](https://www.acquired.com/contact/) or visit our [Developer Documentation](https://docs.acquired.com/docs/woocommerce-v2).
 
 == Changelog ==
+
+= 2.1.0 - 2026/01/22 =
+* Feature: Update to support the release of signing keys and multiple APP IDs.
 
 = 2.0.0 - 2025/10/22 =
 * Release version 2.0.0

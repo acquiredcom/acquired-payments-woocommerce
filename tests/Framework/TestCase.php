@@ -73,7 +73,7 @@ abstract class TestCase extends PHPUnitTestCase {
 			'dir_path'     => '/path/to/acquired-com-for-woocommerce',
 			'dir_url'      => $this->site_url . '/wp-content/plugins/acquired-com-for-woocommerce',
 			'basename'     => 'acquired-com-for-woocommerce/acquired-com-for-woocommerce.php',
-			'version'      => '2.0.0',
+			'version'      => '2.1.0',
 			'php_version'  => '8.1',
 			'wc_version'   => '8.1',
 			'plugin_id'    => 'acfw',

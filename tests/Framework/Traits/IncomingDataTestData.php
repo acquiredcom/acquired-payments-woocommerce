@@ -170,4 +170,74 @@ trait IncomingDataTestData {
 
 		return $this->array_to_object( $webhook_data );
 	}
+
+	/**
+	 * Calculate test redirect hash with optional alternative key for multi-hash testing.
+	 *
+	 * @param array{
+	 *     status: string,
+	 *     transaction_id: string,
+	 *     order_id: string,
+	 *     timestamp: string
+	 * } $data
+	 * @param string|null $alt_key Optional alternative key to generate secondary hash
+	 * @return string Single hash or comma-delimited hashes if alt_key provided
+	 */
+	protected function calculate_test_redirect_hash_multi( array $data, ?string $alt_key = null ) : string {
+		$first_hash = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
+		$primary    = hash( 'sha256', $first_hash . $this->hash_key );
+
+		if ( $alt_key ) {
+			$secondary = hash( 'sha256', $first_hash . $alt_key );
+			return "{$primary},{$secondary}";
+		}
+
+		return $primary;
+	}
+
+	/**
+	 * Calculate test webhook hash with optional alternative key for multi-hash testing.
+	 *
+	 * @param stdClass $data
+	 * @param string|null $alt_key Optional alternative key to generate secondary hash
+	 * @return string Single hash or comma-delimited hashes if alt_key provided
+	 */
+	protected function calculate_test_webhook_hash_multi( stdClass $data, ?string $alt_key = null ) : string {
+		$sanitized_data = preg_replace( '/\s+/', '', json_encode( $data ) );
+		$primary        = hash_hmac( 'sha256', $sanitized_data, $this->hash_key );
+
+		if ( $alt_key ) {
+			$secondary = hash_hmac( 'sha256', $sanitized_data, $alt_key );
+			return "{$primary},{$secondary}";
+		}
+
+		return $primary;
+	}
+
+	/**
+	 * Get test redirect data with optional multi-hash for key rotation testing.
+	 *
+	 * @param string|null $alt_key Optional alternative key for multi-hash
+	 * @return array{
+	 *     status: string,
+	 *     transaction_id: string,
+	 *     order_id: string,
+	 *     order_active: string,
+	 *     timestamp: string,
+	 *     hash: string,
+	 * }
+	 */
+	protected function get_test_redirect_data_multi( ?string $alt_key = null ) : array {
+		$data = [
+			'status'         => 'success',
+			'transaction_id' => 'transaction_123',
+			'order_id'       => 'order_456',
+			'order_active'   => 'false',
+			'timestamp'      => '1621234567',
+		];
+
+		$data['hash'] = $this->calculate_test_redirect_hash_multi( $data, $alt_key );
+
+		return $data;
+	}
 }

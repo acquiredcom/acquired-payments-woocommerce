@@ -26,8 +26,9 @@ class WebhookDataTest extends TestCase {
 	 * Test constructor properly initializes data and all getters work for status update webhook.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Api\IncomingData\WebhookData::__construct
+	 * @return void
 	 */
-	public function test_constructor_initializes_data_for_status_update() : void {
+	public function test_constructor_initializes_data_for_status_update(): void {
 		$test_data    = $this->get_test_webhook_data( 'status_update' );
 		$webhook_data = new WebhookData( $test_data );
 
@@ -45,8 +46,9 @@ class WebhookDataTest extends TestCase {
 	 * Test constructor properly initializes data and all getters work for card new webhook.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Api\IncomingData\WebhookData::__construct
+	 * @return void
 	 */
-	public function test_constructor_initializes_data_for_card_new() : void {
+	public function test_constructor_initializes_data_for_card_new(): void {
 		$test_data    = $this->get_test_webhook_data( 'card_new' );
 		$webhook_data = new WebhookData( $test_data );
 
@@ -65,8 +67,9 @@ class WebhookDataTest extends TestCase {
 	 * Test constructor properly initializes data and all getters work for card update webhook.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Api\IncomingData\WebhookData::__construct
+	 * @return void
 	 */
-	public function test_constructor_initializes_data_for_card_update() : void {
+	public function test_constructor_initializes_data_for_card_update(): void {
 		$test_data    = $this->get_test_webhook_data( 'card_update' );
 		$webhook_data = new WebhookData( $test_data );
 

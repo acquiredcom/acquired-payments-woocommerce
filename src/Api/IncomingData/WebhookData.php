@@ -33,8 +33,9 @@ class WebhookData extends Data {
 	 * Set webhook type and ID.
 	 *
 	 * @param stdClass $incoming_data
+	 * @return void
 	 */
-	private function set_webhook_data( stdClass $incoming_data ) : void {
+	private function set_webhook_data( stdClass $incoming_data ): void {
 		$this->webhook_type = $incoming_data->webhook_type;
 		$this->webhook_id   = $incoming_data->webhook_id;
 
@@ -64,7 +65,7 @@ class WebhookData extends Data {
 	 *
 	 * @return string
 	 */
-	public function get_webhook_type() : string {
+	public function get_webhook_type(): string {
 		return $this->webhook_type;
 	}
 
@@ -73,7 +74,7 @@ class WebhookData extends Data {
 	 *
 	 * @return string
 	 */
-	public function get_webhook_id() : string {
+	public function get_webhook_id(): string {
 		return $this->webhook_id;
 	}
 }

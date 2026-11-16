@@ -32,9 +32,9 @@ class IncomingDataHandler {
 	 * Sanitize data recursively.
 	 *
 	 * @param mixed $data
-	 * @return mixed
+	 * @return string|int|array|stdClass
 	 */
-	private function sanitize_data( mixed $data ) : string|int|array|stdClass {
+	private function sanitize_data( mixed $data ): string|int|array|stdClass {
 		if ( is_array( $data ) ) {
 			return array_map( [ $this, 'sanitize_data' ], $data );
 		}
@@ -55,9 +55,10 @@ class IncomingDataHandler {
 	 * @param array|stdClass $data
 	 * @param array $required_fields
 	 * @param string $context
+	 * @return void
 	 * @throws Exception
 	 */
-	private function validate_required_fields( array|stdClass $data, array $required_fields, string $context = 'webhook' ) : void {
+	private function validate_required_fields( array|stdClass $data, array $required_fields, string $context = 'webhook' ): void {
 		$missing_fields = [];
 
 		foreach ( $required_fields as $field ) :
@@ -65,10 +66,8 @@ class IncomingDataHandler {
 				if ( empty( $data[ $field ] ) ) {
 					$missing_fields[] = $field;
 				}
-			} else {
-				if ( empty( $data->{$field} ) ) {
+			} elseif ( empty( $data->{$field} ) ) {
 					$missing_fields[] = $field;
-				}
 			}
 		endforeach;
 
@@ -84,15 +83,13 @@ class IncomingDataHandler {
 	}
 
 	/**
-	 * Validate redirect hash.
+	 * Check if the redirect hash matches a key.
 	 *
 	 * @param array $data
+	 * @param string $key
 	 * @return bool
 	 */
-	private function validate_redirect_hash( array $data ) : bool {
-		// Determine which key to use: signing_key takes precedence, fallback to app_key for backward compatibility
-		$key = ( ! empty( $this->signing_key ) ) ? $this->signing_key : $this->app_key;
-
+	private function redirect_hash_matches_key( array $data, string $key ): bool {
 		if ( ! $key ) {
 			return false;
 		}
@@ -112,14 +109,27 @@ class IncomingDataHandler {
 	}
 
 	/**
+	 * Validate redirect hash.
+	 *
+	 * @param array $data
+	 * @return bool
+	 */
+	private function validate_redirect_hash( array $data ): bool {
+		// Determine which key to use: signing_key takes precedence, fallback to app_key for backward compatibility.
+		$key = ( ! empty( $this->signing_key ) ) ? $this->signing_key : $this->app_key;
+
+		return $this->redirect_hash_matches_key( $data, $key );
+	}
+
+	/**
 	 * Validate webhook hash.
 	 *
 	 * @param string $data
 	 * @param string $hash
 	 * @return bool
 	 */
-	private function validate_webhook_hash( string $data, string $hash ) : bool {
-		// Determine which key to use: signing_key takes precedence, fallback to app_key for backward compatibility
+	private function validate_webhook_hash( string $data, string $hash ): bool {
+		// Determine which key to use: signing_key takes precedence, fallback to app_key for backward compatibility.
 		$key = ( ! empty( $this->signing_key ) ) ? $this->signing_key : $this->app_key;
 
 		if ( ! $key ) {
@@ -141,22 +151,34 @@ class IncomingDataHandler {
 	}
 
 	/**
+	 * Get redirect hash status.
+	 *
+	 * @param array $data
+	 * @return string
+	 */
+	private function get_redirect_hash_status( array $data ): string {
+		return match ( true ) {
+			empty( $data['hash'] )                                    => 'empty',
+			$this->validate_redirect_hash( $data )                    => 'valid',
+			! $this->signing_key                                      => 'no_signing_key',
+			$this->redirect_hash_matches_key( $data, $this->app_key ) => 'using_app_key_for_signing',
+			default                                                   => 'invalid',
+		};
+	}
+
+	/**
 	 * Format redirect data.
 	 *
 	 * @param array $data
 	 * @return RedirectData
 	 * @throws Exception
 	 */
-	private function format_redirect_data( array $data ) : RedirectData {
+	private function format_redirect_data( array $data ): RedirectData {
 		$data = $this->sanitize_data( array_map( 'wp_unslash', $data ) );
 
-		$this->validate_required_fields( $data, [ 'status', 'transaction_id', 'order_id', 'timestamp', 'hash' ], 'redirect_data' );
+		$this->validate_required_fields( $data, [ 'status', 'transaction_id', 'order_id', 'timestamp' ], 'redirect_data' );
 
-		if ( ! $this->validate_redirect_hash( $data ) ) {
-			throw new Exception( 'Redirect data hash is invalid.' );
-		}
-
-		return new RedirectData( $data );
+		return new RedirectData( $data, $this->get_redirect_hash_status( $data ) );
 	}
 
 	/**
@@ -165,7 +187,7 @@ class IncomingDataHandler {
 	 * @param string $webhook_type
 	 * @return array
 	 */
-	private function get_webhook_body_requirements( string $webhook_type ) : array {
+	private function get_webhook_body_requirements( string $webhook_type ): array {
 		$requirements = [
 			'status_update' => [
 				'required' => [ 'transaction_id', 'status', 'order_id' ],
@@ -189,9 +211,10 @@ class IncomingDataHandler {
 	 *
 	 * @param stdClass $body
 	 * @param string $webhook_type
+	 * @return void
 	 * @throws Exception
 	 */
-	private function validate_webhook_body( stdClass $body, string $webhook_type ) : void {
+	private function validate_webhook_body( stdClass $body, string $webhook_type ): void {
 		$requirements = $this->get_webhook_body_requirements( $webhook_type );
 
 		if ( ! $requirements ) {
@@ -215,7 +238,7 @@ class IncomingDataHandler {
 	 * @return WebhookData
 	 * @throws Exception
 	 */
-	private function format_webhook_data( string $data, string $hash ) : WebhookData {
+	private function format_webhook_data( string $data, string $hash ): WebhookData {
 		if ( ! $this->validate_webhook_hash( $data, $hash ) ) {
 			throw new Exception( 'Webhook hash is invalid.' );
 		}
@@ -246,10 +269,16 @@ class IncomingDataHandler {
 	 * @return RedirectData
 	 * @throws Exception
 	 */
-	public function get_redirect_data( array $data ) : RedirectData {
+	public function get_redirect_data( array $data ): RedirectData {
 		try {
 			$data = $this->format_redirect_data( $data );
-			$this->logger_service->log( 'Incoming redirect data received successfully.', 'debug', $data->get_log_data() );
+
+			if ( $data->is_hash_valid() ) {
+				$this->logger_service->log( 'Incoming redirect data received successfully.', 'debug', $data->get_log_data() );
+			} else {
+				$this->logger_service->log( sprintf( 'Incoming redirect data received with an unverified hash. Hash status: %s.', $data->get_hash_status() ), 'error' );
+			}
+
 			return $data;
 		} catch ( Exception $exception ) {
 			$error = $exception->getMessage();
@@ -266,7 +295,7 @@ class IncomingDataHandler {
 	 * @return WebhookData
 	 * @throws Exception
 	 */
-	public function get_webhook_data( string $data, string $hash ) : WebhookData {
+	public function get_webhook_data( string $data, string $hash ): WebhookData {
 		try {
 			$data = $this->format_webhook_data( $data, $hash );
 			$this->logger_service->log( 'Incoming webhook data received successfully.', 'debug', $data->get_log_data() );

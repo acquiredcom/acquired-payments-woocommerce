@@ -13,5 +13,10 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
  * ObserverInterface interface.
  */
 interface ObserverInterface {
-	public function init_hooks() : void;
+	/**
+	 * Initialize hooks.
+	 *
+	 * @return void
+	 */
+	public function init_hooks(): void;
 }

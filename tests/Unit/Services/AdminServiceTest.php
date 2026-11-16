@@ -14,6 +14,7 @@ use AcquiredComForWooCommerce\Tests\Framework\Traits\SettingsServiceMock;
 use AcquiredComForWooCommerce\Services\AdminService;
 use Brain\Monkey\Functions;
 use Mockery;
+use WC_Order;
 
 /**
  * Test case for AdminService.
@@ -48,7 +49,7 @@ class AdminServiceTest extends TestCase {
 	 * @param string|null $screen_id
 	 * @return void
 	 */
-	private function mock_admin_screen( string|null $screen_id ) : void {
+	private function mock_admin_screen( string|null $screen_id ): void {
 		if ( ! $screen_id ) {
 			Functions\expect( 'get_current_screen' )
 				->once()
@@ -69,9 +70,17 @@ class AdminServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	private function mock_get_params_for_settings_page() : void {
+	private function mock_get_params_for_settings_page(): void {
 		$_GET['tab']     = 'checkout';
 		$_GET['section'] = 'acfw';
+
+		Functions\expect( 'wp_unslash' )
+			->twice()
+			->andReturnUsing(
+				function( $input ) {
+					return $input;
+				}
+			);
 
 		Functions\expect( 'sanitize_text_field' )
 			->twice()
@@ -90,7 +99,7 @@ class AdminServiceTest extends TestCase {
 	 * @param bool   $dismissible
 	 * @return void
 	 */
-	private function mock_admin_notice( string $message, string $type, bool $dismissible = false ) : void {
+	private function mock_admin_notice( string $message, string $type, bool $dismissible = false ): void {
 		Functions\expect( 'wp_admin_notice' )
 			->once()
 			->with(
@@ -106,17 +115,14 @@ class AdminServiceTest extends TestCase {
 	 * Mock get notice transient.
 	 *
 	 * @param int $order_id
-	 * @param array{
-	 *     id: string,
-	 *     value: string
-	 * }|null $return
+	 * @param array|null $return_value
 	 * @return void
 	 */
-	private function mock_get_notice_transient( int $order_id, null|array $return ) : void {
+	private function mock_get_notice_transient( int $order_id, null|array $return_value ): void {
 		Functions\expect( 'get_transient' )
 			->once()
 			->with( 'acfw_order_notice_' . $order_id )
-			->andReturn( $return );
+			->andReturn( $return_value );
 
 		Functions\expect( 'delete_transient' )
 			->once()
@@ -148,7 +154,7 @@ class AdminServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		// Clear $_GET before each test.
@@ -170,7 +176,7 @@ class AdminServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		// Clear $_GET after each test.
 		$_GET = [];
 
@@ -183,7 +189,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::add_notice
 	 * @return void
 	 */
-	public function test_add_notice() : void {
+	public function test_add_notice(): void {
 		// Test notice.
 		$this->mock_admin_notice( 'Test message', 'error' );
 		$this->get_private_method_value( 'add_notice', 'Test message', 'error' );
@@ -199,7 +205,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::get_current_screen
 	 * @return void
 	 */
-	public function test_get_current_screen() : void {
+	public function test_get_current_screen(): void {
 		// Test when screen is null.
 		$this->mock_admin_screen( null );
 		$this->assertNull( $this->get_private_method_value( 'get_current_screen' ) );
@@ -215,7 +221,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::is_payment_gateway_screen
 	 * @return void
 	 */
-	public function test_is_payment_gateway_screen() : void {
+	public function test_is_payment_gateway_screen(): void {
 		// Test when not on the right screen.
 		$this->mock_admin_screen( 'not_the_right_screen' );
 		$this->assertFalse( $this->service->is_payment_gateway_screen() );
@@ -236,7 +242,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::get_order_from_order_admin_screen
 	 * @return void
 	 */
-	public function test_get_order_from_order_admin_screen() : void {
+	public function test_get_order_from_order_admin_screen(): void {
 		$method_name = 'get_order_from_order_admin_screen';
 
 		// Test when not on orders screen.
@@ -271,7 +277,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::add_order_notice
 	 * @return void
 	 */
-	public function test_add_order_notice() : void {
+	public function test_add_order_notice(): void {
 		Functions\expect( 'set_transient' )
 			->once()
 			->with(
@@ -292,7 +298,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::get_order_notice
 	 * @return void
 	 */
-	public function test_get_order_notice() : void {
+	public function test_get_order_notice(): void {
 		// Test when notice does not exist.
 		$this->mock_get_notice_transient( $this->order_id, null );
 		$this->assertNull( $this->get_private_method_value( 'get_order_notice', $this->order_id ) );
@@ -319,7 +325,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::show_order_notice
 	 * @return void
 	 */
-	public function test_show_order_notice() : void {
+	public function test_show_order_notice(): void {
 		// Test empty notice data.
 		Functions\expect( 'wp_admin_notice' )->never();
 		$this->get_private_method_value( 'show_order_notice', [] );
@@ -389,7 +395,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::order_notice
 	 * @return void
 	 */
-	public function test_order_notice() : void {
+	public function test_order_notice(): void {
 		// Test when not on order screen.
 		$this->mock_admin_screen( 'not_the_right_screen' );
 		$this->service->order_notice();
@@ -430,7 +436,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::settings_notice
 	 * @return void
 	 */
-	public function test_settings_notice() : void {
+	public function test_settings_notice(): void {
 		// Test when API credentials are missing.
 
 		$this->get_settings_service()
@@ -442,6 +448,11 @@ class AdminServiceTest extends TestCase {
 			->shouldReceive( 'get_admin_settings_url' )
 			->once()
 			->andReturn( 'https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw' );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( '' );
 
 		$this->mock_admin_notice(
 			'Acquired.com for WooCommerce is not fully configured. Please enter your API credentials <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a>.',
@@ -472,8 +483,13 @@ class AdminServiceTest extends TestCase {
 			->once()
 			->andReturn( 'https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw' );
 
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( '' );
+
 		$this->mock_admin_notice(
-			'Acquired.com for WooCommerce API credentials are invalid. Please enter valid credentials <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a>.',
+			'Your API credentials and configuration are incorrect or incomplete. You are receiving a 401 response. Please check that your API credentials are correct <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a> and that you have whitelisted your IP address within the Acquired Hub. To get your IP address contact your hosting provider.',
 			'error'
 		);
 
@@ -496,8 +512,158 @@ class AdminServiceTest extends TestCase {
 			->once()
 			->andReturn( true );
 
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( '' );
+
 		$this->service->settings_notice();
 	}
+
+	/**
+	 * Test settings notice display for signing key issues.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Services\AdminService::settings_notice
+	 * @return void
+	 */
+	public function test_settings_notice_with_signing_key_issue(): void {
+		// Test when the redirect hash is empty.
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_api_credentials' )
+			->once()
+			->andReturn(
+				[
+					'app_id'  => 'test_id',
+					'app_key' => 'test_key',
+				]
+			);
+
+		$this->get_settings_service()
+			->shouldReceive( 'are_api_credentials_valid' )
+			->once()
+			->andReturn( true );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( 'empty' );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_admin_settings_url' )
+			->once()
+			->andReturn( 'https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw' );
+
+		$this->mock_admin_notice(
+			'Acquired.com sent a redirect without a hash, so it couldn\'t be verified. Activate a signing key in the Acquired Hub and enter it <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a>. Until then, payment status is checked with the Acquired.com API.',
+			'error'
+		);
+
+		$this->service->settings_notice();
+
+		// Test when the app key is used for signing.
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_api_credentials' )
+			->once()
+			->andReturn(
+				[
+					'app_id'  => 'test_id',
+					'app_key' => 'test_key',
+				]
+			);
+
+		$this->get_settings_service()
+			->shouldReceive( 'are_api_credentials_valid' )
+			->once()
+			->andReturn( true );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( 'using_app_key_for_signing' );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_admin_settings_url' )
+			->once()
+			->andReturn( 'https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw' );
+
+		$this->mock_admin_notice(
+			'Acquired.com is signing redirects with a different key than the signing key <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a>. Check that the signing key is activated in the Acquired Hub. Until then, payment status is checked with the Acquired.com API.',
+			'error'
+		);
+
+		$this->service->settings_notice();
+
+		// Test when no signing key is added.
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_api_credentials' )
+			->once()
+			->andReturn(
+				[
+					'app_id'  => 'test_id',
+					'app_key' => 'test_key',
+				]
+			);
+
+		$this->get_settings_service()
+			->shouldReceive( 'are_api_credentials_valid' )
+			->once()
+			->andReturn( true );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( 'no_signing_key' );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_admin_settings_url' )
+			->once()
+			->andReturn( 'https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw' );
+
+		$this->mock_admin_notice(
+			'Acquired.com is signing redirects with a signing key that isn\'t added to the plugin. Add your signing key from the Acquired Hub <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a>. Until then, payment status is checked with the Acquired.com API.',
+			'error'
+		);
+
+		$this->service->settings_notice();
+
+		// Test when the signing key is invalid.
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_api_credentials' )
+			->once()
+			->andReturn(
+				[
+					'app_id'  => 'test_id',
+					'app_key' => 'test_key',
+				]
+			);
+
+		$this->get_settings_service()
+			->shouldReceive( 'are_api_credentials_valid' )
+			->once()
+			->andReturn( true );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_signing_key_issue' )
+			->once()
+			->andReturn( 'invalid' );
+
+		$this->get_settings_service()
+			->shouldReceive( 'get_admin_settings_url' )
+			->once()
+			->andReturn( 'https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw' );
+
+		$this->mock_admin_notice(
+			'Redirects from Acquired.com don\'t match the signing key <a href="https://example.com/wp-admin/admin.php?page=wc-settings&tab=checkout&section=acfw">in the settings page</a>. Check the key for typos and that it belongs to the selected environment. Until then, payment status is checked with the Acquired.com API.',
+			'error'
+		);
+
+		$this->service->settings_notice();
+	}
+
 
 	/**
 	 * Test add order assets.
@@ -505,7 +671,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::add_order_assets
 	 * @return void
 	 */
-	public function test_add_order_assets() : void {
+	public function test_add_order_assets(): void {
 		// Test when not on order screen.
 		$this->mock_admin_screen( 'not_the_right_screen' );
 		$this->service->add_order_assets();
@@ -545,7 +711,7 @@ class AdminServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\AdminService::add_settings_assets
 	 * @return void
 	 */
-	public function test_add_settings_assets() : void {
+	public function test_add_settings_assets(): void {
 		// Test when not on payment gateway setting screen.
 		$this->mock_admin_screen( 'not_the_right_screen' );
 		$this->service->add_settings_assets();

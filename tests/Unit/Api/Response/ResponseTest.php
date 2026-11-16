@@ -23,7 +23,7 @@ class ResponseTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -53,7 +53,7 @@ class ResponseTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_response() : void {
+	public function test_response(): void {
 		$result = Response::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ) );
 
 		// Test if we get a Response instance.
@@ -72,11 +72,31 @@ class ResponseTest extends ResponseTestCase {
 	}
 
 	/**
+	 * Test has_body_field.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::has_body_field
+	 * @return void
+	 */
+	public function test_has_body_field(): void {
+		$result     = Response::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ) );
+		$reflection = new ReflectionHelper( $result );
+
+		// Test with field that has a value.
+		$this->assertTrue( $reflection->get_private_method_value( 'has_body_field', 'transaction_id' ) );
+
+		// Test with field that is empty.
+		$this->assertTrue( $reflection->get_private_method_value( 'has_body_field', 'reason' ) );
+
+		// Test with missing field.
+		$this->assertFalse( $reflection->get_private_method_value( 'has_body_field', 'missing_field' ) );
+	}
+
+	/**
 	 * Test with RequestException.
 	 *
 	 * @return void
 	 */
-	public function test_request_exception() : void {
+	public function test_request_exception(): void {
 		$result = Response::make( $this->mock_request_exception( 400, 'Bad Request', (object) $this->get_test_response_data( 'error_validation' ) ) );
 
 		// Test if we get a Response instance.
@@ -99,7 +119,7 @@ class ResponseTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_exception() : void {
+	public function test_exception(): void {
 		$exception = new Exception( 'Something went wrong' );
 		$result    = Response::make( $exception );
 
@@ -123,7 +143,7 @@ class ResponseTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_runtime_exception() : void {
+	public function test_runtime_exception(): void {
 		$response = $this->mock_runtime_exception( 200, 'OK' );
 		$result   = Response::make( $response );
 
@@ -150,7 +170,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::get_error_message_formatted
 	 * @return void
 	 */
-	public function test_get_error_message_formatted() : void {
+	public function test_get_error_message_formatted(): void {
 		$result = Response::make( $this->mock_request_exception( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ) );
 
 		$reflection         = new ReflectionHelper( $result );
@@ -186,7 +206,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::get_error_message_formatted
 	 * @return void
 	 */
-	public function test_get_error_message_formatted_without_invalid_parameters() : void {
+	public function test_get_error_message_formatted_without_invalid_parameters(): void {
 		$result = Response::make( $this->mock_request_exception( 400, 'Bad Request', $this->get_test_response_data( 'error_authorization' ) ) );
 
 		$reflection         = new ReflectionHelper( $result );
@@ -212,7 +232,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::get_error_message_formatted
 	 * @return void
 	 */
-	public function test_get_error_message_formatted_with_no_error() : void {
+	public function test_get_error_message_formatted_with_no_error(): void {
 		$result     = Response::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ) );
 		$reflection = new ReflectionHelper( $result );
 
@@ -227,7 +247,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_with_invalid_body() : void {
+	public function test_validate_data_with_invalid_body(): void {
 		$result     = Response::make( new Exception( 'Test exception' ) );
 		$reflection = new ReflectionHelper( $result );
 
@@ -242,7 +262,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::read_content
 	 * @return void
 	 */
-	public function test_read_content_with_invalid_response() : void {
+	public function test_read_content_with_invalid_response(): void {
 		$response   = Response::make( new Exception( 'Test exception' ) );
 		$reflection = new ReflectionHelper( $response );
 
@@ -257,7 +277,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::get_log_data
 	 * @return void
 	 */
-	public function test_get_log_data_success() : void {
+	public function test_get_log_data_success(): void {
 		$result = Response::make(
 			$this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ),
 			[
@@ -306,7 +326,7 @@ class ResponseTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Response::get_log_data
 	 * @return void
 	 */
-	public function test_get_log_data_error() : void {
+	public function test_get_log_data_error(): void {
 		$result = Response::make(
 			$this->mock_request_exception(
 				400,

@@ -27,7 +27,7 @@ class ObserverServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\ObserverService::init_observers
 	 * @return void
 	 */
-	public function test_constructor_and_init_observers() : void {
+	public function test_constructor_and_init_observers(): void {
 		// Create mock observers.
 		$observer1 = Mockery::mock( ObserverInterface::class );
 		$observer2 = Mockery::mock( ObserverInterface::class );

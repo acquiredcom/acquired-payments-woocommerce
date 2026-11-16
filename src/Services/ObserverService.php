@@ -29,7 +29,7 @@ class ObserverService {
 	 *
 	 * @return void
 	 */
-	private function init_observers() : void {
+	private function init_observers(): void {
 		foreach ( $this->observers as $observer ) {
 			$observer->init_hooks();
 		}

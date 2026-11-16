@@ -50,7 +50,7 @@ class PaymentGatewayTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	private function mock_settings_for_constructor() : void {
+	private function mock_settings_for_constructor(): void {
 		$this->get_settings_service()->shouldReceive( 'get_option' )->andReturn( 'test_value' );
 		$this->get_settings_service()->shouldReceive( 'get_fields' )->andReturn( [] );
 		$this->get_settings_service()->shouldReceive( 'get_wc_api_endpoint' )->with( 'webhook' )->andReturn( 'acquired-com-for-woocommerce-webhook' );
@@ -63,7 +63,7 @@ class PaymentGatewayTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	private function mock_init_hooks() : void {
+	private function mock_init_hooks(): void {
 		Functions\expect( 'add_action' )
 			->with(
 				'woocommerce_update_options_payment_gateways_acfw',
@@ -204,11 +204,26 @@ class PaymentGatewayTest extends TestCase {
 	}
 
 	/**
+	 * Mock the webhook hash header.
+	 *
+	 * @param string $hash
+	 * @return void
+	 */
+	private function mock_webhook_hash_header( string $hash ): void {
+		$_SERVER['HTTP_HASH'] = $hash;
+
+		Functions\expect( 'wp_unslash' )
+			->once()
+			->with( $hash )
+			->andReturn( $hash );
+	}
+
+	/**
 	 * Set up the test case.
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		// Clear $_SERVER before each test.
@@ -226,7 +241,7 @@ class PaymentGatewayTest extends TestCase {
 		$this->get_settings_service()->shouldReceive( 'is_enabled' )->with( 'tokenization' )->andReturn( false );
 		$this->mock_init_hooks();
 
-		// Create the test class instance - this will trigger all the hook expectations
+		// Create the test class instance - this will trigger all the hook expectations.
 		$this->test_class = new PaymentGateway(
 			$this->get_incoming_data_handler(),
 			$this->get_admin_service(),
@@ -245,7 +260,7 @@ class PaymentGatewayTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		// Clear $_SERVER after each test.
 		$_SERVER = [];
 
@@ -258,7 +273,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_incoming_data_handler(), $this->get_private_property_value( 'incoming_data_handler' ) );
 		$this->assertSame( $this->get_admin_service(), $this->get_private_property_value( 'admin_service' ) );
 		$this->assertSame( $this->get_logger_service(), $this->get_private_property_value( 'logger_service' ) );
@@ -281,8 +296,8 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::__construct
 	 * @return void
 	 */
-	public function test_constructor_adds_tokenization_support_when_enabled() : void {
-		// Create a completely new mock for settings service
+	public function test_constructor_adds_tokenization_support_when_enabled(): void {
+		// Create a completely new mock for settings service.
 		$this->mock_settings_service();
 
 		// Mock requirements for the constructor.
@@ -290,7 +305,7 @@ class PaymentGatewayTest extends TestCase {
 		$this->get_settings_service()->shouldReceive( 'is_enabled' )->with( 'tokenization' )->andReturn( true );
 		$this->mock_init_hooks();
 
-		// Create test instance with tokenization enabled
+		// Create test instance with tokenization enabled.
 		$test_class_instance = new PaymentGateway(
 			$this->get_incoming_data_handler(),
 			$this->get_admin_service(),
@@ -310,7 +325,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::admin_options
 	 * @return void
 	 */
-	public function test_admin_options() : void {
+	public function test_admin_options(): void {
 		// Test the method.
 		$this->expectOutputString( "\t\t<h2>Acquired.com</h2>\n\n\t\t<table class=\"form-table\">\n\t\t\t\t\t</table>\n\t\t" );
 		$this->test_class->admin_options();
@@ -322,7 +337,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::needs_setup
 	 * @return void
 	 */
-	public function test_needs_setup_returns_true_when_not_in_production() : void {
+	public function test_needs_setup_returns_true_when_not_in_production(): void {
 		// Mock SettingsService.
 		$this->get_settings_service()
 			->shouldReceive( 'is_environment_production' )
@@ -339,7 +354,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::needs_setup
 	 * @return void
 	 */
-	public function test_needs_setup_returns_false_when_properly_configured() : void {
+	public function test_needs_setup_returns_false_when_properly_configured(): void {
 		// Mock SettingsService.
 
 		$this->get_settings_service()
@@ -368,7 +383,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::needs_setup
 	 * @return void
 	 */
-	public function test_needs_setup_returns_true_when_production_credentials_missing() : void {
+	public function test_needs_setup_returns_true_when_production_credentials_missing(): void {
 		// Mock SettingsService.
 
 		$this->get_settings_service()
@@ -392,7 +407,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::is_available
 	 * @return void
 	 */
-	public function test_is_available_returns_false_when_no_api_credentials() : void {
+	public function test_is_available_returns_false_when_no_api_credentials(): void {
 		// Mock SettingsService.
 		$this->get_settings_service()
 			->shouldReceive( 'get_api_credentials' )
@@ -409,7 +424,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::is_available
 	 * @return void
 	 */
-	public function test_is_available_returns_false_when_invalid_api_credentials() : void {
+	public function test_is_available_returns_false_when_invalid_api_credentials(): void {
 		// Mock SettingsService.
 
 		$this->get_settings_service()
@@ -437,7 +452,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::is_available
 	 * @return void
 	 */
-	public function test_is_available_returns_true_when_credentials_valid() : void {
+	public function test_is_available_returns_true_when_credentials_valid(): void {
 		// Mock SettingsService.
 
 		$this->get_settings_service()
@@ -465,7 +480,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::show_staging_message
 	 * @return void
 	 */
-	public function test_show_staging_message_returns_original_when_id_mismatch() : void {
+	public function test_show_staging_message_returns_original_when_id_mismatch(): void {
 		$description = 'Original description';
 
 		// Test the method.
@@ -478,7 +493,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::show_staging_message
 	 * @return void
 	 */
-	public function test_show_staging_message_returns_original_when_not_staging() : void {
+	public function test_show_staging_message_returns_original_when_not_staging(): void {
 		$description = 'Original description';
 
 		// Mock SettingsService.
@@ -497,10 +512,10 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::show_staging_message
 	 * @return void
 	 */
-	public function test_show_staging_message_adds_notice_when_staging() : void {
+	public function test_show_staging_message_adds_notice_when_staging(): void {
 		$description = 'Original description';
 
-		// Mock SettingsService
+		// Mock SettingsService.
 		$this->get_settings_service()
 			->shouldReceive( 'is_environment_staging' )
 			->once()
@@ -518,7 +533,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::set_order_fully_refunded_status
 	 * @return void
 	 */
-	public function test_set_order_fully_refunded_status_returns_cancelled_when_conditions_met() : void {
+	public function test_set_order_fully_refunded_status_returns_cancelled_when_conditions_met(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'is_acfw_payment_method' )
@@ -543,7 +558,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::set_order_fully_refunded_status
 	 * @return void
 	 */
-	public function test_set_order_fully_refunded_status_returns_original_when_not_acfw_payment() : void {
+	public function test_set_order_fully_refunded_status_returns_original_when_not_acfw_payment(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'is_acfw_payment_method' )
@@ -561,7 +576,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::set_order_fully_refunded_status
 	 * @return void
 	 */
-	public function test_set_order_fully_refunded_status_returns_original_when_setting_disabled() : void {
+	public function test_set_order_fully_refunded_status_returns_original_when_setting_disabled(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'is_acfw_payment_method' )
@@ -586,7 +601,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::add_order_actions
 	 * @return void
 	 */
-	public function test_add_order_actions_returns_original_when_order_null() : void {
+	public function test_add_order_actions_returns_original_when_order_null(): void {
 		// Test data.
 		$actions = [ 'send_order_details' => 'Send order details to customer' ];
 
@@ -600,7 +615,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::add_order_actions
 	 * @return void
 	 */
-	public function test_add_order_actions_adds_capture_action_when_can_be_captured() : void {
+	public function test_add_order_actions_adds_capture_action_when_can_be_captured(): void {
 		// Test data.
 		$actions = [ 'send_order_details' => 'Send order details to customer' ];
 
@@ -636,7 +651,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::add_order_actions
 	 * @return void
 	 */
-	public function test_add_order_actions_adds_cancel_action_when_can_be_cancelled() : void {
+	public function test_add_order_actions_adds_cancel_action_when_can_be_cancelled(): void {
 		// Test data.
 		$actions = [ 'send_order_details' => 'Send order details to customer' ];
 
@@ -672,7 +687,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::add_order_actions
 	 * @return void
 	 */
-	public function test_add_order_actions_adds_both_actions_when_both_possible() : void {
+	public function test_add_order_actions_adds_both_actions_when_both_possible(): void {
 		// Test data.
 		$actions = [ 'send_order_details' => 'Send order details to customer' ];
 
@@ -709,7 +724,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::get_saved_payment_method_option_html
 	 * @return void
 	 */
-	public function test_get_saved_payment_method_option_html_returns_empty_on_add_payment_page() : void {
+	public function test_get_saved_payment_method_option_html_returns_empty_on_add_payment_page(): void {
 		// Mock is_add_payment_method_page function.
 		Functions\expect( 'is_add_payment_method_page' )
 			->once()
@@ -728,7 +743,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::get_saved_payment_method_option_html
 	 * @return void
 	 */
-	public function test_get_saved_payment_method_option_html_returns_parent_html() : void {
+	public function test_get_saved_payment_method_option_html_returns_parent_html(): void {
 		// Mock is_add_payment_method_page function.
 		Functions\expect( 'is_add_payment_method_page' )
 			->once()
@@ -747,7 +762,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::get_new_payment_method_option_html
 	 * @return void
 	 */
-	public function test_get_new_payment_method_option_html_returns_empty_when_no_tokens_on_checkout() : void {
+	public function test_get_new_payment_method_option_html_returns_empty_when_no_tokens_on_checkout(): void {
 		// Mock is_checkout function.
 		Functions\expect( 'is_checkout' )
 			->once()
@@ -766,7 +781,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::get_new_payment_method_option_html
 	 * @return void
 	 */
-	public function test_get_new_payment_method_option_html_returns_empty_on_add_payment_page() : void {
+	public function test_get_new_payment_method_option_html_returns_empty_on_add_payment_page(): void {
 		// Mock is_checkout function.
 		Functions\expect( 'is_checkout' )
 			->once()
@@ -790,7 +805,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::get_new_payment_method_option_html
 	 * @return void
 	 */
-	public function test_get_new_payment_method_option_html_returns_parent_html_when_tokens_exist() : void {
+	public function test_get_new_payment_method_option_html_returns_parent_html_when_tokens_exist(): void {
 		// Mock is_checkout function.
 		Functions\expect( 'is_checkout' )
 			->once()
@@ -814,7 +829,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::payment_fields
 	 * @return void
 	 */
-	public function test_payment_fields_outputs_expected_html() : void {
+	public function test_payment_fields_outputs_expected_html(): void {
 		$this->expectOutputString( 'Test payment fields outputTest saved payment methods output' );
 		$this->test_class->payment_fields();
 	}
@@ -825,7 +840,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_payment
 	 * @return void
 	 */
-	public function test_process_payment_returns_success_array_when_payment_link_obtained() : void {
+	public function test_process_payment_returns_success_array_when_payment_link_obtained(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'get_payment_link' )
@@ -849,7 +864,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_payment
 	 * @return void
 	 */
-	public function test_process_payment_returns_failure_array_when_exception_thrown() : void {
+	public function test_process_payment_returns_failure_array_when_exception_thrown(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'get_payment_link' )
@@ -877,12 +892,12 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_refund
 	 * @return void
 	 */
-	public function test_process_refund_returns_true_when_refund_succeeds() : void {
+	public function test_process_refund_returns_true_when_refund_succeeds(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'refund_order' )
 			->once()
-			->with( 123, 10.00, 'Test refund' )
+			->with( 123, 10.00 )
 			->andReturn( true );
 
 		$this->assertTrue( $this->test_class->process_refund( 123, 10.00, 'Test refund' ) );
@@ -894,12 +909,12 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_refund
 	 * @return void
 	 */
-	public function test_process_refund_throws_exception_when_refund_fails() : void {
+	public function test_process_refund_throws_exception_when_refund_fails(): void {
 		// Mock OrderService.
 		$this->get_order_service()
 			->shouldReceive( 'refund_order' )
 			->once()
-			->with( 123, 10.00, 'Test refund' )
+			->with( 123, 10.00 )
 			->andThrow( new Exception( 'Payment refund failed.' ) );
 
 		// Test the method.
@@ -914,7 +929,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_capture
 	 * @return void
 	 */
-	public function test_process_capture_logs_error_when_order_is_null() : void {
+	public function test_process_capture_logs_error_when_order_is_null(): void {
 		// Mock LoggerService.
 		$this->get_logger_service()
 			->shouldReceive( 'log' )
@@ -931,7 +946,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_capture
 	 * @return void
 	 */
-	public function test_process_capture_success() : void {
+	public function test_process_capture_success(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_id' )->once()->andReturn( 123 );
@@ -959,7 +974,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_cancellation
 	 * @return void
 	 */
-	public function test_process_cancellation_logs_error_when_order_is_null() : void {
+	public function test_process_cancellation_logs_error_when_order_is_null(): void {
 		// Mock LoggerService.
 		$this->get_logger_service()
 			->shouldReceive( 'log' )
@@ -976,7 +991,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_cancellation
 	 * @return void
 	 */
-	public function test_process_cancellation_success() : void {
+	public function test_process_cancellation_success(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_id' )->once()->andReturn( 123 );
@@ -1004,7 +1019,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::add_payment_method
 	 * @return void
 	 */
-	public function test_add_payment_method_returns_success_array_when_payment_link_obtained() : void {
+	public function test_add_payment_method_returns_success_array_when_payment_link_obtained(): void {
 		// Mock get_current_user_id function.
 		Functions\expect( 'get_current_user_id' )
 			->once()
@@ -1033,7 +1048,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::add_payment_method
 	 * @return void
 	 */
-	public function test_add_payment_method_returns_failure_array_when_exception_thrown() : void {
+	public function test_add_payment_method_returns_failure_array_when_exception_thrown(): void {
 		// Mock get_current_user_id function.
 		Functions\expect( 'get_current_user_id' )
 			->once()
@@ -1068,13 +1083,13 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_status_update() : void {
+	public function test_process_webhook_status_update(): void {
 		// Test data.
 		$webhook_data = '{"type":"status_update"}';
 		$hash         = 'test-hash';
 
-		// Set the HTTP header for hash.
-		$_SERVER['HTTP_HASH'] = $hash;
+		// Mock the HTTP_HASH header.
+		$this->mock_webhook_hash_header( $hash );
 
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
@@ -1114,13 +1129,13 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_card_new_payment_method() : void {
+	public function test_process_webhook_card_new_payment_method(): void {
 		// Test data.
 		$webhook_data = '{"type":"card_new"}';
 		$hash         = 'test-hash';
 
-		// Set the HTTP header for hash.
-		$_SERVER['HTTP_HASH'] = $hash;
+		// Mock the HTTP_HASH header.
+		$this->mock_webhook_hash_header( $hash );
 
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
@@ -1168,13 +1183,13 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_card_new_order() : void {
+	public function test_process_webhook_card_new_order(): void {
 		// Test data.
 		$webhook_data = '{"type":"card_new"}';
 		$hash         = 'test-hash';
 
-		// Set the HTTP header for hash.
-		$_SERVER['HTTP_HASH'] = $hash;
+		// Mock the HTTP_HASH header.
+		$this->mock_webhook_hash_header( $hash );
 
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
@@ -1222,13 +1237,13 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_card_update() : void {
+	public function test_process_webhook_card_update(): void {
 		// Test data.
 		$webhook_data = '{"type":"card_update"}';
 		$hash         = 'test-hash';
 
-		// Set the HTTP header for hash.
-		$_SERVER['HTTP_HASH'] = $hash;
+		// Mock the HTTP_HASH header.
+		$this->mock_webhook_hash_header( $hash );
 
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
@@ -1268,7 +1283,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_empty_data() : void {
+	public function test_process_webhook_empty_data(): void {
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
 			->once()
@@ -1285,13 +1300,13 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_exception() : void {
+	public function test_process_webhook_exception(): void {
 		// Test data.
 		$webhook_data = '{"type":"invalid"}';
 		$hash         = 'test-hash';
 
-		// Set the HTTP header for hash.
-		$_SERVER['HTTP_HASH'] = $hash;
+		// Mock the HTTP_HASH header.
+		$this->mock_webhook_hash_header( $hash );
 
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
@@ -1299,7 +1314,7 @@ class PaymentGatewayTest extends TestCase {
 			->with( 'php://input' )
 			->andReturn( $webhook_data );
 
-		// Mock incoming data handler to throw exception
+		// Mock incoming data handler to throw exception.
 		$this->get_incoming_data_handler()
 			->shouldReceive( 'get_webhook_data' )
 			->once()
@@ -1325,9 +1340,12 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::process_webhook
 	 * @return void
 	 */
-	public function test_process_webhook_without_hash() : void {
+	public function test_process_webhook_without_hash(): void {
 		// Test data.
 		$webhook_data = '{"type":"invalid"}';
+
+		// Mock the HTTP_HASH header.
+		$this->mock_webhook_hash_header( '' );
 
 		// Mock file_get_contents.
 		Functions\expect( 'file_get_contents' )
@@ -1335,7 +1353,7 @@ class PaymentGatewayTest extends TestCase {
 			->with( 'php://input' )
 			->andReturn( $webhook_data );
 
-		// Mock incoming data handler to throw exception
+		// Mock incoming data handler to throw exception.
 		$this->get_incoming_data_handler()
 			->shouldReceive( 'get_webhook_data' )
 			->once()
@@ -1361,7 +1379,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_select_field
 	 * @return void
 	 */
-	public function test_validate_select_field_with_valid_value() : void {
+	public function test_validate_select_field_with_valid_value(): void {
 		// Test data.
 		$key   = 'test_field';
 		$value = 'option_1';
@@ -1380,10 +1398,10 @@ class PaymentGatewayTest extends TestCase {
 			->with( $key )
 			->andReturn( $field );
 
-		// Test the method
+		// Test the method.
 		$result = $this->test_class->validate_select_field( $key, $value );
 
-		// Verify the result is the same as the input since it's valid
+		// Verify the result is the same as the input since it's valid.
 		$this->assertEquals( $value, $result );
 	}
 
@@ -1393,7 +1411,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_select_field
 	 * @return void
 	 */
-	public function test_validate_select_field_with_empty_options() : void {
+	public function test_validate_select_field_with_empty_options(): void {
 		// Test data.
 		$key   = 'test_field';
 		$value = 'option_1';
@@ -1421,7 +1439,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_select_field
 	 * @return void
 	 */
-	public function test_validate_select_field_with_invalid_value() : void {
+	public function test_validate_select_field_with_invalid_value(): void {
 		// Test data.
 		$key   = 'test_field';
 		$value = 'invalid_option';
@@ -1452,7 +1470,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_url_field
 	 * @return void
 	 */
-	public function test_validate_url_field_with_valid_url() : void {
+	public function test_validate_url_field_with_valid_url(): void {
 		// Test data.
 		$key   = 'test_field';
 		$value = 'https://example.com';
@@ -1475,7 +1493,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_url_field
 	 * @return void
 	 */
-	public function test_validate_url_field_with_invalid_url() : void {
+	public function test_validate_url_field_with_invalid_url(): void {
 		// Test data.
 		$key   = 'test_field';
 		$value = 'not-a-url';
@@ -1500,7 +1518,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_payment_reference_field
 	 * @return void
 	 */
-	public function test_validate_payment_reference_field_with_valid_value() : void {
+	public function test_validate_payment_reference_field_with_valid_value(): void {
 		// Test data.
 		$key   = 'payment_reference';
 		$value = 'REF-123-ABC';
@@ -1523,7 +1541,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_payment_reference_field
 	 * @return void
 	 */
-	public function test_validate_payment_reference_field_with_invalid_chars() : void {
+	public function test_validate_payment_reference_field_with_invalid_chars(): void {
 		// Test data.
 		$key   = 'payment_reference';
 		$value = 'REF@123$ABC';
@@ -1538,7 +1556,7 @@ class PaymentGatewayTest extends TestCase {
 
 		// Test the method.
 		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'Invalid value for "Payment Reference". Field can\'t be empty must contain only letters, numbers, spaces, hyphens and be between 1-18 characters.' );
+		$this->expectExceptionMessage( 'Invalid value for "Payment Reference". Field can\'t be empty and must contain only letters, numbers, spaces, hyphens and be between 1-18 characters.' );
 		$this->test_class->validate_payment_reference_field( $key, $value );
 	}
 
@@ -1548,7 +1566,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_payment_reference_field
 	 * @return void
 	 */
-	public function test_validate_payment_reference_field_with_too_long_value() : void {
+	public function test_validate_payment_reference_field_with_too_long_value(): void {
 		// Test data.
 		$key   = 'payment_reference';
 		$value = 'THIS-IS-WAY-TOO-LONG-REFERENCE-123';
@@ -1563,7 +1581,7 @@ class PaymentGatewayTest extends TestCase {
 
 		// Test the method.
 		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'Invalid value for "Payment Reference". Field can\'t be empty must contain only letters, numbers, spaces, hyphens and be between 1-18 characters.' );
+		$this->expectExceptionMessage( 'Invalid value for "Payment Reference". Field can\'t be empty and must contain only letters, numbers, spaces, hyphens and be between 1-18 characters.' );
 		$this->test_class->validate_payment_reference_field( $key, $value );
 	}
 
@@ -1573,7 +1591,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_payment_reference_field
 	 * @return void
 	 */
-	public function test_validate_payment_reference_field_with_empty_value() : void {
+	public function test_validate_payment_reference_field_with_empty_value(): void {
 		// Test data.
 		$key   = 'payment_reference';
 		$value = '';
@@ -1588,7 +1606,7 @@ class PaymentGatewayTest extends TestCase {
 
 		// Test the method.
 		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'Invalid value for "Payment Reference". Field can\'t be empty must contain only letters, numbers, spaces, hyphens and be between 1-18 characters.' );
+		$this->expectExceptionMessage( 'Invalid value for "Payment Reference". Field can\'t be empty and must contain only letters, numbers, spaces, hyphens and be between 1-18 characters.' );
 		$this->test_class->validate_payment_reference_field( $key, $value );
 	}
 
@@ -1598,7 +1616,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_company_id_field
 	 * @return void
 	 */
-	public function test_validate_company_id_field_with_valid_uuid() : void {
+	public function test_validate_company_id_field_with_valid_uuid(): void {
 		// Test data.
 		$key   = 'company_id';
 		$value = '123e4567-e89b-12d3-a456-426614174000';
@@ -1621,7 +1639,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_company_id_field
 	 * @return void
 	 */
-	public function test_validate_company_id_field_with_empty_value() : void {
+	public function test_validate_company_id_field_with_empty_value(): void {
 		// Test data.
 		$key   = 'company_id';
 		$value = '';
@@ -1643,7 +1661,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_company_id_field
 	 * @return void
 	 */
-	public function test_validate_company_id_field_with_invalid_uuid() : void {
+	public function test_validate_company_id_field_with_invalid_uuid(): void {
 		// Test data.
 		$key   = 'company_id';
 		$value = 'invalid-uuid';
@@ -1668,7 +1686,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_company_id_staging_field
 	 * @return void
 	 */
-	public function test_validate_company_id_staging_field_with_valid_uuid() : void {
+	public function test_validate_company_id_staging_field_with_valid_uuid(): void {
 		// Test data.
 		$key   = 'company_id';
 		$value = '123e4567-e89b-12d3-a456-426614174000';
@@ -1691,7 +1709,7 @@ class PaymentGatewayTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentGateway::validate_company_id_production_field
 	 * @return void
 	 */
-	public function test_validate_company_id_production_field_with_valid_uuid() : void {
+	public function test_validate_company_id_production_field_with_valid_uuid(): void {
 		// Test data.
 		$key   = 'company_id';
 		$value = '123e4567-e89b-12d3-a456-426614174000';

@@ -39,7 +39,7 @@ class CustomerObserverTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_customer_service();
@@ -57,7 +57,7 @@ class CustomerObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\CustomerObserver::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_customer_service(), $this->get_private_property_value( 'customer_service' ) );
 	}
 
@@ -67,7 +67,7 @@ class CustomerObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\CustomerObserver::init_hooks
 	 * @return void
 	 */
-	public function test_init_hooks() : void {
+	public function test_init_hooks(): void {
 		// Expect the actions to be added.
 		Actions\expectAdded( 'woocommerce_customer_object_updated_props' )
 			->once()
@@ -88,7 +88,7 @@ class CustomerObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\CustomerObserver::customer_updated
 	 * @return void
 	 */
-	public function test_customer_updated() : void {
+	public function test_customer_updated(): void {
 		// Mock is_account_page.
 		Functions\expect( 'is_account_page' )
 			->once()
@@ -116,7 +116,7 @@ class CustomerObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\CustomerObserver::customer_updated
 	 * @return void
 	 */
-	public function test_customer_updated_when_not_account_page() : void {
+	public function test_customer_updated_when_not_account_page(): void {
 		// Mock is_account_page.
 		Functions\expect( 'is_account_page' )
 			->once()
@@ -139,7 +139,7 @@ class CustomerObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\CustomerObserver::customer_updated
 	 * @return void
 	 */
-	public function test_customer_updated_when_no_changes() : void {
+	public function test_customer_updated_when_no_changes(): void {
 		// Mock is_account_page.
 		Functions\expect( 'is_account_page' )
 			->once()
@@ -163,7 +163,7 @@ class CustomerObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\CustomerObserver::customer_updated
 	 * @return void
 	 */
-	public function test_customer_updated_when_no_meta() : void {
+	public function test_customer_updated_when_no_meta(): void {
 		// Mock is_account_page.
 		Functions\expect( 'is_account_page' )
 			->once()

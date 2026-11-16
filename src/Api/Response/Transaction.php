@@ -7,6 +7,8 @@ declare( strict_types = 1 );
 
 namespace AcquiredComForWooCommerce\Api\Response;
 
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\RequestException;
 use Exception;
 use DateTime;
 
@@ -24,7 +26,7 @@ class Transaction extends Response {
 	 * @return void
 	 * @throws Exception
 	 */
-	protected function validate_data() : void {
+	protected function validate_data(): void {
 		parent::validate_data();
 
 		if ( ! $this->get_body_field( 'transaction_id' ) || ! $this->get_body_field( 'status' ) ) {
@@ -46,7 +48,7 @@ class Transaction extends Response {
 	 *
 	 * @return string|null
 	 */
-	public function get_transaction_id() : ?string {
+	public function get_transaction_id(): ?string {
 		return $this->get_body_field( 'transaction_id' );
 	}
 
@@ -55,7 +57,7 @@ class Transaction extends Response {
 	 *
 	 * @return string|null
 	 */
-	public function get_payment_method() : ?string {
+	public function get_payment_method(): ?string {
 		return $this->get_body_field( 'payment_method' );
 	}
 
@@ -64,7 +66,7 @@ class Transaction extends Response {
 	 *
 	 * @return string|null
 	 */
-	public function get_card_id() : ?string {
+	public function get_card_id(): ?string {
 		return $this->get_body_field( 'card_id' );
 	}
 
@@ -73,7 +75,7 @@ class Transaction extends Response {
 	 *
 	 * @return string|null
 	 */
-	public function get_decline_reason() : ?string {
+	public function get_decline_reason(): ?string {
 		return ! $this->is_transaction_success() && $this->get_body_field( 'reason' ) ? $this->get_body_field( 'reason' ) : null;
 	}
 
@@ -82,7 +84,7 @@ class Transaction extends Response {
 	 *
 	 * @return int|null
 	 */
-	public function get_created_timestamp() : ?int {
+	public function get_created_timestamp(): ?int {
 		$created = $this->get_body_field( 'created' );
 
 		if ( ! $created ) {

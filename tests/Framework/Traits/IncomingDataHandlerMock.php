@@ -28,7 +28,7 @@ trait IncomingDataHandlerMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_incoming_data_handler() : void {
+	protected function mock_incoming_data_handler(): void {
 		$this->incoming_data_handler = Mockery::mock(
 			IncomingDataHandler::class,
 			[
@@ -43,7 +43,7 @@ trait IncomingDataHandlerMock {
 	 *
 	 * @return MockInterface&IncomingDataHandler
 	 */
-	public function get_incoming_data_handler() : MockInterface {
+	public function get_incoming_data_handler(): MockInterface {
 		return $this->incoming_data_handler;
 	}
 }

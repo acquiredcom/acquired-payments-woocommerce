@@ -27,7 +27,7 @@ trait TokenServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_token_service() : void {
+	protected function mock_token_service(): void {
 		$this->token_service = Mockery::mock(
 			TokenService::class,
 			[
@@ -41,7 +41,7 @@ trait TokenServiceMock {
 	 *
 	 * @return MockInterface&TokenService
 	 */
-	public function get_token_service() : MockInterface {
+	public function get_token_service(): MockInterface {
 		return $this->token_service;
 	}
 }

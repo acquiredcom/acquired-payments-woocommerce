@@ -61,7 +61,7 @@ abstract class TestCase extends PHPUnitTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 		Monkey\setUp();
 
@@ -90,7 +90,7 @@ abstract class TestCase extends PHPUnitTestCase {
 	 *
 	 * @return void
 	 */
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		Monkey\tearDown();
 		parent::tearDown();
 	}

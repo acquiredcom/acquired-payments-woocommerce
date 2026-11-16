@@ -28,7 +28,7 @@ trait LoggerServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_logger_service() : void {
+	protected function mock_logger_service(): void {
 		$this->logger_service = Mockery::mock(
 			LoggerService::class,
 			[
@@ -43,7 +43,7 @@ trait LoggerServiceMock {
 	 *
 	 * @return MockInterface&LoggerService
 	 */
-	public function get_logger_service() : MockInterface {
+	public function get_logger_service(): MockInterface {
 		return $this->logger_service;
 	}
 }

@@ -49,10 +49,10 @@ class PaymentMethodTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function mock_payment_gateway() : void {
+	protected function mock_payment_gateway(): void {
 		$this->payment_gateway = Mockery::mock( PaymentGateway::class );
 
-		// Set up basic properties that PaymentMethod needs
+		// Set up basic properties that PaymentMethod needs.
 		$this->payment_gateway->id          = $this->config['plugin_id'];
 		$this->payment_gateway->title       = 'Acquired.com';
 		$this->payment_gateway->description = 'Securely accept Cards, Apple Pay & Google Pay on your store using Acquired.com.';
@@ -64,7 +64,7 @@ class PaymentMethodTest extends TestCase {
 	 *
 	 * @return MockInterface&PaymentGateway
 	 */
-	public function get_payment_gateway() : MockInterface {
+	public function get_payment_gateway(): MockInterface {
 		return $this->payment_gateway;
 	}
 
@@ -73,7 +73,7 @@ class PaymentMethodTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_payment_gateway();
@@ -95,7 +95,7 @@ class PaymentMethodTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentMethod::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_payment_gateway(), $this->get_private_property_value( 'gateway' ) );
 		$this->assertSame( $this->get_assets_service(), $this->get_private_property_value( 'assets_service' ) );
 		$this->assertSame( $this->get_settings_service(), $this->get_private_property_value( 'settings_service' ) );
@@ -107,6 +107,7 @@ class PaymentMethodTest extends TestCase {
 	 * Test initialize method.
 	 *
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentMethod::initialize
+	 * @return void
 	 */
 	public function test_initialize_sets_settings(): void {
 		// Mock SettingsService.
@@ -126,7 +127,7 @@ class PaymentMethodTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentMethod::is_active
 	 * @return void
 	 */
-	public function test_is_active_when_available() : void {
+	public function test_is_active_when_available(): void {
 		// Mock PaymentGateway.
 		$this->get_payment_gateway()
 			->shouldReceive( 'is_available' )
@@ -143,7 +144,7 @@ class PaymentMethodTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentMethod::is_active
 	 * @return void
 	 */
-	public function test_is_active_when_unavailable() : void {
+	public function test_is_active_when_unavailable(): void {
 		// Mock PaymentGateway.
 		$this->get_payment_gateway()
 			->shouldReceive( 'is_available' )
@@ -160,7 +161,7 @@ class PaymentMethodTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentMethod::get_payment_method_script_handles
 	 * @return void
 	 */
-	public function test_get_payment_method_script_handles() : void {
+	public function test_get_payment_method_script_handles(): void {
 		// Mock AssetsService.
 		$this->get_assets_service()
 			->shouldReceive( 'get_asset_uri' )
@@ -189,7 +190,7 @@ class PaymentMethodTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\WooCommerce\PaymentMethod::get_payment_method_data
 	 * @return void
 	 */
-	public function test_get_payment_method_data() : void {
+	public function test_get_payment_method_data(): void {
 		// Expected gateway data from mock_payment_gateway().
 		$expected = [
 			'title'       => 'Acquired.com',

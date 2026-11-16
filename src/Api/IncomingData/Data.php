@@ -70,7 +70,7 @@ abstract class Data {
 	 * @param string $type
 	 * @return void
 	 */
-	protected function set_type( string $type ) : void {
+	protected function set_type( string $type ): void {
 		$this->type = $type;
 	}
 
@@ -82,7 +82,7 @@ abstract class Data {
 	 * @param string $order_id
 	 * @return void
 	 */
-	protected function set_transaction_data( string $transaction_id, string $transaction_status, string $order_id ) : void {
+	protected function set_transaction_data( string $transaction_id, string $transaction_status, string $order_id ): void {
 		$this->transaction_id     = $transaction_id;
 		$this->transaction_status = $transaction_status;
 		$this->order_id           = $order_id;
@@ -94,7 +94,7 @@ abstract class Data {
 	 * @param int $timestamp
 	 * @return void
 	 */
-	protected function set_timestamp( int $timestamp ) : void {
+	protected function set_timestamp( int $timestamp ): void {
 		$this->timestamp = $timestamp;
 	}
 
@@ -104,14 +104,17 @@ abstract class Data {
 	 * @param array|stdClass $incoming_data
 	 * @return void
 	 */
-	protected function set_incoming_data( array|stdClass $incoming_data ) : void {
+	protected function set_incoming_data( array|stdClass $incoming_data ): void {
 		$this->incoming_data = $incoming_data;
 	}
 
 	/**
 	 * Set card ID.
+	 *
+	 * @param string $card_id
+	 * @return void
 	 */
-	public function set_card_id( string $card_id ) : void {
+	public function set_card_id( string $card_id ): void {
 		$this->card_id = $card_id;
 	}
 
@@ -120,7 +123,7 @@ abstract class Data {
 	 *
 	 * @return string
 	 */
-	public function get_type() : string {
+	public function get_type(): string {
 		return $this->type;
 	}
 
@@ -129,7 +132,7 @@ abstract class Data {
 	 *
 	 * @return string
 	 */
-	public function get_transaction_id() : string {
+	public function get_transaction_id(): string {
 		return $this->transaction_id;
 	}
 
@@ -138,7 +141,7 @@ abstract class Data {
 	 *
 	 * @return string
 	 */
-	public function get_transaction_status() : string {
+	public function get_transaction_status(): string {
 		return $this->transaction_status;
 	}
 
@@ -147,7 +150,7 @@ abstract class Data {
 	 *
 	 * @return string
 	 */
-	public function get_order_id() : string {
+	public function get_order_id(): string {
 		return $this->order_id;
 	}
 
@@ -156,7 +159,7 @@ abstract class Data {
 	 *
 	 * @return int
 	 */
-	public function get_timestamp() : int {
+	public function get_timestamp(): int {
 		return $this->timestamp;
 	}
 
@@ -165,7 +168,7 @@ abstract class Data {
 	 *
 	 * @return array|stdClass
 	 */
-	public function get_incoming_data() : array|stdClass {
+	public function get_incoming_data(): array|stdClass {
 		return $this->incoming_data;
 	}
 
@@ -174,7 +177,7 @@ abstract class Data {
 	 *
 	 * @return string
 	 */
-	public function get_card_id() : string {
+	public function get_card_id(): string {
 		return $this->card_id;
 	}
 
@@ -183,7 +186,7 @@ abstract class Data {
 	 *
 	 * @return array
 	 */
-	public function get_log_data() : array {
+	public function get_log_data(): array {
 		return [ sprintf( 'incoming-%s-data', $this->get_type() ) => $this->get_incoming_data() ];
 	}
 }

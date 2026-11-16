@@ -20,7 +20,7 @@ class TokenFactory {
 	 *
 	 * @return WC_Payment_Token_CC WooCommerce payment token instance.
 	 */
-	public function get_wc_payment_token() : WC_Payment_Token_CC {
+	public function get_wc_payment_token(): WC_Payment_Token_CC {
 		return new WC_Payment_Token_CC();
 	}
 }

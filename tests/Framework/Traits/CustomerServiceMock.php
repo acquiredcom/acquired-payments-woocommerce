@@ -30,7 +30,7 @@ trait CustomerServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_customer_service() : void {
+	protected function mock_customer_service(): void {
 		$this->customer_service = Mockery::mock(
 			CustomerService::class,
 			[
@@ -46,7 +46,7 @@ trait CustomerServiceMock {
 	 *
 	 * @return MockInterface&CustomerService
 	 */
-	public function get_customer_service() : MockInterface {
+	public function get_customer_service(): MockInterface {
 		return $this->customer_service;
 	}
 }

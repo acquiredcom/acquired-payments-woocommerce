@@ -61,7 +61,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @param string $status
 	 * @return stdClass
 	 */
-	private function get_test_card_data( string $status ) : stdClass {
+	private function get_test_card_data( string $status ): stdClass {
 		$cards = [
 			'valid'   => (object) [
 				'scheme'       => 'visa',
@@ -86,7 +86,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @param bool $setting
 	 * @return void
 	 */
-	private function mock_tokenization_setting( bool $setting ) : void {
+	private function mock_tokenization_setting( bool $setting ): void {
 		$this->get_settings_service()
 			->shouldReceive( 'is_enabled' )
 			->once()
@@ -99,7 +99,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		// Clear $_POST before each test.
@@ -133,7 +133,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		// Clear $_POST after each test.
 		$_POST = [];
 
@@ -146,7 +146,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_api_client(), $this->get_private_property_value( 'api_client' ) );
 		$this->assertSame( $this->get_customer_service(), $this->get_private_property_value( 'customer_service' ) );
 		$this->assertSame( $this->get_logger_service(), $this->get_private_property_value( 'logger_service' ) );
@@ -163,7 +163,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::is_transaction_success
 	 * @return void
 	 */
-	public function test_is_transaction_success() : void {
+	public function test_is_transaction_success(): void {
 		$this->assertTrue( $this->service->is_transaction_success( 'success' ) );
 		$this->assertTrue( $this->service->is_transaction_success( 'settled' ) );
 		$this->assertTrue( $this->service->is_transaction_success( 'executed' ) );
@@ -176,7 +176,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_status_key
 	 * @return void
 	 */
-	public function test_get_status_key_returns_correct_key() : void {
+	public function test_get_status_key_returns_correct_key(): void {
 		$this->assertEquals( 'acfw_payment_method_status', $this->service->get_status_key() );
 	}
 
@@ -186,7 +186,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_scheduled_action_hook
 	 * @return void
 	 */
-	public function test_get_scheduled_action_hook_returns_correct_hook() : void {
+	public function test_get_scheduled_action_hook_returns_correct_hook(): void {
 		$this->assertEquals( 'acfw_scheduled_save_payment_method', $this->service->get_scheduled_action_hook() );
 	}
 
@@ -196,7 +196,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::set_token_card_data
 	 * @return void
 	 */
-	public function test_set_token_card_data() : void {
+	public function test_set_token_card_data(): void {
 		// Mock WC_Payment_Token_CC.
 
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
@@ -239,7 +239,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::create_token
 	 * @return void
 	 */
-	public function test_create_token_success() : void {
+	public function test_create_token_success(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'set_token' )->once()->with( 'token_123' );
@@ -268,7 +268,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::create_token
 	 * @return void
 	 */
-	public function test_create_token_success_with_order() : void {
+	public function test_create_token_success_with_order(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'set_token' )->once()->with( 'token_123' );
@@ -308,7 +308,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::create_token
 	 * @return void
 	 */
-	public function test_create_token_throws_exception_on_validation_failure() : void {
+	public function test_create_token_throws_exception_on_validation_failure(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'set_token' )->once()->with( 'token_123' );
@@ -339,7 +339,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::update_token
 	 * @return void
 	 */
-	public function test_update_token_success() : void {
+	public function test_update_token_success(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'set_card_type' )->once()->with( 'visa' );
@@ -359,7 +359,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::update_token
 	 * @return void
 	 */
-	public function test_update_token_throws_exception_on_validation_failure() : void {
+	public function test_update_token_throws_exception_on_validation_failure(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'set_card_type' )->once()->with( 'visa' );
@@ -381,7 +381,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_card
 	 * @return void
 	 */
-	public function test_get_card_success() : void {
+	public function test_get_card_success(): void {
 		// Mock Card.
 		$card = Mockery::mock( Card::class );
 		$card->shouldReceive( 'is_active' )->once()->andReturn( true );
@@ -403,7 +403,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_card
 	 * @return void
 	 */
-	public function test_get_card_throws_exception_when_request_fails() : void {
+	public function test_get_card_throws_exception_when_request_fails(): void {
 		// Mock Card.
 		$card = Mockery::mock( Card::class );
 		$card->shouldReceive( 'is_active' )->once()->andReturn( false );
@@ -428,7 +428,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_card
 	 * @return void
 	 */
-	public function test_get_card_throws_exception_when_card_not_active() : void {
+	public function test_get_card_throws_exception_when_card_not_active(): void {
 		// Mock Card.
 		$card = Mockery::mock( Card::class );
 		$card->shouldReceive( 'is_active' )->once()->andReturn( false );
@@ -453,7 +453,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_card_id_from_transaction
 	 * @return void
 	 */
-	public function test_get_card_id_from_transaction_success() : void {
+	public function test_get_card_id_from_transaction_success(): void {
 		// Mock Transaction.
 		$transaction = Mockery::mock( Transaction::class );
 		$transaction->shouldReceive( 'request_is_error' )->once()->andReturn( false );
@@ -476,7 +476,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_card_id_from_transaction
 	 * @return void
 	 */
-	public function test_get_card_id_from_transaction_throws_exception_when_request_fails() : void {
+	public function test_get_card_id_from_transaction_throws_exception_when_request_fails(): void {
 		// Mock Transaction.
 		$transaction = Mockery::mock( Transaction::class );
 		$transaction->shouldReceive( 'request_is_error' )->once()->andReturn( true );
@@ -500,7 +500,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_card_id_from_transaction
 	 * @return void
 	 */
-	public function test_get_card_id_from_transaction_throws_exception_when_card_id_not_found() : void {
+	public function test_get_card_id_from_transaction_throws_exception_when_card_id_not_found(): void {
 		// Mock Transaction.
 		$transaction = Mockery::mock( Transaction::class );
 		$transaction->shouldReceive( 'request_is_error' )->once()->andReturn( false );
@@ -525,7 +525,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::deactivate_card
 	 * @return void
 	 */
-	public function test_deactivate_card_success() : void {
+	public function test_deactivate_card_success(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'get_token' )->once()->andReturn( 'token_123' );
@@ -558,7 +558,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::deactivate_card
 	 * @return void
 	 */
-	public function test_deactivate_card_failure() : void {
+	public function test_deactivate_card_failure(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'get_token' )->once()->andReturn( 'token_123' );
@@ -591,7 +591,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::process_payment_method
 	 * @return void
 	 */
-	public function test_process_payment_method_success() : void {
+	public function test_process_payment_method_success(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -622,7 +622,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::process_payment_method
 	 * @return void
 	 */
-	public function test_process_payment_method_throws_exception_when_tokenization_disabled() : void {
+	public function test_process_payment_method_throws_exception_when_tokenization_disabled(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( false );
 
@@ -653,7 +653,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::process_payment_method
 	 * @return void
 	 */
-	public function test_process_payment_method_throws_exception_when_process_fails() : void {
+	public function test_process_payment_method_throws_exception_when_process_fails(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -686,7 +686,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::schedule_save_payment_method
 	 * @return void
 	 */
-	public function test_schedule_save_payment_method_success() : void {
+	public function test_schedule_save_payment_method_success(): void {
 		// Mock WebhookData.
 		$webhook = Mockery::mock( WebhookData::class );
 		$webhook->shouldReceive( 'get_order_id' )->once()->andReturn( '456-add_payment_method_key' );
@@ -736,7 +736,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::schedule_save_payment_method
 	 * @return void
 	 */
-	public function test_schedule_save_payment_method_throws_exception_when_fails() : void {
+	public function test_schedule_save_payment_method_throws_exception_when_fails(): void {
 		// Mock WebhookData.
 		$webhook = Mockery::mock( WebhookData::class );
 		$webhook->shouldReceive( 'get_order_id' )->once()->andReturn( 'invalid_order_id' );
@@ -764,7 +764,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::save_payment_method_from_customer
 	 * @return void
 	 */
-	public function test_save_payment_method_from_customer_success() : void {
+	public function test_save_payment_method_from_customer_success(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -845,7 +845,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::save_payment_method_from_order
 	 * @return void
 	 */
-	public function test_save_payment_method_from_order_success() : void {
+	public function test_save_payment_method_from_order_success(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -925,7 +925,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::save_payment_method_from_order
 	 * @return void
 	 */
-	public function test_save_payment_method_from_order_throws_exception_when_order_not_found() : void {
+	public function test_save_payment_method_from_order_throws_exception_when_order_not_found(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -952,7 +952,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::update_payment_method
 	 * @return void
 	 */
-	public function test_update_payment_method_success() : void {
+	public function test_update_payment_method_success(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -1030,7 +1030,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::update_payment_method
 	 * @return void
 	 */
-	public function test_update_payment_method_throws_exception_when_token_not_found() : void {
+	public function test_update_payment_method_throws_exception_when_token_not_found(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -1109,7 +1109,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::process_scheduled_save_payment_method
 	 * @return void
 	 */
-	public function test_process_scheduled_save_payment_method_success() : void {
+	public function test_process_scheduled_save_payment_method_success(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
@@ -1198,8 +1198,8 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::process_scheduled_save_payment_method
 	 * @return void
 	 */
-	public function test_process_scheduled_save_payment_method_success_token_exists() : void {
-		// Mock WebhookData
+	public function test_process_scheduled_save_payment_method_success_token_exists(): void {
+		// Mock WebhookData.
 		$webhook = Mockery::mock( WebhookData::class );
 		$webhook->shouldReceive( 'get_order_id' )->once()->andReturn( '456-add_payment_method_key' );
 		$webhook->shouldReceive( 'get_card_id' )->once()->andReturn( 'token_123' );
@@ -1250,7 +1250,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::process_scheduled_save_payment_method
 	 * @return void
 	 */
-	public function test_process_scheduled_save_payment_method_throws_exception_when_fails() : void {
+	public function test_process_scheduled_save_payment_method_throws_exception_when_fails(): void {
 		// Mock WebhookData.
 		$webhook = Mockery::mock( WebhookData::class );
 		$webhook->shouldReceive( 'get_order_id' )->once()->andReturn( 'invalid_order_id' );
@@ -1278,7 +1278,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_method_for_checkout
 	 * @return void
 	 */
-	public function test_get_payment_method_for_checkout_success() : void {
+	public function test_get_payment_method_for_checkout_success(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_user_id' )->twice()->andReturn( 456 );
@@ -1327,7 +1327,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_method_for_checkout
 	 * @return void
 	 */
-	public function test_get_payment_method_for_checkout_returns_null_for_invalid_token() : void {
+	public function test_get_payment_method_for_checkout_returns_null_for_invalid_token(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_user_id' )->twice()->andReturn( 456 );
@@ -1363,7 +1363,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_method_for_checkout
 	 * @return void
 	 */
-	public function test_get_payment_method_for_checkout_returns_null_for_exception() : void {
+	public function test_get_payment_method_for_checkout_returns_null_for_exception(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_user_id' )->twice()->andReturn( 456 );
@@ -1407,7 +1407,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_method_for_checkout
 	 * @return void
 	 */
-	public function test_get_payment_method_for_checkout_returns_null_for_guest() : void {
+	public function test_get_payment_method_for_checkout_returns_null_for_guest(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_user_id' )->once()->andReturn( 0 );
@@ -1422,7 +1422,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_method_for_checkout
 	 * @return void
 	 */
-	public function test_get_payment_method_for_checkout_returns_null_without_token() : void {
+	public function test_get_payment_method_for_checkout_returns_null_without_token(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_user_id' )->once()->andReturn( 123 );
@@ -1437,7 +1437,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_link_body
 	 * @return void
 	 */
-	public function test_get_payment_link_body_with_customer_data() : void {
+	public function test_get_payment_link_body_with_customer_data(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->twice()->andReturn( 456 );
@@ -1449,7 +1449,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->andReturn(
 				[
 					'transaction' => [
-						'currency' => 'gbp',
+						'currency' => 'GBP',
 						'custom1'  => '2.0.0',
 					],
 					'payment'     => [
@@ -1492,7 +1492,7 @@ class PaymentMethodServiceTest extends TestCase {
 		// Set expected response.
 		$expected = [
 			'transaction'     => [
-				'currency' => 'gbp',
+				'currency' => 'GBP',
 				'custom1'  => '2.0.0',
 				'order_id' => '456-add_payment_method_random123abcdef',
 				'amount'   => 0,
@@ -1520,7 +1520,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_link_body
 	 * @return void
 	 */
-	public function test_get_payment_link_body_without_customer_data() : void {
+	public function test_get_payment_link_body_without_customer_data(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->twice()->andReturn( 456 );
@@ -1533,7 +1533,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->andReturn(
 				[
 					'transaction' => [
-						'currency' => 'gbp',
+						'currency' => 'GBP',
 						'custom1'  => '2.0.0',
 					],
 					'payment'     => [
@@ -1577,7 +1577,7 @@ class PaymentMethodServiceTest extends TestCase {
 		// Set expected response.
 		$expected = [
 			'transaction'     => [
-				'currency' => 'gbp',
+				'currency' => 'GBP',
 				'custom1'  => '2.0.0',
 				'order_id' => '456-add_payment_method_random123abcdef',
 				'amount'   => 0,
@@ -1604,7 +1604,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_link
 	 * @return void
 	 */
-	public function test_get_payment_link_success() : void {
+	public function test_get_payment_link_success(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->twice()->andReturn( 456 );
@@ -1661,7 +1661,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->andReturn(
 				[
 					'transaction' => [
-						'currency' => 'gbp',
+						'currency' => 'GBP',
 						'custom1'  => '2.0.0',
 					],
 					'payment'     => [
@@ -1681,7 +1681,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->with(
 				[
 					'transaction'     => [
-						'currency' => 'gbp',
+						'currency' => 'GBP',
 						'custom1'  => '2.0.0',
 						'order_id' => '456-add_payment_method_random123abcdef',
 						'amount'   => 0,
@@ -1719,7 +1719,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_link
 	 * @return void
 	 */
-	public function test_get_payment_link_throws_exception_when_user_id_not_set() : void {
+	public function test_get_payment_link_throws_exception_when_user_id_not_set(): void {
 		// Mock LoggerService.
 		$this->get_logger_service()
 			->shouldReceive( 'log' )
@@ -1738,7 +1738,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_link
 	 * @return void
 	 */
-	public function test_get_payment_link_throws_exception_when_customer_not_found() : void {
+	public function test_get_payment_link_throws_exception_when_customer_not_found(): void {
 		// Mock CustomerFactory.
 		$this->get_customer_factory()
 			->shouldReceive( 'get_wc_customer' )
@@ -1764,7 +1764,7 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_payment_link
 	 * @return void
 	 */
-	public function test_get_payment_link_throws_exception_when_request_fails() : void {
+	public function test_get_payment_link_throws_exception_when_request_fails(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->twice()->andReturn( 456 );
@@ -1815,7 +1815,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->andReturn(
 				[
 					'transaction' => [
-						'currency' => 'gbp',
+						'currency' => 'GBP',
 						'custom1'  => '2.0.0',
 					],
 					'payment'     => [
@@ -1835,7 +1835,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->with(
 				[
 					'transaction'     => [
-						'currency' => 'gbp',
+						'currency' => 'GBP',
 						'custom1'  => '2.0.0',
 						'order_id' => '456-add_payment_method_random123abcdef',
 						'amount'   => 0,
@@ -1875,12 +1875,13 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::confirm_payment_method
 	 * @return void
 	 */
-	public function test_confirm_payment_method_success() : void {
+	public function test_confirm_payment_method_success(): void {
 		// Mock tokenization setting.
 		$this->mock_tokenization_setting( true );
 
 		// Mock RedirectData.
 		$redirect_data = Mockery::mock( RedirectData::class );
+		$redirect_data->shouldReceive( 'is_hash_valid' )->once()->andReturn( true );
 		$redirect_data->shouldReceive( 'get_order_id' )->twice()->andReturn( '456-add_payment_method_key' );
 		$redirect_data->shouldReceive( 'get_transaction_id' )->once()->andReturn( 'transaction_123' );
 		$redirect_data->shouldReceive( 'set_card_id' )->once()->with( 'token_123' );
@@ -1930,7 +1931,7 @@ class PaymentMethodServiceTest extends TestCase {
 			->with( 'token_123' )
 			->andReturn( $card );
 
-		// Mock WC_Payment_Token_CC
+		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'WC_Payment_Token_CC' );
 		$token->shouldReceive( 'set_token' )->once()->with( 'token_123' );
 		$token->shouldReceive( 'set_gateway_id' )->once();
@@ -1966,7 +1967,7 @@ class PaymentMethodServiceTest extends TestCase {
 				}
 			);
 
-		// Test the method
+		// Test the method.
 		$this->assertInstanceOf( 'WC_Customer', $this->service->confirm_payment_method( $redirect_data ) );
 	}
 
@@ -1976,19 +1977,20 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::confirm_payment_method
 	 * @return void
 	 */
-	public function test_confirm_payment_method_token_exists() : void {
+	public function test_confirm_payment_method_token_exists(): void {
 		// Mock RedirectData.
 		$redirect_data = Mockery::mock( RedirectData::class );
+		$redirect_data->shouldReceive( 'is_hash_valid' )->once()->andReturn( true );
 		$redirect_data->shouldReceive( 'get_order_id' )->once()->andReturn( '456-add_payment_method_key' );
 		$redirect_data->shouldReceive( 'get_transaction_id' )->once()->andReturn( 'transaction_123' );
 		$redirect_data->shouldReceive( 'set_card_id' )->once()->with( 'token_123' );
 		$redirect_data->shouldReceive( 'get_card_id' )->once()->andReturn( 'token_123' );
 
-		// Mock WC_Customer
+		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->once()->andReturn( 456 );
 
-		// Mock CustomerFactory
+		// Mock CustomerFactory.
 		$this->get_customer_factory()
 			->shouldReceive( 'get_wc_customer' )
 			->once()
@@ -2024,9 +2026,10 @@ class PaymentMethodServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::confirm_payment_method
 	 * @return void
 	 */
-	public function test_confirm_payment_method_failure() : void {
+	public function test_confirm_payment_method_failure(): void {
 		// Mock RedirectData.
 		$redirect_data = Mockery::mock( RedirectData::class );
+		$redirect_data->shouldReceive( 'is_hash_valid' )->once()->andReturn( true );
 		$redirect_data->shouldReceive( 'get_order_id' )->once()->andReturn( 'invalid_order_id' );
 		$redirect_data->shouldReceive( 'get_log_data' )->once()->andReturn( [] );
 
@@ -2043,12 +2046,52 @@ class PaymentMethodServiceTest extends TestCase {
 	}
 
 	/**
+	 * Test confirm_payment_method rejects redirect data with an unverified hash.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::confirm_payment_method
+	 * @return void
+	 */
+	public function test_confirm_payment_method_unverified_hash(): void {
+		// Mock RedirectData.
+		$redirect_data = Mockery::mock( RedirectData::class );
+		$redirect_data->shouldReceive( 'is_hash_valid' )->once()->andReturn( false );
+		$redirect_data->shouldReceive( 'get_hash_status' )->once()->andReturn( 'invalid' );
+		$redirect_data->shouldReceive( 'get_log_data' )->never();
+		$redirect_data->shouldReceive( 'get_order_id' )->never();
+
+		// Mock CustomerFactory.
+		$this->get_customer_factory()
+			->shouldReceive( 'get_wc_customer' )
+			->never();
+
+		// Mock ApiClient.
+		$this->get_api_client()
+			->shouldReceive( 'get_transaction' )
+			->never();
+
+		// Mock TokenService.
+		$this->get_token_service()
+			->shouldReceive( 'payment_token_exists' )
+			->never();
+
+		// Mock LoggerService.
+		$this->get_logger_service()
+			->shouldReceive( 'log' )
+			->never();
+
+		// Test the method.
+		$this->expectException( Exception::class );
+		$this->expectExceptionMessage( 'Redirect data hash is not valid. Hash status: invalid.' );
+		$this->service->confirm_payment_method( $redirect_data );
+	}
+
+	/**
 	 * Test get_notice_data.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Services\PaymentMethodService::get_notice_data
 	 * @return void
 	 */
-	public function test_get_notice_data() : void {
+	public function test_get_notice_data(): void {
 		// Test success message.
 		$expected = [
 			'message' => 'Payment method successfully added.',

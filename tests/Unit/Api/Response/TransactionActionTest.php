@@ -23,7 +23,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -54,7 +54,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = TransactionAction::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'TransactionAction' );
 
 		// Test if we get a TransactionAction instance.
@@ -71,7 +71,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_transaction_id() : void {
+	public function test_validate_data_missing_transaction_id(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->transaction_id );
 
@@ -93,7 +93,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_status() : void {
+	public function test_validate_data_missing_status(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->status );
 
@@ -117,7 +117,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::get_decline_reason
 	 * @return void
 	 */
-	public function test_transaction_data_success() : void {
+	public function test_transaction_data_success(): void {
 		$result     = TransactionAction::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'TransactionAction' );
 		$reflection = new ReflectionHelper( $result );
 
@@ -134,7 +134,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::get_decline_reason
 	 * @return void
 	 */
-	public function test_transaction_data_pending() : void {
+	public function test_transaction_data_pending(): void {
 		$result     = TransactionAction::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'pending' ) ), [], 'TransactionAction' );
 		$reflection = new ReflectionHelper( $result );
 
@@ -151,7 +151,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::get_decline_reason
 	 * @return void
 	 */
-	public function test_transaction_data_declined() : void {
+	public function test_transaction_data_declined(): void {
 		$result     = TransactionAction::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'declined' ) ), [], 'TransactionAction' );
 		$reflection = new ReflectionHelper( $result );
 
@@ -168,7 +168,7 @@ class TransactionActionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionAction::get_decline_reason
 	 * @return void
 	 */
-	public function test_transaction_data_blocked() : void {
+	public function test_transaction_data_blocked(): void {
 		$result     = TransactionAction::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'blocked' ) ), [], 'TransactionAction' );
 		$reflection = new ReflectionHelper( $result );
 

@@ -1,57 +1,60 @@
 === Acquired.com for WooCommerce ===
 Contributors: acquired
 Tags: acquired, acquired payment, payments, gateway, payment gateway, credit card, card
-Requires at least: 6.5
-Tested up to: 6.8.3
+Requires at least: 7.0
+Tested up to: 7.1.4
 Requires PHP: 8.1
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: MIT License
 License URI: https://opensource.org/license/mit
 
-Accept Cards, Apple Pay, Google Pay, and Pay by Bank with Acquired.com — a secure, high-performance payment gateway for WooCommerce.
+Accept Cards, Apple Pay, and Google Pay with Acquired — a secure, high-performance payment gateway for WooCommerce.
 
 == Description ==
 
-Take your checkout experience to the next level with Acquired.com for WooCommerce — a modern, high-performance payments extension built for growing businesses.
+Take your checkout experience to the next level with Acquired for WooCommerce — a modern, high-performance payments extension built for growing businesses.
 
-Accept Cards, Apple Pay, Google Pay, and Pay by Bank through Acquired.com’s secure and scalable platform. Designed for flexibility and reliability, this plugin helps merchants offer more ways to pay while keeping setup and compliance simple.
+Accept Cards, Apple Pay and Google Pay through Acquired’s secure and scalable platform. Designed for flexibility and reliability, this plugin helps merchants offer ways to pay while keeping setup and compliance simple.
 
 == Key Features ==
-- **Card Payments** - Securely accept Visa, Mastercard, and American Express with EMV 3-D Secure (v2.2), providing enhanced security and frictionless authentication.
-- **Apple Pay & Google Pay** - Enable Apple Pay and Google Pay through Acquired.com’s Hosted Checkout, giving customers a simple, one-tap payment experience on supported devices — no additional setup required.
-- **Smart Card Management** - Keep your customers’ card details up to date — even when cards expire or are replaced. Acquired.com’s Network Tokenization and Account Updater services ensure stored cards remain valid, allowing repeat payments to continue seamlessly without customer action.
-- **Pay by Bank (Open Banking)** - Let customers pay directly from their bank account in real time — no cards required. Pay by Bank offers instant authorisation, lower fees, and reduced fraud risk, making it an ideal alternative payment option.
-- **Customisable Checkout** - Match your brand with a fully configurable checkout experience. Adjust styling, layout, and colours to blend seamlessly into your store.
-- **Payment Management** - Manage and update payment statuses directly within WooCommerce — view transaction history and process refunds from your store dashboard.
-- **PCI DSS Simplified** - Stay fully compliant with minimal effort using Acquired.com’s SAQ-A hosted solution, keeping sensitive data off your servers.
+
+- **Card Payments** – Securely accept Visa, Mastercard, and American Express with EMV 3-D Secure, providing enhanced security and frictionless authentication.
+- **Apple Pay & Google Pay** – Enable Apple Pay and Google Pay through Acquired’s Hosted Checkout, giving customers a simple, one-tap payment experience on supported devices — no additional setup required.
+- **Smart Card Management** – Keep your customers’ card details up to date — even when cards expire or are replaced. Acquired’s Network Tokenization and Account Updater services ensure stored cards remain valid, allowing repeat payments to continue seamlessly without customer action.
+- **Customisable Checkout** – Match your brand with a fully configurable checkout experience. Adjust styling, layout, and colours to blend seamlessly into your store.
+- **Payment Management** – Manage and update payment statuses directly within WooCommerce — view transaction history and process refunds from your store dashboard.
+- **PCI DSS Simplified** – Stay fully compliant with minimal effort using Acquired’s SAQ-A hosted solution, keeping sensitive data off your servers.
 
 == Why choose Acquired.com? ==
-Acquired.com powers payments for leading UK eCommerce and Financial Services businesses.
 
-Our platform supports multiple payment methods, real-time bank payments, and secure card processing, all through one unified system.
+Acquired powers payments for leading UK eCommerce and Financial Services businesses.
+Our platform supports multiple payment methods and secure card processing, all through one unified system.
 
-With a UK-based support team and enterprise-grade infrastructure, Acquired.com is built to help merchants grow confidently and securely.
+With a UK-based support team and enterprise-grade infrastructure, Acquired is built to help merchants grow confidently and securely.
+
 
 == Installation ==
+
 1. [Contact us](https://www.acquired.com/contact/) to request a test account.
 2. In your WordPress dashboard, go to Plugins → Add New.
-3. Search for Acquired.com and click Install Now.
+3. Search for Acquired and click Install Now.
 4. Activate the plugin and navigate to WooCommerce → Settings → Payments.
-5. Enter your Acquired.com credentials and enable your preferred payment methods — Cards, Apple Pay, Google Pay, or Pay by Bank.
+5. Enter your Acquired credentials and enable your preferred payment methods — Cards, Apple Pay, or Google Pay.
 
 You’re now ready to start accepting payments with Acquired.com.
 
 For detailed setup instructions, visit our [WooCommerce integration guide](https://docs.acquired.com/docs/woocommerce-v2).
 
 == Frequently Asked Questions ==
-= Do I need an Acquired.com account to use this plugin? =
-Yes. You’ll need an Acquired.com merchant account to process payments. Contact us to get started.
 
-= Is Acquired.com PCI DSS compliant? =
-Yes. Acquired.com is PCI DSS Level 1 compliant. Using this plugin via Hosted Checkout keeps you within SAQ-A scope.
+= Do I need an Acquired account to use this plugin? =
+Yes. You’ll need an Acquired merchant account to process payments. Contact us to get started.
+
+= Is Acquired PCI DSS compliant? =
+Yes. Acquired is PCI DSS Level 1 compliant. Using this plugin via Hosted Checkout keeps you within SAQ-A scope.
 
 = Can I use Apple Pay or Google Pay with this plugin? =
-Yes. Both Apple Pay and Google Pay are available via the Hosted Checkout integration.
+Yes. Both Apple Pay and Google Pay are available via the Hosted Checkout integration with no additional integration.
 
 = Does this plugin support recurring payments or WooCommerce Subscriptions? =
 Not at this time. The plugin currently supports one-off and stored card payments only.
@@ -60,6 +63,19 @@ Not at this time. The plugin currently supports one-off and stored card payments
 Our UK-based support team is available to help you. [Contact support](https://www.acquired.com/contact/) or visit our [Developer Documentation](https://docs.acquired.com/docs/woocommerce-v2).
 
 == Changelog ==
+
+= 2.2.0 - YYYY/MM/DD =
+* Feature: Confirm order payments with the Acquired.com API when a redirect can't be verified with the signing key (missing, inactive or wrong key), instead of failing the order. An admin notice explains the signing key issue.
+* Tweak: Clearer notice for invalid API credentials, including the reminder to whitelist the server IP address in the Acquired Hub.
+* Tweak: Remove Pay by Bank from the default gateway description.
+* Tweak: Redact date of birth and IP address in debug logs.
+* Tweak: Require WordPress 7.0. Tested up to WordPress 7.1.4 and WooCommerce 11.3.0.
+* Fixed: Show signing key fields only for the selected environment.
+* Fixed: Send the currency to Acquired.com in uppercase.
+* Fixed: Unslash the webhook hash and admin screen request values.
+* Fixed: Extra space in the Acquired Hub links on the settings page.
+* Fixed: Typos and inconsistencies in notices and admin texts.
+* Dev: Add PHPStan, fix coding standards violations and update dependencies.
 
 = 2.1.0 - 2026/01/22 =
 * Feature: Update to support the release of signing keys and multiple APP IDs.

@@ -45,7 +45,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		// Clear $_GET before each test.
@@ -70,7 +70,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function tearDown() : void {
+	protected function tearDown(): void {
 		// Clear $_GET after each test.
 		$_GET = [];
 
@@ -83,7 +83,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_incoming_data_handler(), $this->get_private_property_value( 'incoming_data_handler' ) );
 		$this->assertSame( $this->get_logger_service(), $this->get_private_property_value( 'logger_service' ) );
 		$this->assertSame( $this->get_payment_method_service(), $this->get_private_property_value( 'payment_method_service' ) );
@@ -95,7 +95,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::init_hooks
 	 * @return void
 	 */
-	public function test_init_hooks() : void {
+	public function test_init_hooks(): void {
 		// Test template_redirect action.
 		Actions\expectAdded( 'template_redirect' )
 			->once()
@@ -144,7 +144,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::payment_token_deleted
 	 * @return void
 	 */
-	public function test_payment_token_deleted() : void {
+	public function test_payment_token_deleted(): void {
 		$token_id = 123;
 
 		// Mock WC_Payment_Token.
@@ -166,7 +166,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::add_notice
 	 * @return void
 	 */
-	public function test_add_notice_with_data() : void {
+	public function test_add_notice_with_data(): void {
 		// Mock is_add_payment_method_page to return true.
 		Functions\expect( 'is_add_payment_method_page' )
 			->once()
@@ -221,7 +221,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::add_notice
 	 * @return void
 	 */
-	public function test_add_notice_not_payment_page() : void {
+	public function test_add_notice_not_payment_page(): void {
 		// Mock is_add_payment_method_page to return false.
 		Functions\expect( 'is_add_payment_method_page' )
 			->once()
@@ -241,7 +241,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::add_notice
 	 * @return void
 	 */
-	public function test_add_notice_without_notice_data() : void {
+	public function test_add_notice_without_notice_data(): void {
 		// Mock is_add_payment_method_page to return true.
 		Functions\expect( 'is_add_payment_method_page' )
 			->once()
@@ -311,7 +311,7 @@ class PaymentMethodObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\PaymentMethodObserver::run_process_scheduled_save_payment_method
 	 * @return void
 	 */
-	public function test_run_process_scheduled_save_payment_method_failure() : void {
+	public function test_run_process_scheduled_save_payment_method_failure(): void {
 		// Set test data.
 		$webhook_data = json_encode( (object) [ 'invalid_data' ] );
 		$hash         = 'test_hash';

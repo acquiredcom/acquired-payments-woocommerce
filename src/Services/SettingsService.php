@@ -42,26 +42,20 @@ class SettingsService {
 	private string $api_credentials_validation_option = '';
 
 	/**
+	 * Signing key issue option key.
+	 *
+	 * @var string
+	 */
+	private string $signing_key_issue_option = '';
+
+	/**
 	 * Constructor.
 	 *
-	 * @param array{
-	 *     root_file: string,
-	 *     dir_path: string,
-	 *     dir_url: string,
-	 *     basename: string,
-	 *     version: string,
-	 *     php_version: string,
-	 *     wc_version: string,
-	 *     plugin_id: string,
-	 *     plugin_name: string,
-	 *     plugin_slug: string,
-	 *     lang_dir: string,
-	 *     log_dir_path: string,
-	 *     site_name: string
-	 * } $config
+	 * @param array<string, mixed> $config
 	 */
 	public function __construct( public array $config ) {
 		$this->api_credentials_validation_option = $this->config['plugin_id'] . '_api_credentials_valid';
+		$this->signing_key_issue_option          = $this->config['plugin_id'] . '_signing_key_issue';
 		$this->option_id                         = 'woocommerce_' . $this->config['plugin_id'] . '_settings';
 	}
 
@@ -71,7 +65,7 @@ class SettingsService {
 	 * @param bool $is_valid
 	 * @return void
 	 */
-	public function set_api_credentials_validation_status( bool $is_valid ) : void {
+	public function set_api_credentials_validation_status( bool $is_valid ): void {
 		update_option( $this->api_credentials_validation_option, $is_valid );
 	}
 
@@ -80,7 +74,7 @@ class SettingsService {
 	 *
 	 * @return bool
 	 */
-	public function are_api_credentials_valid() : bool {
+	public function are_api_credentials_valid(): bool {
 		return (bool) get_option( $this->api_credentials_validation_option, false );
 	}
 
@@ -89,7 +83,7 @@ class SettingsService {
 	 *
 	 * @return void
 	 */
-	private function load_options() : void {
+	private function load_options(): void {
 		$this->options = get_option( $this->option_id, [] );
 	}
 
@@ -98,7 +92,7 @@ class SettingsService {
 	 *
 	 * @return void
 	 */
-	public function reload_options() : void {
+	public function reload_options(): void {
 		$this->load_options();
 	}
 
@@ -107,7 +101,7 @@ class SettingsService {
 	 *
 	 * @return array
 	 */
-	public function get_options() : array {
+	public function get_options(): array {
 		if ( ! $this->options ) {
 			$this->load_options();
 		}
@@ -122,7 +116,7 @@ class SettingsService {
 	 * @param mixed $default_value
 	 * @return mixed
 	 */
-	public function get_option( string $option_key, mixed $default_value = false ) : mixed {
+	public function get_option( string $option_key, mixed $default_value = false ): mixed {
 		$options = $this->get_options();
 
 		return ! empty( $options[ $option_key ] ) ? $options[ $option_key ] : $default_value;
@@ -134,7 +128,7 @@ class SettingsService {
 	 * @param string $option_key
 	 * @return bool
 	 */
-	public function is_enabled( string $option_key ) : bool {
+	public function is_enabled( string $option_key ): bool {
 		return 'yes' === $this->get_option( $option_key );
 	}
 
@@ -144,7 +138,7 @@ class SettingsService {
 	 * @param string $environment
 	 * @return bool
 	 */
-	private function is_environment( string $environment ) : bool {
+	private function is_environment( string $environment ): bool {
 		return $this->get_option( 'environment' ) === $environment;
 	}
 
@@ -153,7 +147,7 @@ class SettingsService {
 	 *
 	 * @return bool
 	 */
-	public function is_environment_staging() : bool {
+	public function is_environment_staging(): bool {
 		return $this->is_environment( 'staging' );
 	}
 
@@ -162,7 +156,7 @@ class SettingsService {
 	 *
 	 * @return bool
 	 */
-	public function is_environment_production() : bool {
+	public function is_environment_production(): bool {
 		return $this->is_environment( 'production' );
 	}
 
@@ -172,7 +166,7 @@ class SettingsService {
 	 * @param string $subdomain
 	 * @return string
 	 */
-	private function get_acquired_url( string $subdomain ) : string {
+	private function get_acquired_url( string $subdomain ): string {
 		$domain = sprintf( '%s.%s/%s', $subdomain, $this->domain, 'v1' );
 
 		if ( ! $this->is_environment_production() ) {
@@ -187,7 +181,7 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_api_url() : string {
+	public function get_api_url(): string {
 		return $this->get_acquired_url( 'api' );
 	}
 
@@ -197,7 +191,7 @@ class SettingsService {
 	 * @param string $environment
 	 * @return string
 	 */
-	private function get_hub_url( string $environment ) : string {
+	private function get_hub_url( string $environment ): string {
 		return trailingslashit( 'https://' . sprintf( '%s.%s', 'staging' === $environment ? 'qahub' : 'hub', $this->domain ) );
 	}
 
@@ -206,17 +200,16 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_pay_url() : string {
+	public function get_pay_url(): string {
 		return $this->get_acquired_url( 'pay' );
 	}
 
 	/**
 	 * Get company ID for specific environment.
 	 *
-	 * @param string $environment
 	 * @return string
 	 */
-	public function get_company_id() : string {
+	public function get_company_id(): string {
 		return $this->get_option( 'company_id_' . ( $this->is_environment_production() ? 'production' : 'staging' ), '' );
 	}
 
@@ -227,9 +220,9 @@ class SettingsService {
 	 * @return array{
 	 *     app_id: string,
 	 *     app_key: string
-	 * }|array<empty>
+	 * }|array{}
 	 */
-	public function get_api_credentials_for_environment( string $environment ) : array {
+	public function get_api_credentials_for_environment( string $environment ): array {
 		$credentials = [
 			'app_id'  => $this->get_option( 'app_id_' . $environment ),
 			'app_key' => $this->get_option( 'app_key_' . $environment ),
@@ -247,7 +240,7 @@ class SettingsService {
 	 *
 	 * @return array
 	 */
-	public function get_api_credentials() : array {
+	public function get_api_credentials(): array {
 		return $this->get_api_credentials_for_environment( $this->is_environment_production() ? 'production' : 'staging' );
 	}
 
@@ -256,7 +249,7 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_app_key() : string {
+	public function get_app_key(): string {
 		$credentials = $this->get_api_credentials();
 
 		return $credentials['app_key'] ?? '';
@@ -268,7 +261,7 @@ class SettingsService {
 	 * @param string $environment
 	 * @return string
 	 */
-	public function get_signing_key_for_environment( string $environment ) : string {
+	public function get_signing_key_for_environment( string $environment ): string {
 		return $this->get_option( 'signing_key_' . $environment, '' );
 	}
 
@@ -277,8 +270,36 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_signing_key() : string {
+	public function get_signing_key(): string {
 		return $this->get_signing_key_for_environment( $this->is_environment_production() ? 'production' : 'staging' );
+	}
+
+	/**
+	 * Set signing key issue.
+	 *
+	 * @param string $issue
+	 * @return void
+	 */
+	public function set_signing_key_issue( string $issue ): void {
+		update_option( $this->signing_key_issue_option, $issue, false );
+	}
+
+	/**
+	 * Get signing key issue.
+	 *
+	 * @return string
+	 */
+	public function get_signing_key_issue(): string {
+		return (string) get_option( $this->signing_key_issue_option, '' );
+	}
+
+	/**
+	 * Clear signing key issue.
+	 *
+	 * @return void
+	 */
+	public function clear_signing_key_issue(): void {
+		delete_option( $this->signing_key_issue_option );
 	}
 
 	/**
@@ -286,7 +307,7 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_payment_reference() : string {
+	public function get_payment_reference(): string {
 		$payment_reference = $this->get_option( 'payment_reference', $this->config['site_name'] );
 
 		return substr( preg_replace( '/[^\w \-]/', '', $payment_reference ), 0, 18 );
@@ -298,7 +319,7 @@ class SettingsService {
 	 * @param string $endpoint
 	 * @return string
 	 */
-	public function get_wc_api_endpoint( string $endpoint ) : string {
+	public function get_wc_api_endpoint( string $endpoint ): string {
 		return $this->config['plugin_slug'] . '-' . $endpoint;
 	}
 
@@ -308,7 +329,7 @@ class SettingsService {
 	 * @param string $endpoint
 	 * @return string
 	 */
-	public function get_wc_api_url( string $endpoint ) : string {
+	public function get_wc_api_url( string $endpoint ): string {
 		return WC()->api_request_url( $this->get_wc_api_endpoint( $endpoint ) );
 	}
 
@@ -317,7 +338,7 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_shop_currency() : string {
+	public function get_shop_currency(): string {
 		return get_woocommerce_currency();
 	}
 
@@ -326,7 +347,7 @@ class SettingsService {
 	 *
 	 * @return int
 	 */
-	public function get_payment_link_expiration_time() : int {
+	public function get_payment_link_expiration_time(): int {
 		return 300;
 	}
 
@@ -335,7 +356,7 @@ class SettingsService {
 	 *
 	 * @return int
 	 */
-	public function get_payment_link_max_expiration_time() : int {
+	public function get_payment_link_max_expiration_time(): int {
 		return 2678400;
 	}
 
@@ -344,7 +365,7 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	public function get_admin_settings_url() : string {
+	public function get_admin_settings_url(): string {
 		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $this->config['plugin_id'] );
 	}
 
@@ -353,7 +374,7 @@ class SettingsService {
 	 *
 	 * @return int
 	 */
-	public function get_wc_hold_stock_time() : int {
+	public function get_wc_hold_stock_time(): int {
 		$duration     = (int) get_option( 'woocommerce_hold_stock_minutes' );
 		$manage_stock = 'yes' === get_option( 'woocommerce_manage_stock' );
 
@@ -369,8 +390,8 @@ class SettingsService {
 	 *
 	 * @return string
 	 */
-	private function get_hub_link() : string {
-		return '<a class="acfw-env-link" href=" ' . esc_url( $this->get_hub_url( 'production' ) ) . '" data-env-href-production="' . esc_url( $this->get_hub_url( 'production' ) ) . '" data-env-href-staging="' . esc_url( $this->get_hub_url( 'staging' ) ) . '" target="_blank">Acquired.com</a>';
+	private function get_hub_link(): string {
+		return '<a class="acfw-env-link" href="' . esc_url( $this->get_hub_url( 'production' ) ) . '" data-env-href-production="' . esc_url( $this->get_hub_url( 'production' ) ) . '" data-env-href-staging="' . esc_url( $this->get_hub_url( 'staging' ) ) . '" target="_blank">Acquired.com</a>';
 	}
 
 	/**
@@ -378,7 +399,7 @@ class SettingsService {
 	 *
 	 * @return array
 	 */
-	public function get_fields() : array {
+	public function get_fields(): array {
 		return [
 			'enabled'                 => [
 				'title'   => __( 'Enable Acquired.com payment gateway', 'acquired-com-for-woocommerce' ),
@@ -394,10 +415,10 @@ class SettingsService {
 				'desc_tip'    => true,
 			],
 			'description'             => [
-				'title'       => __( 'Description', 'woocommerce' ),
+				'title'       => __( 'Description', 'acquired-com-for-woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'Payment method description that the customer will see on your checkout.', 'acquired-com-for-woocommerce' ),
-				'default'     => __( 'Checkout with Apple Pay, Google Pay, Card and Pay by Bank.', 'acquired-com-for-woocommerce' ),
+				'default'     => __( 'Checkout with Apple Pay, Google Pay and Card.', 'acquired-com-for-woocommerce' ),
 				'desc_tip'    => true,
 			],
 			'environment'             => [
@@ -415,14 +436,14 @@ class SettingsService {
 				'title'       => __( 'Live Company-Id', 'acquired-com-for-woocommerce' ),
 				'type'        => 'text',
 				// translators: %s is the Acquired hub link.
-				'description' => sprintf( __( 'You can find your Company-Id in your %s account. Login to the Acquired Hub -> Go to SETTINGS -> Go to REFERENCES IDS -> Retrieve your Company-Id.', 'acquired-com-for-woocommerce' ), '<a href=" ' . esc_url( $this->get_hub_url( 'production' ) ) . '" target="_blank">Acquired.com</a>' ),
+				'description' => sprintf( __( 'You can find your Company-Id in your %s account. Login to the Acquired Hub -> Go to SETTINGS -> Go to REFERENCES IDS -> Retrieve your Company-Id.', 'acquired-com-for-woocommerce' ), '<a href="' . esc_url( $this->get_hub_url( 'production' ) ) . '" target="_blank">Acquired.com</a>' ),
 				'desc_tip'    => __( 'Enter your Acquired.com Company-Id.', 'acquired-com-for-woocommerce' ),
 			],
 			'company_id_staging'      => [
 				'title'       => __( 'Staging Company-Id', 'acquired-com-for-woocommerce' ),
 				'type'        => 'text',
 				// translators: %s is the Acquired hub link.
-				'description' => sprintf( __( 'You can find your Company-Id in your %s account. Login to the Acquired Hub -> Go to SETTINGS -> Go to REFERENCES IDS -> Retrieve your Company-Id.', 'acquired-com-for-woocommerce' ), '<a href=" ' . esc_url( $this->get_hub_url( 'staging' ) ) . '" target="_blank">Acquired.com</a>' ),
+				'description' => sprintf( __( 'You can find your Company-Id in your %s account. Login to the Acquired Hub -> Go to SETTINGS -> Go to REFERENCES IDS -> Retrieve your Company-Id.', 'acquired-com-for-woocommerce' ), '<a href="' . esc_url( $this->get_hub_url( 'staging' ) ) . '" target="_blank">Acquired.com</a>' ),
 				'desc_tip'    => __( 'Enter your Acquired.com staging Company-Id.', 'acquired-com-for-woocommerce' ),
 			],
 			'api_credentials'         => [
@@ -463,13 +484,13 @@ class SettingsService {
 			'signing_key_production'  => [
 				'title'       => __( 'Live Signing Key', 'acquired-com-for-woocommerce' ),
 				'type'        => 'password',
-				'description' => __( 'Enter your Acquired.com production signing key (format: sk_{32-bit hex}).', 'acquired-com-for-woocommerce' ),
+				'description' => __( 'Enter your Acquired.com production signing key (format: sk_{64-character hex}).', 'acquired-com-for-woocommerce' ),
 				'desc_tip'    => true,
 			],
 			'signing_key_staging'     => [
 				'title'       => __( 'Staging Signing Key', 'acquired-com-for-woocommerce' ),
 				'type'        => 'password',
-				'description' => __( 'Enter your Acquired.com staging signing key (format: sk_{32-bit hex}).', 'acquired-com-for-woocommerce' ),
+				'description' => __( 'Enter your Acquired.com staging signing key (format: sk_{64-character hex}).', 'acquired-com-for-woocommerce' ),
 				'desc_tip'    => true,
 			],
 			'additional'              => [
@@ -593,15 +614,15 @@ class SettingsService {
 			'cancel_refunded'         => [
 				'title'       => __( 'Cancel refunded orders', 'acquired-com-for-woocommerce' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Automatically switch fully refunded order status to canceled.', 'acquired-com-for-woocommerce' ),
+				'description' => __( 'Automatically switch fully refunded order status to cancelled.', 'acquired-com-for-woocommerce' ),
 				'label'       => __( 'Enable/Disable', 'acquired-com-for-woocommerce' ),
 				'default'     => 'no',
 				'desc_tip'    => false,
 			],
 			'woo_wallet_refund'       => [
-				'title'       => __( 'Wallet for WooCommerce failed orders.', 'acquired-com-for-woocommerce' ),
+				'title'       => __( 'Wallet for WooCommerce failed orders', 'acquired-com-for-woocommerce' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Refund wallet credit for failed orders  paid partially with Wallet for WooCommerce.', 'acquired-com-for-woocommerce' ),
+				'description' => __( 'Refund wallet credit for failed orders paid partially with Wallet for WooCommerce.', 'acquired-com-for-woocommerce' ),
 				'label'       => __( 'Enable/Disable', 'acquired-com-for-woocommerce' ),
 				'default'     => 'no',
 				'desc_tip'    => false,
@@ -615,7 +636,7 @@ class SettingsService {
 	 * @param string $field_key
 	 * @return array
 	 */
-	public function get_field( string $field_key ) : array {
+	public function get_field( string $field_key ): array {
 		$fields = $this->get_fields();
 
 		return $fields[ $field_key ] ?? [];

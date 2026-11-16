@@ -40,6 +40,7 @@ jobs:
             -x ".git/*" \
             -x ".github/*" \
             -x "node_modules/*" \
+            -x "stubs/*" \
             -x "tests/*" \
             -x ".wordpress-org/*" \
             -x ".editorconfig" \
@@ -47,6 +48,7 @@ jobs:
             -x ".eslintrc.json" \
             -x ".gitattributes" \
             -x ".gitignore" \
+            -x "AGENTS.md" \
             -x "CHANGELOG.md" \
             -x "composer.json" \
             -x "composer.lock" \
@@ -54,6 +56,7 @@ jobs:
             -x "package-lock.json" \
             -x "patchwork.json" \
             -x "phpcs.xml" \
+            -x "phpstan.neon" \
             -x "phpunit.xml" \
             -x "README.md" \
             -x "webpack.mix.js"

@@ -1,0 +1,20 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 2
+	paths:
+		- acquired-com-for-woocommerce.php
+		- src/
+	bootstrapFiles:
+		- vendor/autoload.php
+	scanFiles:
+		- stubs/acfw-constants.php
+		- stubs/woo-wallet.php
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
+	dynamicConstantNames:
+		ACFW_DIR_PATH: string
+		ACFW_DIR_URL: string
+		ACFW_PLUGIN_BASENAME: string
+		WC_VERSION: string

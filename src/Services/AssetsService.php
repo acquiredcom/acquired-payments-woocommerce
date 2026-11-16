@@ -51,7 +51,7 @@ class AssetsService {
 	 *
 	 * @return string
 	 */
-	public function get_assets_directory() : string {
+	public function get_assets_directory(): string {
 		return $this->assets_directory;
 	}
 
@@ -60,7 +60,7 @@ class AssetsService {
 	 *
 	 * @return string
 	 */
-	public function get_assets_directory_uri() : string {
+	public function get_assets_directory_uri(): string {
 		return $this->assets_directory_uri;
 	}
 
@@ -70,7 +70,7 @@ class AssetsService {
 	 * @param string $asset_path
 	 * @return string
 	 */
-	public function get_asset_uri( string $asset_path ) : string {
+	public function get_asset_uri( string $asset_path ): string {
 		return $this->get_assets_directory_uri() . $asset_path;
 	}
 
@@ -80,7 +80,7 @@ class AssetsService {
 	 * @param string $asset_path
 	 * @return string
 	 */
-	public function get_asset_path( string $asset_path ) : string {
+	public function get_asset_path( string $asset_path ): string {
 		return trailingslashit( $this->get_assets_directory() ) . $asset_path;
 	}
 
@@ -90,7 +90,7 @@ class AssetsService {
 	 * @param string $asset_path
 	 * @return bool
 	 */
-	public function asset_exists( string $asset_path ) : bool {
+	public function asset_exists( string $asset_path ): bool {
 		return file_exists( $this->get_asset_path( $asset_path ) );
 	}
 }

@@ -27,7 +27,7 @@ class AdminObserver implements ObserverInterface {
 	 *
 	 * @return void
 	 */
-	public function init_hooks() : void {
+	public function init_hooks(): void {
 		add_action( 'admin_notices', [ $this->admin_service, 'settings_notice' ] );
 		add_action( 'admin_notices', [ $this->admin_service, 'order_notice' ] );
 	}

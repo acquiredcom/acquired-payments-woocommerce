@@ -47,7 +47,7 @@ class OrderObserverTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_incoming_data_handler();
@@ -71,7 +71,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		// Test if constructor sets the expected properties to the right values.
 		$this->assertSame( $this->get_incoming_data_handler(), $this->get_private_property_value( 'incoming_data_handler' ) );
 		$this->assertSame( $this->get_logger_service(), $this->get_private_property_value( 'logger_service' ) );
@@ -85,7 +85,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::init_hooks
 	 * @return void
 	 */
-	public function test_init_hooks() : void {
+	public function test_init_hooks(): void {
 		// Test woocommerce_before_thankyou action.
 		Actions\expectAdded( 'woocommerce_before_thankyou' )
 			->once()
@@ -134,7 +134,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::add_fail_notice
 	 * @return void
 	 */
-	public function test_add_fail_notice_with_notice() : void {
+	public function test_add_fail_notice_with_notice(): void {
 		$order_id           = 123;
 		$error_message      = 'Payment failed';
 		$error_message_html = '<div class="woocommerce-error">Payment failed</div>';
@@ -173,7 +173,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::add_fail_notice
 	 * @return void
 	 */
-	public function test_add_fail_notice_without_notice() : void {
+	public function test_add_fail_notice_without_notice(): void {
 		$order_id = 123;
 
 		// Mock OrderService.
@@ -194,7 +194,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::run_process_scheduled_order
 	 * @return void
 	 */
-	public function test_run_process_scheduled_order_success() : void {
+	public function test_run_process_scheduled_order_success(): void {
 		// Set test data.
 		$webhook_data = json_encode(
 			(object) [
@@ -236,7 +236,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::run_process_scheduled_order
 	 * @return void
 	 */
-	public function test_run_process_scheduled_order_failure() : void {
+	public function test_run_process_scheduled_order_failure(): void {
 		// Set test data.
 		$webhook_data = json_encode( (object) [ 'invalid_data' ] );
 		$hash         = 'test_hash';
@@ -264,7 +264,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::refund_woo_wallet
 	 * @return void
 	 */
-	public function test_refund_woo_wallet_when_conditions_met() : void {
+	public function test_refund_woo_wallet_when_conditions_met(): void {
 		// Set test data.
 		$order_id = 123;
 
@@ -310,7 +310,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::refund_woo_wallet
 	 * @return void
 	 */
-	private function test_refund_woo_wallet_when_disabled() : void {
+	private function test_refund_woo_wallet_when_disabled(): void {
 		// Set test data.
 		$order_id = 123;
 
@@ -340,7 +340,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::refund_woo_wallet
 	 * @return void
 	 */
-	public function test_refund_woo_wallet_when_not_acfw_payment() : void {
+	public function test_refund_woo_wallet_when_not_acfw_payment(): void {
 		// Set test data.
 		$order_id = 123;
 
@@ -376,7 +376,7 @@ class OrderObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\OrderObserver::refund_woo_wallet
 	 * @return void
 	 */
-	public function test_refund_woo_wallet_when_no_woo_wallet() : void {
+	public function test_refund_woo_wallet_when_no_woo_wallet(): void {
 		// Set test data.
 		$order_id = 123;
 

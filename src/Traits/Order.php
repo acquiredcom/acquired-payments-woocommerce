@@ -18,10 +18,10 @@ trait Order {
 	/**
 	 * Get WooCommerce order object.
 	 *
-	 * @param int $order_id The order ID
-	 * @return WC_Order|null WooCommerce order object or null if invalid
+	 * @param int $order_id
+	 * @return WC_Order|null
 	 */
-	protected function get_wc_order( int $order_id ) : ?WC_Order {
+	protected function get_wc_order( int $order_id ): ?WC_Order {
 		$order = wc_get_order( $order_id );
 
 		return $order instanceof WC_Order ? $order : null;
@@ -33,7 +33,7 @@ trait Order {
 	 * @param int|WC_Order $order
 	 * @return bool
 	 */
-	public function is_acfw_payment_method( int|WC_Order $order ) : bool {
+	public function is_acfw_payment_method( int|WC_Order $order ): bool {
 		$order = $order instanceof WC_Order ? $order : $this->get_wc_order( $order );
 
 		if ( ! $order ) {

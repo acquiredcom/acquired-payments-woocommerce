@@ -39,7 +39,7 @@ class SettingsObserverTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_api_client();
@@ -59,7 +59,7 @@ class SettingsObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\SettingsObserver::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_api_client(), $this->get_private_property_value( 'api_client' ) );
 		$this->assertSame( $this->get_settings_service(), $this->get_private_property_value( 'settings_service' ) );
 	}
@@ -70,7 +70,7 @@ class SettingsObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\SettingsObserver::init_hooks
 	 * @return void
 	 */
-	public function test_init_hooks() : void {
+	public function test_init_hooks(): void {
 		// Mock SettingsService.
 		$this->get_settings_service()
 			->shouldReceive( '__get' )
@@ -97,7 +97,7 @@ class SettingsObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\SettingsObserver::options_updated
 	 * @return void
 	 */
-	public function test_options_updated() : void {
+	public function test_options_updated(): void {
 		// Mock ApiClient.
 		$this->get_api_client()
 			->shouldReceive( 'validate_credentials' )
@@ -119,6 +119,10 @@ class SettingsObserverTest extends TestCase {
 					return $value;
 				}
 			);
+
+		$this->get_settings_service()
+			->shouldReceive( 'clear_signing_key_issue' )
+			->once();
 
 			// Test the method.
 		$this->test_class->options_updated();

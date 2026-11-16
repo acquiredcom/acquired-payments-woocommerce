@@ -52,6 +52,8 @@ class LoggerService {
 		'holder_name',
 		'scheme',
 		'number',
+		'dob',
+		'ip',
 	];
 
 	/**
@@ -68,7 +70,7 @@ class LoggerService {
 	 * @param mixed $data
 	 * @return mixed
 	 */
-	private function redact_sensitive_data( mixed $data ) : mixed {
+	private function redact_sensitive_data( mixed $data ): mixed {
 		if ( ! is_array( $data ) && ! is_object( $data ) ) {
 			return $data;
 		}
@@ -98,7 +100,7 @@ class LoggerService {
 	 * @param array $context
 	 * @return void
 	 */
-	public function log( string $message, string $level = 'info', array $context = [] ) : void {
+	public function log( string $message, string $level = 'info', array $context = [] ): void {
 		if ( ! $this->settings_service->is_enabled( 'debug_log' ) ) {
 			return;
 		}

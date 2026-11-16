@@ -1,15 +1,57 @@
 <?xml version="1.0"?>
 <ruleset name="Acquired.com for WooCommerce">
-  <!-- Use Neuralab coding standards. -->
-  <rule ref="Neuralab" />
-
-  <!-- Exclude some folders from linting. -->
-  <exclude-pattern>/assets/*</exclude-pattern>
-  <exclude-pattern>/node_modules/*</exclude-pattern>
+  <!-- Exclude paths and patterns. -->
   <exclude-pattern>/vendor/*</exclude-pattern>
+  <exclude-pattern>/stubs/*</exclude-pattern>
+  <exclude-pattern>/node_modules/*</exclude-pattern>
+  <exclude-pattern>/assets/*</exclude-pattern>
+  <exclude-pattern>*.js</exclude-pattern>
+  <exclude-pattern>*.css</exclude-pattern>
 
   <!-- Lint only PHP files. -->
   <arg name="extensions" value="php"/>
+
+  <!-- Include WordPress coding standards. -->
+  <rule ref="WordPress">
+    <!-- Disable Generic.Functions.CallTimePassByReference rule since it will be deprecated (https://github.com/PHPCSStandards/PHP_CodeSniffer/issues/921). -->
+    <exclude name="Generic.Functions.CallTimePassByReference"/>
+    <!-- Disable @package tag rule. -->
+    <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+    <!-- Disable missing parameter comment rule. -->
+    <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+    <!-- Disable empty throws rule. -->
+    <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+    <!-- Disable spacing after param type in function comment. -->
+    <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+    <!-- Disable space after function rule in multiline function declaration. -->
+    <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+    <!-- Disable Yoda conditions rule. -->
+    <exclude name="WordPress.PHP.YodaConditions"/>
+    <!-- Disable short array syntax rule. -->
+    <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+    <!-- Disable short ternary operator rule. -->
+    <exclude name="Universal.Operators.DisallowShortTernary.Found"/>
+    <!-- Disable exception not escaped rule. -->
+    <exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
+  </rule>
+
+  <!-- Disallow long array syntax. -->
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+  <!-- Restore missing return rule that is disabled in WordPress-Docs coding standards. -->
+  <rule ref="Squiz.Commenting.FunctionComment.MissingReturn">
+    <severity>5</severity>
+  </rule>
+
+  <!-- Restore missing type hint rule that is disabled in WordPress-Docs coding standards. -->
+  <rule ref="Squiz.Commenting.FunctionComment.TypeHintMissing">
+    <severity>5</severity>
+  </rule>
+
+  <!-- Disable wrong comment style rule for index.php. -->
+  <rule ref="Squiz.Commenting.FileComment.WrongStyle">
+    <exclude-pattern>index.php</exclude-pattern>
+  </rule>
 
   <!-- Disable class name rule so we can use PSR 4 auto loading.-->
   <rule ref="WordPress.Files.FileName.InvalidClassFileName">
@@ -23,11 +65,23 @@
     <exclude-pattern>tests/*</exclude-pattern>
   </rule>
 
-  <!-- Enable Yoda conditions rule. -->
-  <rule ref="WordPress.PHP.YodaConditions" />
+  <!-- Require strict types. -->
+  <rule ref="Generic.PHP.RequireStrictTypes">
+    <!-- Don't require strict types for index.php. -->
+    <exclude-pattern>index.php</exclude-pattern>
+  </rule>
 
   <!-- Allow json_encode in tests since WordPress functions aren't available. -->
   <rule ref="WordPress.WP.AlternativeFunctions.json_encode_json_encode">
     <exclude-pattern>/tests/*</exclude-pattern>
+  </rule>
+
+  <!-- Set allowed text domains. -->
+  <rule ref="WordPress.WP.I18n">
+    <properties>
+      <property name="text_domain" type="array">
+        <element value="acquired-com-for-woocommerce"/>
+      </property>
+    </properties>
   </rule>
 </ruleset>

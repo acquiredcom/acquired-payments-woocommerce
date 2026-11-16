@@ -30,7 +30,7 @@ trait ApiClientMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_api_client() : void {
+	protected function mock_api_client(): void {
 		$this->api_client = Mockery::mock(
 			ApiClient::class,
 			[
@@ -46,7 +46,7 @@ trait ApiClientMock {
 	 *
 	 * @return MockInterface&ApiClient
 	 */
-	public function get_api_client() : MockInterface {
+	public function get_api_client(): MockInterface {
 		return $this->api_client;
 	}
 }

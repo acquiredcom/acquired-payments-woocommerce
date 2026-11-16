@@ -27,8 +27,8 @@ use AcquiredComForWooCommerce\Services\TokenService;
 use AcquiredComForWooCommerce\WooCommerce\PaymentGateway;
 use AcquiredComForWooCommerce\WooCommerce\PaymentMethod;
 use DI\ContainerBuilder;
+use Automattic\WooCommerce\Utilities\LoggingUtil;
 use function DI\autowire;
-use \Automattic\WooCommerce\Utilities\LoggingUtil;
 
 // @codeCoverageIgnoreStart
 

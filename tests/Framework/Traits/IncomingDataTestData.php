@@ -26,20 +26,20 @@ trait IncomingDataTestData {
 	 * @param string $hash_key
 	 * @return void
 	 */
-	protected function set_hash_key( string $hash_key ) : void {
+	protected function set_hash_key( string $hash_key ): void {
 		$this->hash_key = $hash_key;
 	}
 
 	/**
 	 * Convert array to stdClass recursively.
 	 *
-	 * @param array $array Array to convert.
+	 * @param array $array_to_convert
 	 * @return stdClass
 	 */
-	private function array_to_object( array $array ) : stdClass {
+	private function array_to_object( array $array_to_convert ): stdClass {
 		$object = new stdClass();
 
-		foreach ( $array as $key => $value ) :
+		foreach ( $array_to_convert as $key => $value ) :
 			$object->$key = is_array( $value ) ? $this->array_to_object( $value ) : $value;
 		endforeach;
 
@@ -49,15 +49,10 @@ trait IncomingDataTestData {
 	/**
 	 * Calculate test redirect hash.
 	 *
-	 * @param array{
-	 *     status: string,
-	 *     transaction_id: string,
-	 *     order_id: string,
-	 *     timestamp: string
-	 * }
+	 * @param array $data
 	 * @return string
 	 */
-	protected function calculate_test_redirect_hash( array $data ) : string {
+	protected function calculate_test_redirect_hash( array $data ): string {
 		$first_hash = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
 
 		return hash( 'sha256', $first_hash . $this->hash_key );
@@ -69,7 +64,7 @@ trait IncomingDataTestData {
 	 * @param stdClass $data
 	 * @return string
 	 */
-	protected function calculate_test_webhook_hash( stdClass $data ) : string {
+	protected function calculate_test_webhook_hash( stdClass $data ): string {
 		return hash_hmac( 'sha256', preg_replace( '/\s+/', '', json_encode( $data ) ), $this->hash_key );
 	}
 
@@ -85,7 +80,7 @@ trait IncomingDataTestData {
 	 *     hash: string,
 	 * }
 	 */
-	protected function get_test_redirect_data() : array {
+	protected function get_test_redirect_data(): array {
 		$data = [
 			'status'         => 'success',
 			'transaction_id' => 'transaction_123',
@@ -124,7 +119,7 @@ trait IncomingDataTestData {
 	 *     }
 	 * }
 	 */
-	protected function get_test_webhook_data( string $type ) : stdClass {
+	protected function get_test_webhook_data( string $type ): stdClass {
 		$data = [
 			'status_update' => [
 				'webhook_type' => 'status_update',
@@ -174,16 +169,11 @@ trait IncomingDataTestData {
 	/**
 	 * Calculate test redirect hash with optional alternative key for multi-hash testing.
 	 *
-	 * @param array{
-	 *     status: string,
-	 *     transaction_id: string,
-	 *     order_id: string,
-	 *     timestamp: string
-	 * } $data
-	 * @param string|null $alt_key Optional alternative key to generate secondary hash
-	 * @return string Single hash or comma-delimited hashes if alt_key provided
+	 * @param array $data
+	 * @param string|null $alt_key Optional alternative key to generate secondary hash.
+	 * @return string Single hash or comma-delimited hashes if alt_key provided.
 	 */
-	protected function calculate_test_redirect_hash_multi( array $data, ?string $alt_key = null ) : string {
+	protected function calculate_test_redirect_hash_multi( array $data, ?string $alt_key = null ): string {
 		$first_hash = hash( 'sha256', $data['status'] . $data['transaction_id'] . $data['order_id'] . $data['timestamp'] );
 		$primary    = hash( 'sha256', $first_hash . $this->hash_key );
 
@@ -199,10 +189,10 @@ trait IncomingDataTestData {
 	 * Calculate test webhook hash with optional alternative key for multi-hash testing.
 	 *
 	 * @param stdClass $data
-	 * @param string|null $alt_key Optional alternative key to generate secondary hash
-	 * @return string Single hash or comma-delimited hashes if alt_key provided
+	 * @param string|null $alt_key Optional alternative key to generate secondary hash.
+	 * @return string Single hash or comma-delimited hashes if alt_key provided.
 	 */
-	protected function calculate_test_webhook_hash_multi( stdClass $data, ?string $alt_key = null ) : string {
+	protected function calculate_test_webhook_hash_multi( stdClass $data, ?string $alt_key = null ): string {
 		$sanitized_data = preg_replace( '/\s+/', '', json_encode( $data ) );
 		$primary        = hash_hmac( 'sha256', $sanitized_data, $this->hash_key );
 
@@ -217,7 +207,7 @@ trait IncomingDataTestData {
 	/**
 	 * Get test redirect data with optional multi-hash for key rotation testing.
 	 *
-	 * @param string|null $alt_key Optional alternative key for multi-hash
+	 * @param string|null $alt_key Optional alternative key for multi-hash.
 	 * @return array{
 	 *     status: string,
 	 *     transaction_id: string,
@@ -227,7 +217,7 @@ trait IncomingDataTestData {
 	 *     hash: string,
 	 * }
 	 */
-	protected function get_test_redirect_data_multi( ?string $alt_key = null ) : array {
+	protected function get_test_redirect_data_multi( ?string $alt_key = null ): array {
 		$data = [
 			'status'         => 'success',
 			'transaction_id' => 'transaction_123',

@@ -7,6 +7,8 @@ declare( strict_types = 1 );
 
 namespace Automattic\WooCommerce\Blocks\Payments\Integrations;
 
+// phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
+
 /**
  * AbstractPaymentMethodType class.
  */
@@ -32,10 +34,12 @@ abstract class AbstractPaymentMethodType {
 	 * @param mixed $default Value that is returned if the setting does not exist.
 	 * @return mixed
 	 */
-	protected function get_setting( $name, $default = '' ) {}
+	protected function get_setting( $name, $default = '' ) {} // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound, Squiz.Commenting.FunctionComment.TypeHintMissing
 
 	/**
 	 * Returns the name of the payment method.
+	 *
+	 * @return string
 	 */
 	public function get_name() {}
 

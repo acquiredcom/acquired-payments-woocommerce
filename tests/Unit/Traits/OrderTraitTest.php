@@ -23,7 +23,7 @@ class OrderTraitTest extends TraitTestCase {
 	 *
 	 * @return object
 	 */
-	protected function get_test_class() : object {
+	protected function get_test_class(): object {
 		return new TestClass( $this->config );
 	}
 
@@ -31,8 +31,9 @@ class OrderTraitTest extends TraitTestCase {
 	 * Test get WooCommerce order.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Traits\Order::get_wc_order
+	 * @return void
 	 */
-	public function test_get_wc_order() : void {
+	public function test_get_wc_order(): void {
 		// Test with order ID that doesn't exist.
 
 		Functions\expect( 'wc_get_order' )
@@ -58,8 +59,9 @@ class OrderTraitTest extends TraitTestCase {
 	 * Test is Acquired.com payment method.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Traits\Order::is_acfw_payment_method
+	 * @return void
 	 */
-	public function test_is_acfw_payment_method() : void {
+	public function test_is_acfw_payment_method(): void {
 		// Test with order ID that doesn't exist.
 
 		Functions\expect( 'wc_get_order' )

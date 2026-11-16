@@ -27,7 +27,7 @@ trait TokenFactoryMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_token_factory() : void {
+	protected function mock_token_factory(): void {
 		$this->token_factory = Mockery::mock( TokenFactory::class );
 	}
 
@@ -36,7 +36,7 @@ trait TokenFactoryMock {
 	 *
 	 * @return MockInterface&TokenFactory
 	 */
-	public function get_token_factory() : MockInterface {
+	public function get_token_factory(): MockInterface {
 		return $this->token_factory;
 	}
 }

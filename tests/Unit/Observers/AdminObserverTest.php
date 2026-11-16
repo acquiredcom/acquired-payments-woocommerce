@@ -37,7 +37,7 @@ class AdminObserverTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_admin_service();
@@ -55,7 +55,7 @@ class AdminObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\AdminObserver::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_admin_service(), $this->get_private_property_value( 'admin_service' ) );
 	}
 
@@ -65,7 +65,7 @@ class AdminObserverTest extends TestCase {
 	 * @covers AcquiredComForWooCommerce\Observers\AdminObserver::init_hooks
 	 * @return void
 	 */
-	public function test_init_hooks() : void {
+	public function test_init_hooks(): void {
 		// Expect the actions to be added.
 		Actions\expectAdded( 'admin_notices' )
 			->times( 2 )

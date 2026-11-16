@@ -10,6 +10,7 @@ namespace AcquiredComForWooCommerce\Observers;
 use AcquiredComForWooCommerce\Api\IncomingDataHandler;
 use AcquiredComForWooCommerce\Services\LoggerService;
 use AcquiredComForWooCommerce\Services\PaymentMethodService;
+use WC_Payment_Token;
 use Exception;
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
@@ -36,7 +37,7 @@ class PaymentMethodObserver implements ObserverInterface {
 	 *
 	 * @return void
 	 */
-	public function init_hooks() : void {
+	public function init_hooks(): void {
 		add_action( 'template_redirect', [ $this, 'add_notice' ] );
 		add_action( 'woocommerce_payment_token_deleted', [ $this, 'payment_token_deleted' ], 10, 2 );
 		add_action( $this->payment_method_service->get_scheduled_action_hook(), [ $this, 'run_process_scheduled_save_payment_method' ], 10, 2 );
@@ -45,9 +46,11 @@ class PaymentMethodObserver implements ObserverInterface {
 	/**
 	 * Deactivate card on token deletion.
 	 *
+	 * @param int $token_id
+	 * @param WC_Payment_Token $token
 	 * @return void
 	 */
-	public function payment_token_deleted( $token_id, $token ) : void {
+	public function payment_token_deleted( $token_id, $token ): void { // phpcs:ignore Squiz.Commenting.FunctionComment.TypeHintMissing
 		$this->payment_method_service->deactivate_card( $token );
 	}
 
@@ -56,7 +59,7 @@ class PaymentMethodObserver implements ObserverInterface {
 	 *
 	 * @return void
 	 */
-	public function add_notice() : void {
+	public function add_notice(): void {
 		if ( ! is_add_payment_method_page() ) {
 			return;
 		}
@@ -75,7 +78,7 @@ class PaymentMethodObserver implements ObserverInterface {
 	 * @param string $hash
 	 * @return void
 	 */
-	public function run_process_scheduled_save_payment_method( string $webhook_data, string $hash ) : void {
+	public function run_process_scheduled_save_payment_method( string $webhook_data, string $hash ): void {
 		try {
 			$data = $this->incoming_data_handler->get_webhook_data( $webhook_data, $hash );
 			$this->payment_method_service->process_scheduled_save_payment_method( $data );

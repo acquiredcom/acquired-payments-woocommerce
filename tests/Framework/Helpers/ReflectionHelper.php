@@ -45,7 +45,7 @@ class ReflectionHelper {
 	 * @param string $property_name
 	 * @return ReflectionProperty
 	 */
-	public function get_private_property( string $property_name ) : ReflectionProperty {
+	public function get_private_property( string $property_name ): ReflectionProperty {
 		$property = $this->reflection->getProperty( $property_name );
 		$property->setAccessible( true );
 
@@ -58,7 +58,7 @@ class ReflectionHelper {
 	 * @param string $property_name
 	 * @return mixed
 	 */
-	public function get_private_property_value( string $property_name ) : mixed {
+	public function get_private_property_value( string $property_name ): mixed {
 		$property = $this->get_private_property( $property_name );
 
 		return $property->getValue( $this->reflected_class );
@@ -70,7 +70,7 @@ class ReflectionHelper {
 	 * @param string $method_name Name of the private method.
 	 * @return ReflectionMethod The accessible method.
 	 */
-	public function get_private_method( string $method_name ) : ReflectionMethod {
+	public function get_private_method( string $method_name ): ReflectionMethod {
 		$method = $this->reflection->getMethod( $method_name );
 		$method->setAccessible( true );
 
@@ -84,7 +84,7 @@ class ReflectionHelper {
 	 * @param mixed ...$args
 	 * @return mixed
 	 */
-	public function get_private_method_value( string $method_name, mixed ...$args ) : mixed {
+	public function get_private_method_value( string $method_name, mixed ...$args ): mixed {
 		$method = $this->get_private_method( $method_name );
 
 		return $method->invoke( $this->reflected_class, ...$args );
@@ -92,8 +92,12 @@ class ReflectionHelper {
 
 	/**
 	 * Set private property value.
+	 *
+	 * @param string $property_name
+	 * @param mixed $value
+	 * @return void
 	 */
-	public function set_private_property_value( string $property_name, mixed $value ) : void {
+	public function set_private_property_value( string $property_name, mixed $value ): void {
 		$property = $this->get_private_property( $property_name );
 		$property->setValue( $this->reflected_class, $value );
 	}
@@ -105,7 +109,7 @@ class ReflectionHelper {
 	 * @param mixed ...$args
 	 * @return void
 	 */
-	public function set_private_method_value( string $method_name, mixed ...$args ) : void {
+	public function set_private_method_value( string $method_name, mixed ...$args ): void {
 		$method = $this->get_private_method( $method_name );
 		$method->invoke( $this->reflected_class, ...$args );
 	}

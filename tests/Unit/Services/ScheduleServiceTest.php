@@ -36,7 +36,7 @@ class ScheduleServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->service = new ScheduleService( 'test-group' );
@@ -49,7 +49,7 @@ class ScheduleServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\ScheduleService::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		// Test if constructor sets the expected properties to the right values.
 		$this->assertEquals( 'test-group', $this->get_private_property_value( 'group' ) );
 		$this->assertEquals( 30, $this->get_private_property_value( 'delay' ) );
@@ -61,7 +61,7 @@ class ScheduleServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\ScheduleService::schedule
 	 * @return void
 	 */
-	public function test_schedule_success() : void {
+	public function test_schedule_success(): void {
 		// Test successful scheduling of an action.
 
 		Functions\expect( 'time' )
@@ -85,7 +85,7 @@ class ScheduleServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\ScheduleService::schedule
 	 * @return void
 	 */
-	public function test_schedule_failure() : void {
+	public function test_schedule_failure(): void {
 		// Test failed scheduling of an action.
 
 		Functions\expect( 'time' )

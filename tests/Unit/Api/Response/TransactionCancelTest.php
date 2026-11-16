@@ -21,7 +21,7 @@ class TransactionCancelTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -39,7 +39,7 @@ class TransactionCancelTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionCancel::is_cancelled
 	 * @return void
 	 */
-	public function test_is_cancelled_success() : void {
+	public function test_is_cancelled_success(): void {
 		$result = TransactionCancel::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'TransactionCancel' );
 		$this->assertTrue( $result->is_cancelled() );
 	}
@@ -50,7 +50,7 @@ class TransactionCancelTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionCancel::is_cancelled
 	 * @return void
 	 */
-	public function test_is_cancelled_error() : void {
+	public function test_is_cancelled_error(): void {
 		$result = TransactionCancel::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'TransactionCancel' );
 		$this->assertFalse( $result->is_cancelled() );
 	}

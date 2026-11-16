@@ -4,7 +4,7 @@ Tags: acquired, acquired payment, payments, gateway, payment gateway, credit car
 Requires at least: 7.0
 Tested up to: 7.1.4
 Requires PHP: 8.1
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: MIT License
 License URI: https://opensource.org/license/mit
 

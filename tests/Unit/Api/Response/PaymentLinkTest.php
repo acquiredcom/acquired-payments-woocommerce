@@ -23,7 +23,7 @@ class PaymentLinkTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -42,7 +42,7 @@ class PaymentLinkTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\PaymentLink::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = PaymentLink::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'PaymentLink' );
 
 		// Test if we get a PaymentLink instance.
@@ -59,7 +59,7 @@ class PaymentLinkTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\PaymentLink::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_link_id() : void {
+	public function test_validate_data_missing_link_id(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->link_id );
 
@@ -81,7 +81,7 @@ class PaymentLinkTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\PaymentLink::get_link_id
 	 * @return void
 	 */
-	public function test_get_link_id_success() : void {
+	public function test_get_link_id_success(): void {
 		$result = PaymentLink::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'PaymentLink' );
 		$this->assertEquals( 'link_1234567890', $result->get_link_id() );
 	}
@@ -92,7 +92,7 @@ class PaymentLinkTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\PaymentLink::get_link_id
 	 * @return void
 	 */
-	public function test_get_link_id_error() : void {
+	public function test_get_link_id_error(): void {
 		$result = PaymentLink::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'PaymentLink' );
 		$this->assertNull( $result->get_link_id() );
 	}

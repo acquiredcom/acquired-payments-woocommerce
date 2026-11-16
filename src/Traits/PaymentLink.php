@@ -28,19 +28,13 @@ trait PaymentLink {
 	 * @param WC_Order|WC_Customer $object
 	 * @return string
 	 */
-	protected function format_order_id_for_payment_link( WC_Order|WC_Customer $object ) : string {
-		switch ( true ) {
-			case $object instanceof WC_Order:
-				$id  = $object->get_id();
-				$key = $object->get_order_key();
-				break;
-			case $object instanceof WC_Customer:
-				$id  = $object->get_id();
-				$key = 'add_payment_method_' . wp_generate_password( 13, false );
-				break;
-		}
+	protected function format_order_id_for_payment_link( WC_Order|WC_Customer $object ): string { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.objectFound
+		$key = match ( true ) {
+			$object instanceof WC_Order    => $object->get_order_key(),
+			$object instanceof WC_Customer => 'add_payment_method_' . wp_generate_password( 13, false ),
+		};
 
-		return sprintf( '%s-%s', $id, $key );
+		return sprintf( '%s-%s', $object->get_id(), $key );
 	}
 
 	/**
@@ -49,7 +43,7 @@ trait PaymentLink {
 	 * @param string $incoming_data_order_id
 	 * @return int|null
 	 */
-	protected function get_id_from_incoming_data_order_id( string $incoming_data_order_id ) : ?int {
+	protected function get_id_from_incoming_data_order_id( string $incoming_data_order_id ): ?int {
 		$order_data = explode( '-', $incoming_data_order_id );
 
 		return 2 === count( $order_data ) && isset( $order_data[0] ) ? intval( $order_data[0] ) : null;
@@ -61,7 +55,7 @@ trait PaymentLink {
 	 * @param string $incoming_data_order_id
 	 * @return string|null
 	 */
-	protected function get_key_from_incoming_data_order_id( string $incoming_data_order_id ) : ?string {
+	protected function get_key_from_incoming_data_order_id( string $incoming_data_order_id ): ?string {
 		$order_data = explode( '-', $incoming_data_order_id );
 
 		return 2 === count( $order_data ) && isset( $order_data[1] ) ? $order_data[1] : null;
@@ -74,7 +68,7 @@ trait PaymentLink {
 	 * @return WC_Order
 	 * @throws Exception
 	 */
-	protected function get_wc_order_from_incoming_data( string $incoming_data_order_id ) : WC_Order {
+	protected function get_wc_order_from_incoming_data( string $incoming_data_order_id ): WC_Order {
 		$order_id = $this->get_id_from_incoming_data_order_id( $incoming_data_order_id );
 
 		if ( ! $order_id ) {
@@ -101,7 +95,7 @@ trait PaymentLink {
 	 * @return WC_Customer
 	 * @throws Exception
 	 */
-	protected function get_wc_customer_from_incoming_data( string $incoming_data_order_id ) : WC_Customer {
+	protected function get_wc_customer_from_incoming_data( string $incoming_data_order_id ): WC_Customer {
 		$customer_id = $this->get_id_from_incoming_data_order_id( $incoming_data_order_id );
 
 		if ( ! $customer_id ) {
@@ -123,7 +117,7 @@ trait PaymentLink {
 	 * @param string $incoming_data_order_id
 	 * @return bool
 	 */
-	public function is_for_payment_method( string $incoming_data_order_id ) : bool {
+	public function is_for_payment_method( string $incoming_data_order_id ): bool {
 		$key = $this->get_key_from_incoming_data_order_id( $incoming_data_order_id );
 
 		return $key && str_starts_with( $key, 'add_payment_method' );
@@ -135,7 +129,7 @@ trait PaymentLink {
 	 * @param string $incoming_data_order_id
 	 * @return bool
 	 */
-	public function is_for_order( string $incoming_data_order_id ) : bool {
+	public function is_for_order( string $incoming_data_order_id ): bool {
 		return ! $this->is_for_payment_method( $incoming_data_order_id );
 	}
 
@@ -145,7 +139,7 @@ trait PaymentLink {
 	 * @param string $link_id
 	 * @return string
 	 */
-	protected function get_pay_url( string $link_id ) : string {
+	protected function get_pay_url( string $link_id ): string {
 		return $this->settings_service->get_pay_url() . $link_id;
 	}
 }

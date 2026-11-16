@@ -67,7 +67,7 @@ class CustomerServiceTest extends TestCase {
 	 * @param string $address_type
 	 * @return array
 	 */
-	private function get_test_address_data( string $address_type ) : array {
+	private function get_test_address_data( string $address_type ): array {
 		$address_data = [
 			'billing'  => [
 				'first_name' => 'John',
@@ -103,7 +103,7 @@ class CustomerServiceTest extends TestCase {
 	 * @param bool $address_match
 	 * @return array
 	 */
-	private function get_expected_address_data( bool $add_email, bool $address_match ) : array {
+	private function get_expected_address_data( bool $add_email, bool $address_match ): array {
 		$address_data = [
 			'first_name' => 'John',
 			'last_name'  => 'Doe',
@@ -147,7 +147,7 @@ class CustomerServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_api_client();
@@ -169,7 +169,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->get_api_client(), $this->get_private_property_value( 'api_client' ) );
 		$this->assertSame( $this->get_logger_service(), $this->get_private_property_value( 'logger_service' ) );
 		$this->assertSame( $this->get_customer_factory(), $this->get_private_property_value( 'customer_factory' ) );
@@ -181,7 +181,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::truncate_to_length
 	 * @return void
 	 */
-	public function test_truncate_to_length() : void {
+	public function test_truncate_to_length(): void {
 		$input    = 'This is a long string that exceeds the limit.';
 		$expected = 'This is a ';
 
@@ -195,7 +195,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::validate_email
 	 * @return void
 	 */
-	public function test_validate_email() : void {
+	public function test_validate_email(): void {
 		$valid_email   = 'john@example.com';
 		$invalid_email = 'invalid-email';
 
@@ -209,7 +209,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::validate_name
 	 * @return void
 	 */
-	public function test_validate_name() : void {
+	public function test_validate_name(): void {
 		$valid_name   = 'John Doe';
 		$invalid_name = 'John123';
 
@@ -223,7 +223,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::validate_address
 	 * @return void
 	 */
-	public function test_validate_address() : void {
+	public function test_validate_address(): void {
 		$valid_address   = '123 Main St, London, UK';
 		$invalid_address = '#Invalid Address';
 
@@ -237,7 +237,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::format_basic_address_data
 	 * @return void
 	 */
-	public function test_format_basic_address_data() : void {
+	public function test_format_basic_address_data(): void {
 		$address_data = [
 			'first_name'  => 'John',
 			'last_name'   => 'Doe',
@@ -263,7 +263,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::format_basic_address_data
 	 * @return void
 	 */
-	public function test_format_basic_address_data_with_invalid_email() : void {
+	public function test_format_basic_address_data_with_invalid_email(): void {
 		$address_data = [
 			'first_name'  => 'John',
 			'last_name'   => 'Doe',
@@ -280,7 +280,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::format_basic_address_data
 	 * @return void
 	 */
-	public function test_format_basic_address_data_with_invalid_data() : void {
+	public function test_format_basic_address_data_with_invalid_data(): void {
 		$address_data = [
 			'first_name' => '1John',
 			'last_name'  => '#Doe',
@@ -305,7 +305,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::format_address_data
 	 * @return void
 	 */
-	public function test_format_address_data_with_valid_data_without_state() : void {
+	public function test_format_address_data_with_valid_data_without_state(): void {
 		$result = $this->get_private_method_value( 'format_address_data', $this->get_test_address_data( 'billing' ) );
 		$this->assertArrayNotHasKey( 'state', $result );
 	}
@@ -316,7 +316,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::format_address_data
 	 * @return void
 	 */
-	public function test_format_address_data_with_us_address_and_state() : void {
+	public function test_format_address_data_with_us_address_and_state(): void {
 		$address_data            = $this->get_test_address_data( 'billing' );
 		$address_data['country'] = 'US';
 		$address_data['state']   = 'ny';
@@ -333,7 +333,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::format_address_data
 	 * @return void
 	 */
-	public function test_format_address_data_with_empty_address_fields() : void {
+	public function test_format_address_data_with_empty_address_fields(): void {
 		$address_data = [
 			'address_1' => '',
 			'address_2' => '',
@@ -361,7 +361,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::addresses_match
 	 * @return void
 	 */
-	public function test_addresses_match_with_identical_addresses() : void {
+	public function test_addresses_match_with_identical_addresses(): void {
 		$this->assertTrue( $this->get_private_method_value( 'addresses_match', $this->get_test_address_data( 'billing' ), $this->get_test_address_data( 'billing' ) ) );
 	}
 
@@ -371,7 +371,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::addresses_match
 	 * @return void
 	 */
-	public function test_addresses_match_with_different_addresses() : void {
+	public function test_addresses_match_with_different_addresses(): void {
 		$this->assertFalse( $this->get_private_method_value( 'addresses_match', $this->get_test_address_data( 'billing' ), $this->get_test_address_data( 'shipping' ) ) );
 	}
 
@@ -381,7 +381,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::addresses_match
 	 * @return void
 	 */
-	public function test_addresses_match_ignores_email_and_phone() : void {
+	public function test_addresses_match_ignores_email_and_phone(): void {
 		$address_1 = $this->get_test_address_data( 'billing' );
 		$address_2 = $this->get_test_address_data( 'billing' );
 
@@ -398,7 +398,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_address_data_formatted
 	 * @return void
 	 */
-	public function test_get_address_data_formatted() : void {
+	public function test_get_address_data_formatted(): void {
 		$this->assertEquals(
 			$this->get_expected_address_data( false, true ),
 			$this->get_private_method_value( 'get_address_data_formatted', $this->get_test_address_data( 'billing' ), [], false )
@@ -411,7 +411,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_address_data_formatted
 	 * @return void
 	 */
-	public function test_get_address_data_formatted_with_email() : void {
+	public function test_get_address_data_formatted_with_email(): void {
 		$this->assertEquals(
 			$this->get_expected_address_data( true, true ),
 			$this->get_private_method_value( 'get_address_data_formatted', $this->get_test_address_data( 'billing' ), [], true )
@@ -424,7 +424,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_address_data_formatted
 	 * @return void
 	 */
-	public function test_get_address_data_formatted_with_different_shipping_address() : void {
+	public function test_get_address_data_formatted_with_different_shipping_address(): void {
 		$this->assertEquals(
 			$this->get_expected_address_data( false, false ),
 			$this->get_private_method_value(
@@ -442,7 +442,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_address_data_formatted
 	 * @return void
 	 */
-	public function test_get_address_data_formatted_with_different_shipping_address_and_email() : void {
+	public function test_get_address_data_formatted_with_different_shipping_address_and_email(): void {
 		$this->assertEquals(
 			$this->get_expected_address_data( true, false ),
 			$this->get_private_method_value(
@@ -460,7 +460,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_address_data_formatted
 	 * @return void
 	 */
-	public function test_get_address_data_formatted_with_empty_billing_address() : void {
+	public function test_get_address_data_formatted_with_empty_billing_address(): void {
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'Billing address is empty.' );
 		$this->get_private_method_value( 'get_address_data_formatted', [] );
@@ -472,7 +472,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_address_data_formatted
 	 * @return void
 	 */
-	public function test_get_address_data_formatted_with_invalid_customer_data() : void {
+	public function test_get_address_data_formatted_with_invalid_customer_data(): void {
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'Customer data is not valid.' );
 		$this->get_private_method_value( 'get_address_data_formatted', [ 'address_1' => '123 Main St' ] );
@@ -484,7 +484,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data
 	 * @return void
 	 */
-	public function test_get_customer_address_data() : void {
+	public function test_get_customer_address_data(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -500,7 +500,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data
 	 * @return void
 	 */
-	public function test_get_customer_address_data_without_billing_address() : void {
+	public function test_get_customer_address_data_without_billing_address(): void {
 		$expected_address_data = [
 			'first_name' => '',
 			'last_name'  => '',
@@ -536,7 +536,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data
 	 * @return void
 	 */
-	public function test_get_customer_address_data_invalid() : void {
+	public function test_get_customer_address_data_invalid(): void {
 		// Set test data.
 		$billing_address = $this->get_test_address_data( 'billing' );
 		unset( $billing_address['email'] ); // Remove email to simulate invalid data.
@@ -545,9 +545,11 @@ class CustomerServiceTest extends TestCase {
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $billing_address );
 		$customer->shouldReceive( 'has_shipping_address' )->once()->andReturn( false );
+		$customer->shouldReceive( 'get_email' )->once()->andReturn( '' );
 
 		// Test the method.
 		$this->expectException( Exception::class );
+		$this->expectExceptionMessage( 'Customer data is not valid.' );
 		$this->get_private_method_value( 'get_customer_address_data', $customer );
 	}
 
@@ -557,7 +559,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data
 	 * @return void
 	 */
-	public function test_get_customer_address_data_with_different_shipping_address() : void {
+	public function test_get_customer_address_data_with_different_shipping_address(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -578,7 +580,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data
 	 * @return void
 	 */
-	public function test_get_customer_address_data_with_same_billing_and_shipping_address() : void {
+	public function test_get_customer_address_data_with_same_billing_and_shipping_address(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -595,7 +597,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data_from_wc_order
 	 * @return void
 	 */
-	public function test_get_customer_address_data_from_wc_order_with_user() : void {
+	public function test_get_customer_address_data_from_wc_order_with_user(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_address' )->once()->with( 'billing' )->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -612,7 +614,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data_from_wc_order
 	 * @return void
 	 */
-	public function test_get_customer_address_data_from_wc_order_with_user_and_different_shipping_address() : void {
+	public function test_get_customer_address_data_from_wc_order_with_user_and_different_shipping_address(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_address' )->once()->with( 'billing' )->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -630,7 +632,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_address_data_from_wc_order
 	 * @return void
 	 */
-	public function test_get_customer_address_data_from_wc_order_with_no_user() : void {
+	public function test_get_customer_address_data_from_wc_order_with_no_user(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_address' )->once()->with( 'billing' )->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -647,7 +649,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::create_customer
 	 * @return void
 	 */
-	public function test_create_customer_success() : void {
+	public function test_create_customer_success(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, false );
 
@@ -685,7 +687,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::create_customer
 	 * @return void
 	 */
-	public function test_create_customer_failure() : void {
+	public function test_create_customer_failure(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, false );
 
@@ -720,7 +722,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::update_customer
 	 * @return void
 	 */
-	public function test_update_customer_with_missing_customer_id() : void {
+	public function test_update_customer_with_missing_customer_id(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, true );
 
@@ -744,7 +746,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::update_customer
 	 * @return void
 	 */
-	public function test_update_customer_success() : void {
+	public function test_update_customer_success(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, true );
 
@@ -780,7 +782,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::update_customer
 	 * @return void
 	 */
-	public function test_update_customer_failure() : void {
+	public function test_update_customer_failure(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, true );
 
@@ -816,7 +818,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::create_or_update_customer_for_checkout
 	 * @return void
 	 */
-	public function test_create_or_update_customer_for_checkout_failure() : void {
+	public function test_create_or_update_customer_for_checkout_failure(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_user_id' )->once()->andReturn( $this->test_user_id );
@@ -845,7 +847,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::create_or_update_customer_for_checkout
 	 * @return void
 	 */
-	public function test_create_or_update_customer_for_checkout_create_success() : void {
+	public function test_create_or_update_customer_for_checkout_create_success(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, true );
 
@@ -897,7 +899,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::create_or_update_customer_for_checkout
 	 * @return void
 	 */
-	public function test_create_or_update_customer_for_checkout_update_success() : void {
+	public function test_create_or_update_customer_for_checkout_update_success(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( true, true );
 
@@ -946,7 +948,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_guest_checkout
 	 * @return void
 	 */
-	public function test_get_customer_data_for_guest_checkout_success() : void {
+	public function test_get_customer_data_for_guest_checkout_success(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( false, true );
 
@@ -972,7 +974,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_guest_checkout
 	 * @return void
 	 */
-	public function test_get_customer_data_for_guest_checkout_failure() : void {
+	public function test_get_customer_data_for_guest_checkout_failure(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_address' )->once()->with( 'billing' )->andReturn( [] );
@@ -995,7 +997,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_checkout
 	 * @return void
 	 */
-	public function test_get_customer_data_for_checkout_returns_guest_data_no_customer() : void {
+	public function test_get_customer_data_for_checkout_returns_guest_data_no_customer(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( false, true );
 
@@ -1023,7 +1025,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_checkout
 	 * @return void
 	 */
-	public function test_get_customer_data_for_checkout_returns_customer_id_success() : void {
+	public function test_get_customer_data_for_checkout_returns_customer_id_success(): void {
 		// Mock WC_Order.
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_customer_id' )->once()->andReturn( $this->test_user_id );
@@ -1077,7 +1079,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_checkout
 	 * @return void
 	 */
-	public function test_get_customer_data_for_checkout_returns_guest_data_on_failure() : void {
+	public function test_get_customer_data_for_checkout_returns_guest_data_on_failure(): void {
 		// Set test data.
 		$customer_data = $this->get_expected_address_data( false, true );
 
@@ -1137,7 +1139,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::update_customer_in_my_account
 	 * @return void
 	 */
-	public function test_update_customer_in_my_account_success() : void {
+	public function test_update_customer_in_my_account_success(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -1173,7 +1175,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::update_customer_in_my_account
 	 * @return void
 	 */
-	public function test_update_customer_in_my_account_get_data_failure() : void {
+	public function test_update_customer_in_my_account_get_data_failure(): void {
 		$billing_address = $this->get_test_address_data( 'billing' );
 		unset( $billing_address['email'] );
 
@@ -1201,7 +1203,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::update_customer_in_my_account
 	 * @return void
 	 */
-	public function test_update_customer_in_my_account_update_failure() : void {
+	public function test_update_customer_in_my_account_update_failure(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -1223,7 +1225,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_or_create_customer_for_new_payment_method
 	 * @return void
 	 */
-	public function test_get_or_create_customer_for_new_payment_method_failure() : void {
+	public function test_get_or_create_customer_for_new_payment_method_failure(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( [] );
@@ -1253,7 +1255,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_or_create_customer_for_new_payment_method
 	 * @return void
 	 */
-	public function test_get_or_create_customer_for_new_payment_method_existing_customer() : void {
+	public function test_get_or_create_customer_for_new_payment_method_existing_customer(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -1277,7 +1279,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_or_create_customer_for_new_payment_method
 	 * @return void
 	 */
-	public function test_get_or_create_customer_for_new_payment_method_new_customer() : void {
+	public function test_get_or_create_customer_for_new_payment_method_new_customer(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -1321,7 +1323,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_new_payment_method
 	 * @return void
 	 */
-	public function test_get_customer_data_for_new_payment_method_returns_customer_id() : void {
+	public function test_get_customer_data_for_new_payment_method_returns_customer_id(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( $this->get_test_address_data( 'billing' ) );
@@ -1348,7 +1350,7 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_data_for_new_payment_method
 	 * @return void
 	 */
-	public function test_get_customer_data_for_new_payment_method_returns_empty_array() : void {
+	public function test_get_customer_data_for_new_payment_method_returns_empty_array(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_billing' )->once()->andReturn( [] );
@@ -1381,14 +1383,14 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_from_customer_id
 	 * @return void
 	 */
-	public function test_get_customer_from_customer_id_success() : void {
+	public function test_get_customer_from_customer_id_success(): void {
 		// Mock WordPress get_users function.
 		Functions\expect( 'get_users' )
 			->once()
 			->with(
 				[
-					'meta_key'   => '_acfw_customer_id',
-					'meta_value' => $this->test_customer_id,
+					'meta_key'   => '_acfw_customer_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_value' => $this->test_customer_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 					'number'     => 1,
 					'fields'     => 'ID',
 				]
@@ -1405,7 +1407,7 @@ class CustomerServiceTest extends TestCase {
 			->with( $this->test_user_id )
 			->andReturn( $customer );
 
-		// Test the method
+		// Test the method.
 		$result = $this->service->get_customer_from_customer_id( $this->test_customer_id );
 		$this->assertInstanceOf( 'WC_Customer', $result );
 	}
@@ -1416,21 +1418,21 @@ class CustomerServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\CustomerService::get_customer_from_customer_id
 	 * @return void
 	 */
-	public function test_get_customer_from_customer_id_user_not_found() : void {
-		// Mock WordPress get_users function to return empty array
+	public function test_get_customer_from_customer_id_user_not_found(): void {
+		// Mock WordPress get_users function to return empty array.
 		Functions\expect( 'get_users' )
 			->once()
 			->with(
 				[
-					'meta_key'   => '_acfw_customer_id',
-					'meta_value' => $this->test_customer_id,
+					'meta_key'   => '_acfw_customer_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_value' => $this->test_customer_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value,
 					'number'     => 1,
 					'fields'     => 'ID',
 				]
 			)
 			->andReturn( [] );
 
-		// Test the method
+		// Test the method.
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'User not found.' );
 		$this->service->get_customer_from_customer_id( $this->test_customer_id );

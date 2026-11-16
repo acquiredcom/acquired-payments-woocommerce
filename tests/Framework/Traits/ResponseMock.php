@@ -27,7 +27,7 @@ trait ResponseMock {
 	 * @param stdClass $body_content
 	 * @return ResponseInterface
 	 */
-	protected function mock_response( int $status_code, string $reason_phrase, stdClass $body_content ) : ResponseInterface {
+	protected function mock_response( int $status_code, string $reason_phrase, stdClass $body_content ): ResponseInterface {
 		// Mock StreamInterface.
 		$stream = Mockery::mock( StreamInterface::class );
 		$stream->shouldReceive( 'getContents' )->once()->andReturn( json_encode( $body_content ) );
@@ -49,7 +49,7 @@ trait ResponseMock {
 	 * @param stdClass $body_content
 	 * @return RequestException
 	 */
-	protected function mock_request_exception( int $status_code, string $reason_phrase, stdClass $body_content ) : RequestException {
+	protected function mock_request_exception( int $status_code, string $reason_phrase, stdClass $body_content ): RequestException {
 		// Mock StreamInterface.
 		$stream = Mockery::mock( StreamInterface::class );
 		$stream->shouldReceive( 'getContents' )->once()->andReturn( json_encode( $body_content ) );
@@ -76,7 +76,7 @@ trait ResponseMock {
 	 * @param string $reason_phrase
 	 * @return ResponseInterface
 	 */
-	protected function mock_runtime_exception( int $status_code, string $reason_phrase ) : ResponseInterface {
+	protected function mock_runtime_exception( int $status_code, string $reason_phrase ): ResponseInterface {
 		// Mock StreamInterface.
 		$stream = Mockery::mock( StreamInterface::class );
 		$stream->shouldReceive( 'getContents' )->twice()->andThrow( new RuntimeException( 'Failed to read stream' ) );

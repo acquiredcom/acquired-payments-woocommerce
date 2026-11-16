@@ -15,6 +15,7 @@ use AcquiredComForWooCommerce\Api\Response\Transaction;
 use AcquiredComForWooCommerce\Api\Response\TransactionCapture;
 use AcquiredComForWooCommerce\Api\Response\TransactionRefund;
 use AcquiredComForWooCommerce\Api\Response\TransactionCancel;
+use AcquiredComForWooCommerce\Api\Response\TransactionList;
 use AcquiredComForWooCommerce\Api\Response\Customer;
 use AcquiredComForWooCommerce\Api\Response\CustomerCreate;
 use AcquiredComForWooCommerce\Api\Response\Card;
@@ -63,7 +64,7 @@ class ApiClientTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	private function mock_get_api_credentials() : void {
+	private function mock_get_api_credentials(): void {
 		$this->get_settings_service()
 			->shouldReceive( 'get_api_credentials' )
 			->once()
@@ -78,9 +79,10 @@ class ApiClientTest extends TestCase {
 	/**
 	 * Mock get_api_url creation.
 	 *
+	 * @param string $value
 	 * @return void
 	 */
-	private function mock_get_api_url_creation( string $value ) : void {
+	private function mock_get_api_url_creation( string $value ): void {
 		$this->get_settings_service()
 			->shouldReceive( 'get_api_url' )
 			->once()
@@ -95,9 +97,10 @@ class ApiClientTest extends TestCase {
 	/**
 	 * Mock get_payment_link_default_body creation.
 	 *
+	 * @param bool $enabled_3d_secure
 	 * @return void
 	 */
-	private function mock_get_payment_link_default_body_creation( bool $enabled_3d_secure = true ) : void {
+	private function mock_get_payment_link_default_body_creation( bool $enabled_3d_secure = true ): void {
 		$this->get_settings_service()
 			->shouldReceive( 'get_shop_currency' )
 			->once()
@@ -162,7 +165,7 @@ class ApiClientTest extends TestCase {
 		array $request_body = [],
 		int $response_status = 200,
 		array $response_data = []
-	) : void {
+	): void {
 		// Mock response.
 		$response = $this->mock_response(
 			$response_status,
@@ -188,9 +191,10 @@ class ApiClientTest extends TestCase {
 	/**
 	 * Mock get_access_token.
 	 *
+	 * @param string $result
 	 * @return void
 	 */
-	private function mock_make_token_request( string $result ) : void {
+	private function mock_make_token_request( string $result ): void {
 		$data = [
 			'success' => [
 				'data' => [
@@ -241,7 +245,7 @@ class ApiClientTest extends TestCase {
 	 * @param string $result
 	 * @return void
 	 */
-	private function mock_get_access_token( string $result ) : void {
+	private function mock_get_access_token( string $result ): void {
 		$this->mock_make_token_request( $result );
 
 		if ( 'success' === $result ) {
@@ -259,8 +263,10 @@ class ApiClientTest extends TestCase {
 
 	/**
 	 * Set up the test case.
+	 *
+	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mock_logger_service();
@@ -277,7 +283,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		$this->assertSame( $this->client, $this->get_private_property_value( 'client' ) );
 		$this->assertSame( $this->get_logger_service(), $this->get_private_property_value( 'logger_service' ) );
 		$this->assertSame( $this->get_settings_service(), $this->get_private_property_value( 'settings_service' ) );
@@ -289,7 +295,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_default_headers
 	 * @return void
 	 */
-	public function test_get_default_headers() : void {
+	public function test_get_default_headers(): void {
 		$result = $this->get_private_method_value( 'get_default_headers' );
 
 		$this->assertIsArray( $result );
@@ -308,7 +314,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_api_url
 	 * @return void
 	 */
-	public function test_get_api_url() : void {
+	public function test_get_api_url(): void {
 		// With slug.
 		$this->mock_get_api_url_creation( 'payment-links' );
 		$result = $this->get_private_method_value( 'get_api_url', 'payment-links' );
@@ -336,7 +342,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_api_url
 	 * @return void
 	 */
-	public function test_get_api_url_with_fields() : void {
+	public function test_get_api_url_with_fields(): void {
 		// Mock get_api_url creation.
 		$this->mock_get_api_url_creation( 'transactions/12345' );
 
@@ -352,12 +358,51 @@ class ApiClientTest extends TestCase {
 	}
 
 	/**
+	 * Test get_api_url with query parameters.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_api_url
+	 * @return void
+	 */
+	public function test_get_api_url_with_query(): void {
+		// Mock get_api_url creation.
+		$this->mock_get_api_url_creation( 'transactions' );
+
+		// Mock add_query_arg.
+		Functions\expect( 'add_query_arg' )
+			->once()
+			->with(
+				[
+					'order_id' => '518-wc_order_test',
+					'status'   => 'success',
+					'limit'    => 1,
+				],
+				'transactions/'
+			)
+			->andReturn( 'transactions/?order_id=518-wc_order_test&status=success&limit=1' );
+
+		// Test response data.
+		$result = $this->get_private_method_value(
+			'get_api_url',
+			'transactions',
+			'',
+			'',
+			[],
+			[
+				'order_id' => '518-wc_order_test',
+				'status'   => 'success',
+				'limit'    => 1,
+			]
+		);
+		$this->assertEquals( 'https://api.acquired.com/v1/transactions/?order_id=518-wc_order_test&status=success&limit=1', $result );
+	}
+
+	/**
 	 * Test json_encode with array.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::json_encode
 	 * @return void
 	 */
-	public function test_json_encode_array() : void {
+	public function test_json_encode_array(): void {
 		$test_array = [ 'test' => 'value' ];
 
 		// Mock wp_json_encode.
@@ -382,7 +427,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::json_encode
 	 * @return void
 	 */
-	public function test_json_encode_object() : void {
+	public function test_json_encode_object(): void {
 		$test_object = (object) [ 'test' => 'value' ];
 
 		// Mock wp_json_encode.
@@ -407,7 +452,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::json_encode
 	 * @return void
 	 */
-	public function test_json_encode_invalid_data() : void {
+	public function test_json_encode_invalid_data(): void {
 		$test_array = [ 'test' => 'value' ];
 
 		// Mock wp_json_encode.
@@ -432,7 +477,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_payment_link_default_body
 	 * @return void
 	 */
-	public function test_get_payment_link_default_body() : void {
+	public function test_get_payment_link_default_body(): void {
 		// Mock link body creation.
 		$this->mock_get_payment_link_default_body_creation();
 
@@ -454,7 +499,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_payment_link_default_body
 	 * @return void
 	 */
-	public function test_get_payment_link_default_body_with_3d_secure_disabled() : void {
+	public function test_get_payment_link_default_body_with_3d_secure_disabled(): void {
 		// Mock link body creation.
 		$this->mock_get_payment_link_default_body_creation( false );
 
@@ -465,7 +510,7 @@ class ApiClientTest extends TestCase {
 		$this->assertArrayHasKey( 'payment', $result );
 		$this->assertArrayHasKey( 'count_retry', $result );
 		$this->assertArrayNotHasKey( 'tds', $result );
-		$this->assertEquals( 'gbp', $result['transaction']['currency'] );
+		$this->assertEquals( 'GBP', $result['transaction']['currency'] );
 		$this->assertEquals( '2.0.0', $result['transaction']['custom1'] );
 		$this->assertEquals( 'Test Store', $result['payment']['reference'] );
 		$this->assertEquals( 1, $result['count_retry'] );
@@ -477,7 +522,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request
 	 * @return void
 	 */
-	public function test_make_request() : void {
+	public function test_make_request(): void {
 		// Mock client request.
 		$this->mock_client_request(
 			'POST',
@@ -511,7 +556,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request
 	 * @return void
 	 */
-	public function test_make_request_with_request_exception() : void {
+	public function test_make_request_with_request_exception(): void {
 		$exception = $this->mock_request_exception(
 			400,
 			'Bad Request',
@@ -552,7 +597,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request
 	 * @return void
 	 */
-	public function test_make_request_with_exception() : void {
+	public function test_make_request_with_exception(): void {
 		$exception = new Exception( 'Test exception' );
 
 		$this->client
@@ -584,7 +629,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_token_request
 	 * @return void
 	 */
-	public function test_make_token_request() : void {
+	public function test_make_token_request(): void {
 		$this->mock_make_token_request( 'success' );
 		$result = $this->get_private_method_value( 'make_token_request' );
 		$this->assertInstanceOf( Token::class, $result );
@@ -598,7 +643,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_access_token
 	 * @return void
 	 */
-	public function test_get_access_token_success() : void {
+	public function test_get_access_token_success(): void {
 		$this->mock_get_access_token( 'success' );
 		$result = $this->get_private_method_value( 'get_access_token' );
 		$this->assertEquals( 'Bearer token_1234567890', $result );
@@ -610,7 +655,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_access_token
 	 * @return void
 	 */
-	public function test_get_access_token_error() : void {
+	public function test_get_access_token_error(): void {
 		$this->mock_get_access_token( 'error' );
 		$result = $this->get_private_method_value( 'get_access_token' );
 		$this->assertNull( $result );
@@ -622,7 +667,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_authorization_header
 	 * @return void
 	 */
-	public function test_get_authorization_header() : void {
+	public function test_get_authorization_header(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -646,7 +691,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_authorization_header
 	 * @return void
 	 */
-	public function test_get_authorization_header_with_company_id() : void {
+	public function test_get_authorization_header_with_company_id(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -677,7 +722,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_authorization_header
 	 * @return void
 	 */
-	public function test_get_authorization_header_error() : void {
+	public function test_get_authorization_header_error(): void {
 		$this->mock_get_access_token( 'error' );
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'Access token in authorization header doesn\'t exist.' );
@@ -690,7 +735,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request_with_auth
 	 * @return void
 	 */
-	public function test_make_request_with_auth_success() : void {
+	public function test_make_request_with_auth_success(): void {
 		// Mock get access token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -724,7 +769,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request_with_auth
 	 * @return void
 	 */
-	public function test_make_request_with_auth_and_header_success() : void {
+	public function test_make_request_with_auth_and_header_success(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -768,7 +813,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request_with_auth
 	 * @return void
 	 */
-	public function test_make_request_with_error() : void {
+	public function test_make_request_with_error(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -789,7 +834,7 @@ class ApiClientTest extends TestCase {
 			->once()
 			->andThrow( $exception );
 
-		// Test response data
+		// Test response data.
 
 		$result = $this->get_private_method_value(
 			'make_request_with_auth',
@@ -808,7 +853,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::make_request_with_auth
 	 * @return void
 	 */
-	public function test_make_request_with_auth_and_header_error() : void {
+	public function test_make_request_with_auth_and_header_error(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'error' );
 
@@ -840,7 +885,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_payment_link
 	 * @return void
 	 */
-	public function test_get_payment_link() : void {
+	public function test_get_payment_link(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -884,7 +929,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_transaction
 	 * @return void
 	 */
-	public function test_get_transaction() : void {
+	public function test_get_transaction(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -916,12 +961,77 @@ class ApiClientTest extends TestCase {
 	}
 
 	/**
+	 * Test get_transactions.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_transactions
+	 * @return void
+	 */
+	public function test_get_transactions(): void {
+		// Mock token request.
+		$this->mock_get_access_token( 'success' );
+
+		// Mock API URL creation.
+		$this->mock_get_api_url_creation( 'transactions' );
+
+		// Mock add_query_arg.
+		Functions\expect( 'add_query_arg' )
+			->once()
+			->with(
+				[
+					'order_id' => '518-wc_order_test',
+					'status'   => 'success',
+					'limit'    => 1,
+				],
+				'transactions/'
+			)
+			->andReturn( 'transactions/?order_id=518-wc_order_test&status=success&limit=1' );
+
+		Functions\expect( 'add_query_arg' )
+			->once()
+			->with( 'filter', 'transaction_id', 'transactions/?order_id=518-wc_order_test&status=success&limit=1' )
+			->andReturn( 'transactions/?order_id=518-wc_order_test&status=success&limit=1&filter=transaction_id' );
+
+		// Mock client request that happens in make_request.
+		$this->mock_client_request(
+			'GET',
+			'https://api.acquired.com/v1/transactions/?order_id=518-wc_order_test&status=success&limit=1&filter=transaction_id',
+			[
+				'Accept'        => 'application/json',
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer token_1234567890',
+			],
+			[],
+			200,
+			[
+				'meta' => [
+					'count' => 0,
+					'total' => 0,
+				],
+				'data' => null,
+			]
+		);
+
+		$result = $this->test_class->get_transactions(
+			[
+				'order_id' => '518-wc_order_test',
+				'status'   => 'success',
+				'limit'    => 1,
+			],
+			[ 'transaction_id' ]
+		);
+
+		$this->assertInstanceOf( TransactionList::class, $result );
+		$this->assertTrue( $result->request_is_success() );
+		$this->assertNull( $result->get_first_transaction_id() );
+	}
+
+	/**
 	 * Test capture_transaction.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::capture_transaction
 	 * @return void
 	 */
-	public function test_capture_transaction() : void {
+	public function test_capture_transaction(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -958,7 +1068,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::refund_transaction
 	 * @return void
 	 */
-	public function test_refund_transaction() : void {
+	public function test_refund_transaction(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -995,7 +1105,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::cancel_transaction
 	 * @return void
 	 */
-	public function test_cancel_transaction() : void {
+	public function test_cancel_transaction(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -1032,7 +1142,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_customer
 	 * @return void
 	 */
-	public function test_get_customer() : void {
+	public function test_get_customer(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -1068,7 +1178,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::create_customer
 	 * @return void
 	 */
-	public function test_create_customer() : void {
+	public function test_create_customer(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -1111,7 +1221,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::update_customer
 	 * @return void
 	 */
-	public function test_update_customer() : void {
+	public function test_update_customer(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -1147,7 +1257,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::get_card
 	 * @return void
 	 */
-	public function test_get_card() : void {
+	public function test_get_card(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -1191,7 +1301,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::update_card
 	 * @return void
 	 */
-	public function test_update_card() : void {
+	public function test_update_card(): void {
 		// Mock token request.
 		$this->mock_get_access_token( 'success' );
 
@@ -1227,7 +1337,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::validate_credentials
 	 * @return void
 	 */
-	public function test_validate_credentials_success() : void {
+	public function test_validate_credentials_success(): void {
 		// Mock SettingsService.
 		$this->get_settings_service()
 			->shouldReceive( 'get_company_id' )
@@ -1253,7 +1363,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::validate_credentials
 	 * @return void
 	 */
-	public function test_validate_credentials_error() : void {
+	public function test_validate_credentials_error(): void {
 		// Mock SettingsService.
 		$this->get_settings_service()
 			->shouldReceive( 'get_company_id' )
@@ -1279,7 +1389,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::validate_credentials
 	 * @return void
 	 */
-	public function test_validate_credentials_with_company_id_success() : void {
+	public function test_validate_credentials_with_company_id_success(): void {
 		// Mock link body creation.
 		$this->mock_get_payment_link_default_body_creation();
 
@@ -1319,7 +1429,7 @@ class ApiClientTest extends TestCase {
 			],
 			[
 				'transaction'  => [
-					'currency' => 'gbp',
+					'currency' => 'GBP',
 					'custom1'  => '2.0.0',
 					'order_id' => 1234567890,
 					'amount'   => 0,
@@ -1360,7 +1470,7 @@ class ApiClientTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\ApiClient::validate_credentials
 	 * @return void
 	 */
-	public function test_validate_credentials_with_company_id_error() : void {
+	public function test_validate_credentials_with_company_id_error(): void {
 		// Mock link body creation.
 		$this->mock_get_payment_link_default_body_creation();
 
@@ -1400,7 +1510,7 @@ class ApiClientTest extends TestCase {
 			],
 			[
 				'transaction'  => [
-					'currency' => 'gbp',
+					'currency' => 'GBP',
 					'custom1'  => '2.0.0',
 					'order_id' => 1234567890,
 					'amount'   => 0,

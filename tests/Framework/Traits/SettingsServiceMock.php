@@ -27,7 +27,7 @@ trait SettingsServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_settings_service() : void {
+	protected function mock_settings_service(): void {
 		$this->settings_service = Mockery::mock( SettingsService::class, [ $this->config ] );
 	}
 
@@ -36,7 +36,7 @@ trait SettingsServiceMock {
 	 *
 	 * @return MockInterface&SettingsService
 	 */
-	public function get_settings_service() : MockInterface {
+	public function get_settings_service(): MockInterface {
 		return $this->settings_service;
 	}
 }

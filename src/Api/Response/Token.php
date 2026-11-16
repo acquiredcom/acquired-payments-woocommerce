@@ -7,6 +7,8 @@ declare( strict_types = 1 );
 
 namespace AcquiredComForWooCommerce\Api\Response;
 
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\RequestException;
 use Exception;
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
@@ -23,7 +25,7 @@ class Token extends Response {
 	 * @return void
 	 * @throws Exception
 	 */
-	protected function validate_data() : void {
+	protected function validate_data(): void {
 		parent::validate_data();
 
 		if ( ! $this->get_body_field( 'token_type' ) || ! $this->get_body_field( 'access_token' ) ) {
@@ -50,7 +52,7 @@ class Token extends Response {
 	 *
 	 * @return string|null
 	 */
-	public function get_token_formatted() : ?string {
+	public function get_token_formatted(): ?string {
 		return $this->request_is_success() ? sprintf( '%s %s', $this->get_body_field( 'token_type' ), $this->get_body_field( 'access_token' ) ) : null;
 	}
 
@@ -64,7 +66,7 @@ class Token extends Response {
 	 *     error_message?: string
 	 * }
 	 */
-	public function get_log_data() : array {
+	public function get_log_data(): array {
 		$data = parent::get_log_data();
 
 		unset( $data['request_body'], $data['response_body'] );

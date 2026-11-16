@@ -35,7 +35,7 @@ trait PaymentMethodServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_payment_method_service() : void {
+	protected function mock_payment_method_service(): void {
 		$this->payment_method_service = Mockery::mock(
 			PaymentMethodService::class,
 			[
@@ -56,7 +56,7 @@ trait PaymentMethodServiceMock {
 	 *
 	 * @return MockInterface&PaymentMethodService
 	 */
-	public function get_payment_method_service() : MockInterface {
+	public function get_payment_method_service(): MockInterface {
 		return $this->payment_method_service;
 	}
 }

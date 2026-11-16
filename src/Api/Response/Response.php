@@ -86,7 +86,7 @@ class Response {
 	 * @param string|null $response_class_name
 	 * @return self
 	 */
-	public static function make( ResponseInterface|RequestException|Exception $response, array $request_body = [], string|null $response_class_name = null ) : self {
+	public static function make( ResponseInterface|RequestException|Exception $response, array $request_body = [], string|null $response_class_name = null ): self {
 		$class = new \ReflectionClass( __NAMESPACE__ . '\\' . ( $response_class_name ?? 'Response' ) );
 
 		return $class->newInstanceArgs( [ $response, $request_body ] );
@@ -98,7 +98,7 @@ class Response {
 	 * @param bool $is_success
 	 * @return void
 	 */
-	private function set_request_status( bool $is_success ) : void {
+	private function set_request_status( bool $is_success ): void {
 		$this->request_is_success = $is_success;
 	}
 
@@ -107,7 +107,7 @@ class Response {
 	 *
 	 * @return bool
 	 */
-	public function request_is_success() : bool {
+	public function request_is_success(): bool {
 		return $this->request_is_success;
 	}
 
@@ -116,7 +116,7 @@ class Response {
 	 *
 	 * @return bool
 	 */
-	public function request_is_error() : bool {
+	public function request_is_error(): bool {
 		return ! $this->request_is_success();
 	}
 
@@ -126,7 +126,7 @@ class Response {
 	 * @param string $error_message
 	 * @return void
 	 */
-	private function set_error_message( string $error_message ) : void {
+	private function set_error_message( string $error_message ): void {
 		$this->error_message = $error_message;
 	}
 
@@ -135,16 +135,17 @@ class Response {
 	 *
 	 * @return string
 	 */
-	private function get_error_message() : string {
+	private function get_error_message(): string {
 		return $this->error_message;
 	}
 
 	/**
 	 * Get error message formatted.
 	 *
+	 * @param bool $with_invalid_params
 	 * @return string
 	 */
-	public function get_error_message_formatted( bool $with_invalid_params = false ) : string {
+	public function get_error_message_formatted( bool $with_invalid_params = false ): string {
 		if ( ! $this->get_error_message() ) {
 			return '';
 		}
@@ -155,7 +156,7 @@ class Response {
 		if ( $with_invalid_params && ! empty( $this->invalid_parameters ) ) {
 			$error_message .= sprintf(
 				/* translators: %s is invalid parameters. */
-				__( ' Invalid parameters: "%s".', 'acquired-for-woocommerce' ),
+				__( ' Invalid parameters: "%s".', 'acquired-com-for-woocommerce' ),
 				join( ', ', $this->invalid_parameters )
 			);
 		}
@@ -168,7 +169,7 @@ class Response {
 	 *
 	 * @return int
 	 */
-	private function get_status_code() : int {
+	private function get_status_code(): int {
 		return $this->status_code;
 	}
 
@@ -177,7 +178,7 @@ class Response {
 	 *
 	 * @return string
 	 */
-	private function get_reason_phrase() : string {
+	private function get_reason_phrase(): string {
 		return $this->reason_phrase;
 	}
 
@@ -185,8 +186,9 @@ class Response {
 	 * Set response body.
 	 *
 	 * @param string $body
+	 * @return void
 	 */
-	private function set_body( string $body ) : void {
+	private function set_body( string $body ): void {
 		$this->body = json_decode( $body );
 	}
 
@@ -195,8 +197,20 @@ class Response {
 	 *
 	 * @return stdClass|null
 	 */
-	private function get_body() : ?stdClass {
+	private function get_body(): ?stdClass {
 		return $this->body;
+	}
+
+	/**
+	 * Check if response body has field.
+	 *
+	 * @param string $field
+	 * @return bool
+	 */
+	protected function has_body_field( string $field ): bool {
+		$body = $this->get_body();
+
+		return $body && property_exists( $body, $field );
 	}
 
 	/**
@@ -205,14 +219,8 @@ class Response {
 	 * @param string $field
 	 * @return mixed
 	 */
-	public function get_body_field( string $field ) : mixed {
-		$body = $this->get_body();
-
-		if ( ! $body ) {
-			return null;
-		}
-
-		return property_exists( $body, $field ) ? $body->{$field} : null;
+	public function get_body_field( string $field ): mixed {
+		return $this->has_body_field( $field ) ? $this->get_body()->{$field} : null;
 	}
 
 	/**
@@ -227,10 +235,9 @@ class Response {
 	/**
 	 * Get response status.
 	 *
-	 * @param string $status
 	 * @return string
 	 */
-	public function get_status() : string {
+	public function get_status(): string {
 		return $this->status;
 	}
 
@@ -240,7 +247,7 @@ class Response {
 	 * @return void
 	 * @throws Exception
 	 */
-	protected function validate_data() : void {
+	protected function validate_data(): void {
 		if ( ! $this->body ) {
 			throw new Exception( 'Invalid response body' );
 		}
@@ -252,10 +259,10 @@ class Response {
 	 * Read response content.
 	 *
 	 * @param ResponseInterface|null $response
-	 * @return string
+	 * @return void
 	 * @throws Exception
 	 */
-	private function read_content( ResponseInterface|null $response ) : void {
+	private function read_content( ResponseInterface|null $response ): void {
 		if ( ! $response ) {
 			throw new Exception( 'Empty response.' );
 		}
@@ -276,7 +283,7 @@ class Response {
 	 *
 	 * @return void
 	 */
-	private function handle_request_exception() : void {
+	private function handle_request_exception(): void {
 		$error_message = $this->get_body_field( 'error' ) ?? $this->get_reason_phrase();
 		$this->set_error_message( $error_message ?: 'Unknown error' );
 
@@ -298,7 +305,7 @@ class Response {
 	 * @param ResponseInterface|RequestException|Exception $response
 	 * @return void
 	 */
-	private function handle_response( ResponseInterface|RequestException|Exception $response ) : void {
+	private function handle_response( ResponseInterface|RequestException|Exception $response ): void {
 		try {
 			if ( $response instanceof RequestException ) {
 				$this->read_content( $response->getResponse() );
@@ -324,7 +331,7 @@ class Response {
 	 *
 	 * @return array
 	 */
-	private function get_request_body() : array {
+	private function get_request_body(): array {
 		return $this->request_body;
 	}
 
@@ -340,7 +347,7 @@ class Response {
 	 *     error_message?: string
 	 * }
 	 */
-	public function get_log_data() : array {
+	public function get_log_data(): array {
 		$data = [
 			'status'        => $this->get_status(),
 			'response_code' => $this->get_status_code(),

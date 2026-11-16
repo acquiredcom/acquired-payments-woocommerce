@@ -27,7 +27,7 @@ trait CustomerFactoryMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_customer_factory() : void {
+	protected function mock_customer_factory(): void {
 		$this->customer_factory = Mockery::mock( CustomerFactory::class );
 	}
 
@@ -36,7 +36,7 @@ trait CustomerFactoryMock {
 	 *
 	 * @return MockInterface&CustomerFactory
 	 */
-	public function get_customer_factory() : MockInterface {
+	public function get_customer_factory(): MockInterface {
 		return $this->customer_factory;
 	}
 }

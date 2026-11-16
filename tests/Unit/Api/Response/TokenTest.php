@@ -23,7 +23,7 @@ class TokenTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -43,7 +43,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = Token::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Token' );
 
 		// Test if we get a Token instance.
@@ -60,7 +60,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_token_type() : void {
+	public function test_validate_data_missing_token_type(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->token_type );
 
@@ -82,7 +82,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_access_token() : void {
+	public function test_validate_data_missing_access_token(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->access_token );
 
@@ -104,7 +104,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::set_status
 	 * @return void
 	 */
-	public function test_set_status_success() : void {
+	public function test_set_status_success(): void {
 		$result = Token::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Token' );
 		$this->assertEquals( 'success', $result->get_status() );
 	}
@@ -115,7 +115,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::set_status
 	 * @return void
 	 */
-	public function test_set_status_error() : void {
+	public function test_set_status_error(): void {
 		$result = Token::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'Token' );
 		$this->assertEquals( 'error', $result->get_status() );
 	}
@@ -126,7 +126,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::get_token_formatted
 	 * @return void
 	 */
-	public function test_get_token_formatted_success() : void {
+	public function test_get_token_formatted_success(): void {
 		$result = Token::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Token' );
 		$this->assertEquals( 'Bearer token_1234567890', $result->get_token_formatted() );
 	}
@@ -137,7 +137,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::get_token_formatted
 	 * @return void
 	 */
-	public function test_get_token_formatted_error() : void {
+	public function test_get_token_formatted_error(): void {
 		$result = Token::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'Token' );
 		$this->assertNull( $result->get_token_formatted() );
 	}
@@ -148,7 +148,7 @@ class TokenTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Token::get_log_data
 	 * @return void
 	 */
-	public function test_get_log_data_error() : void {
+	public function test_get_log_data_error(): void {
 		$result = Token::make(
 			$this->mock_response(
 				200,

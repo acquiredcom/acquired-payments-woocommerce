@@ -35,7 +35,7 @@ trait Reflection {
 	 * @param object $test_class
 	 * @return void
 	 */
-	private function initialize_reflection( object $test_class ) : void {
+	private function initialize_reflection( object $test_class ): void {
 		$this->reflection      = new ReflectionClass( $test_class );
 		$this->reflected_class = $test_class;
 	}
@@ -46,7 +46,7 @@ trait Reflection {
 	 * @param string $property_name
 	 * @return ReflectionProperty
 	 */
-	protected function get_private_property( string $property_name ) : ReflectionProperty {
+	protected function get_private_property( string $property_name ): ReflectionProperty {
 		$property = $this->reflection->getProperty( $property_name );
 		$property->setAccessible( true );
 
@@ -59,7 +59,7 @@ trait Reflection {
 	 * @param string $property_name
 	 * @return mixed
 	 */
-	protected function get_private_property_value( string $property_name ) : mixed {
+	protected function get_private_property_value( string $property_name ): mixed {
 		$property = $this->get_private_property( $property_name );
 
 		return $property->getValue( $this->reflected_class );
@@ -71,7 +71,7 @@ trait Reflection {
 	 * @param string $method_name Name of the private method.
 	 * @return ReflectionMethod The accessible method.
 	 */
-	protected function get_private_method( string $method_name ) : ReflectionMethod {
+	protected function get_private_method( string $method_name ): ReflectionMethod {
 		$method = $this->reflection->getMethod( $method_name );
 		$method->setAccessible( true );
 
@@ -85,7 +85,7 @@ trait Reflection {
 	 * @param mixed ...$args
 	 * @return mixed
 	 */
-	protected function get_private_method_value( string $method_name, mixed ...$args ) : mixed {
+	protected function get_private_method_value( string $method_name, mixed ...$args ): mixed {
 		$method = $this->get_private_method( $method_name );
 
 		return $method->invoke( $this->reflected_class, ...$args );
@@ -93,8 +93,12 @@ trait Reflection {
 
 	/**
 	 * Set private property value.
+	 *
+	 * @param string $property_name
+	 * @param mixed $value
+	 * @return void
 	 */
-	protected function set_private_property_value( string $property_name, mixed $value ) : void {
+	protected function set_private_property_value( string $property_name, mixed $value ): void {
 		$property = $this->get_private_property( $property_name );
 		$property->setValue( $this->reflected_class, $value );
 	}
@@ -106,7 +110,7 @@ trait Reflection {
 	 * @param mixed ...$args
 	 * @return void
 	 */
-	protected function set_private_method_value( string $method_name, mixed ...$args ) : void {
+	protected function set_private_method_value( string $method_name, mixed ...$args ): void {
 		$method = $this->get_private_method( $method_name );
 		$method->invoke( $this->reflected_class, ...$args );
 	}

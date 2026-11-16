@@ -30,7 +30,7 @@ class TokenService {
 	 * @param int $token_id Token ID.
 	 * @return WC_Payment_Token_CC|null
 	 */
-	public function get_token( int $token_id ) : ?WC_Payment_Token_CC {
+	public function get_token( int $token_id ): ?WC_Payment_Token_CC {
 		$token = WC_Payment_Tokens::get( $token_id );
 
 		if ( ! $token || $token->get_gateway_id() !== $this->gateway_id ) {
@@ -46,7 +46,7 @@ class TokenService {
 	 * @param int $user_id User ID.
 	 * @return WC_Payment_Token_CC[]|array
 	 */
-	public function get_user_tokens( int $user_id ) : array {
+	public function get_user_tokens( int $user_id ): array {
 		return WC_Payment_Tokens::get_tokens(
 			[
 				'user_id'    => $user_id,
@@ -63,7 +63,7 @@ class TokenService {
 	 * @return WC_Payment_Token_CC
 	 * @throws Exception
 	 */
-	public function get_token_by_user_and_card_id( int $user_id, string $card_id ) : WC_Payment_Token_CC {
+	public function get_token_by_user_and_card_id( int $user_id, string $card_id ): WC_Payment_Token_CC {
 		foreach ( $this->get_user_tokens( $user_id ) as $token ) :
 			if ( $token->get_token() === $card_id ) {
 				return $token;
@@ -80,7 +80,7 @@ class TokenService {
 	 * @param string $card_id
 	 * @return bool
 	 */
-	public function payment_token_exists( int $user_id, string $card_id ) : bool {
+	public function payment_token_exists( int $user_id, string $card_id ): bool {
 		try {
 			$this->get_token_by_user_and_card_id( $user_id, $card_id );
 			return true;

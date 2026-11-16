@@ -25,7 +25,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 *
 	 * @return object
 	 */
-	protected function get_test_class() : object {
+	protected function get_test_class(): object {
 		return new TestClass( $this->config );
 	}
 
@@ -35,7 +35,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::format_order_id_for_payment_link
 	 * @return void
 	 */
-	public function test_format_order_id_for_payment_link_with_order() : void {
+	public function test_format_order_id_for_payment_link_with_order(): void {
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_id' )->once()->andReturn( 123 );
 		$order->shouldReceive( 'get_order_key' )->once()->andReturn( 'wc_order_key' );
@@ -48,7 +48,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::format_order_id_for_payment_link
 	 * @return void
 	 */
-	public function test_format_order_id_for_payment_link_with_customer() : void {
+	public function test_format_order_id_for_payment_link_with_customer(): void {
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->once()->andReturn( 456 );
 
@@ -66,7 +66,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_id_from_incoming_data_order_id
 	 * @return void
 	 */
-	public function test_get_id_from_incoming_data_order_id() : void {
+	public function test_get_id_from_incoming_data_order_id(): void {
 		// Valid format.
 		$this->assertEquals( 123, $this->get_private_method_value( 'get_id_from_incoming_data_order_id', '123-wc_order_key' ) );
 
@@ -81,11 +81,11 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_key_from_incoming_data_order_id
 	 * @return void
 	 */
-	public function test_get_key_from_incoming_data_order_id() : void {
+	public function test_get_key_from_incoming_data_order_id(): void {
 		// Valid format.
 		$this->assertEquals( 'wc_order_key', $this->get_private_method_value( 'get_key_from_incoming_data_order_id', '123-wc_order_key' ) );
 
-		// Invalid format
+		// Invalid format.
 		$this->assertNull( $this->get_private_method_value( 'get_key_from_incoming_data_order_id', 'invalid' ) );
 		$this->assertNull( $this->get_private_method_value( 'get_key_from_incoming_data_order_id', 'invalid-key-123' ) );
 	}
@@ -96,7 +96,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_order_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_order_from_incoming_data_with_invalid_order_id() : void {
+	public function test_get_wc_order_from_incoming_data_with_invalid_order_id(): void {
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'No valid order ID in incoming data.' );
 		$this->get_private_method_value( 'get_wc_order_from_incoming_data', 'invalid' );
@@ -108,7 +108,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_order_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_order_from_incoming_data_with_non_existent_order() : void {
+	public function test_get_wc_order_from_incoming_data_with_non_existent_order(): void {
 		Functions\expect( 'wc_get_order' )
 			->once()
 			->with( 123 )
@@ -125,7 +125,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_order_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_order_from_incoming_data_with_invalid_order_key() : void {
+	public function test_get_wc_order_from_incoming_data_with_invalid_order_key(): void {
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_order_key' )->once()->andReturn( 'invalid-key-123' );
 
@@ -145,7 +145,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_order_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_order_from_incoming_data_with_valid_order() : void {
+	public function test_get_wc_order_from_incoming_data_with_valid_order(): void {
 		$order = Mockery::mock( 'WC_Order' );
 		$order->shouldReceive( 'get_order_key' )->once()->andReturn( 'wc_order_key' );
 
@@ -163,7 +163,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_customer_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_customer_from_incoming_data_with_invalid_customer_id() : void {
+	public function test_get_wc_customer_from_incoming_data_with_invalid_customer_id(): void {
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'No valid customer ID in incoming data.' );
 		$this->get_private_method_value( 'get_wc_customer_from_incoming_data', 'invalid' );
@@ -175,7 +175,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_customer_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_customer_from_incoming_data_with_non_existent_customer() : void {
+	public function test_get_wc_customer_from_incoming_data_with_non_existent_customer(): void {
 		// Mock CustomerFactory.
 		$this->test_class->get_customer_factory()
 			->shouldReceive( 'get_wc_customer' )
@@ -194,7 +194,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_wc_customer_from_incoming_data
 	 * @return void
 	 */
-	public function test_get_wc_customer_from_incoming_data_with_valid_customer() : void {
+	public function test_get_wc_customer_from_incoming_data_with_valid_customer(): void {
 		// Mock WC_Customer.
 		$customer = Mockery::mock( 'WC_Customer' );
 		$customer->shouldReceive( 'get_id' )->once()->andReturn( 456 );
@@ -218,7 +218,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::is_for_payment_method
 	 * @return void
 	 */
-	public function test_is_for_payment_method() : void {
+	public function test_is_for_payment_method(): void {
 		// Payment method link.
 		$result = $this->test_class->is_for_payment_method( '456-add_payment_method_key' );
 		$this->assertTrue( $result );
@@ -233,7 +233,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::is_for_order
 	 * @return void
 	 */
-	public function test_is_for_order() : void {
+	public function test_is_for_order(): void {
 		// Order link.
 		$this->assertTrue( $this->test_class->is_for_order( '123-wc_order_key' ) );
 
@@ -247,7 +247,7 @@ class PaymentLinkTraitTest extends TraitTestCase {
 	 * @covers \AcquiredComForWooCommerce\Traits\PaymentLink::get_pay_url
 	 * @return void
 	 */
-	public function test_get_pay_url() : void {
+	public function test_get_pay_url(): void {
 		$this->test_class->get_settings_service()
 			->shouldReceive( 'get_pay_url' )
 			->once()

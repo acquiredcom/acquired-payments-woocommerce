@@ -32,8 +32,10 @@ class TokenFactoryTest extends TestCase {
 
 	/**
 	 * Set up the test case.
+	 *
+	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->test_class = new TokenFactory();
@@ -45,8 +47,9 @@ class TokenFactoryTest extends TestCase {
 	 *
 	 * @runInSeparateProcess
 	 * @covers \AcquiredComForWooCommerce\Factories\TokenFactory::get_wc_payment_token
+	 * @return void
 	 */
-	public function test_get_wc_payment_token() : void {
+	public function test_get_wc_payment_token(): void {
 		// Mock WC_Payment_Token_CC.
 		$token = Mockery::mock( 'overload:WC_Payment_Token_CC' );
 		$token->shouldReceive( '__construct' )->once();

@@ -35,6 +35,8 @@ final class Plugin {
 
 	/**
 	 * Constructor.
+	 *
+	 * @param ContainerInterface $container
 	 */
 	public function __construct( private ContainerInterface $container ) {
 		$this->root_file = $this->container->get( SettingsService::class )->config['root_file'];
@@ -45,8 +47,10 @@ final class Plugin {
 
 	/**
 	 * Initialize hooks.
+	 *
+	 * @return void
 	 */
-	private function init_hooks() : void {
+	private function init_hooks(): void {
 		add_action( 'init', [ $this, 'load_textdomain' ], 0 );
 		add_action( 'before_woocommerce_init', [ $this, 'custom_order_tables_support' ] );
 		add_filter( 'woocommerce_payment_gateways', [ $this, 'register_gateway' ] );
@@ -56,8 +60,10 @@ final class Plugin {
 
 	/**
 	 * Load text domain.
+	 *
+	 * @return void
 	 */
-	public function load_textdomain() : void {
+	public function load_textdomain(): void {
 		load_plugin_textdomain( 'acquired-com-for-woocommerce', false, trailingslashit( dirname( $this->basename ) ) . $this->container->get( SettingsService::class )->config['lang_dir'] );
 	}
 
@@ -66,7 +72,7 @@ final class Plugin {
 	 *
 	 * @return void
 	 */
-	public function custom_order_tables_support() : void {
+	public function custom_order_tables_support(): void {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 			/**
 			 * Declare compatibility with custom order tables.
@@ -81,7 +87,7 @@ final class Plugin {
 	 * @param array $methods
 	 * @return array
 	 */
-	public function register_gateway( $methods ) : array {
+	public function register_gateway( $methods ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.TypeHintMissing
 		$methods[] = $this->container->get( PaymentGateway::class );
 
 		return $methods;
@@ -92,7 +98,7 @@ final class Plugin {
 	 *
 	 * @return void
 	 */
-	public function register_block_checkout() : void {
+	public function register_block_checkout(): void {
 		if ( ! class_exists( '\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
 			return;
 		}
@@ -111,7 +117,7 @@ final class Plugin {
 	 * @param array $links
 	 * @return array
 	 */
-	public function add_settings_link( $links ) : array {
+	public function add_settings_link( $links ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.TypeHintMissing
 		$links['settings'] = sprintf(
 			'<a href="%s" aria-label="%s">%s</a>',
 			esc_url( $this->container->get( SettingsService::class )->get_admin_settings_url() ),

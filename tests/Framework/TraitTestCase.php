@@ -30,7 +30,7 @@ abstract class TraitTestCase extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->test_class = $this->get_test_class();
@@ -42,5 +42,5 @@ abstract class TraitTestCase extends TestCase {
 	 *
 	 * @return object
 	 */
-	abstract protected function get_test_class() : object;
+	abstract protected function get_test_class(): object;
 }

@@ -34,7 +34,7 @@ trait OrderServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_order_service() : void {
+	protected function mock_order_service(): void {
 		$this->order_service = Mockery::mock(
 			OrderService::class,
 			[
@@ -54,7 +54,7 @@ trait OrderServiceMock {
 	 *
 	 * @return MockInterface&OrderService
 	 */
-	public function get_order_service() : MockInterface {
+	public function get_order_service(): MockInterface {
 		return $this->order_service;
 	}
 }

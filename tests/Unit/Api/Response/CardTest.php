@@ -23,7 +23,7 @@ class CardTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -50,7 +50,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = Card::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Card' );
 
 		// Test if we get a Card instance.
@@ -67,7 +67,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_card() : void {
+	public function test_validate_data_missing_card(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->card );
 
@@ -89,7 +89,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_customer_id() : void {
+	public function test_validate_data_missing_customer_id(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->customer_id );
 
@@ -111,7 +111,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_required_fields() : void {
+	public function test_validate_data_missing_required_fields(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->card->number );
 
@@ -133,7 +133,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::set_status
 	 * @return void
 	 */
-	public function test_set_status_success() : void {
+	public function test_set_status_success(): void {
 		$result = Card::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Card' );
 		$this->assertEquals( 'success', $result->get_status() );
 	}
@@ -144,7 +144,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::set_status
 	 * @return void
 	 */
-	public function test_set_status_error() : void {
+	public function test_set_status_error(): void {
 		$result = Card::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'Card' );
 		$this->assertEquals( 'error', $result->get_status() );
 	}
@@ -155,7 +155,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::get_card_data
 	 * @return void
 	 */
-	public function test_get_card_data() : void {
+	public function test_get_card_data(): void {
 		$card_data = (object) [
 			'holder_name'  => 'E Johnson',
 			'scheme'       => 'visa',
@@ -174,7 +174,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::get_card_id
 	 * @return void
 	 */
-	public function test_get_card_id() : void {
+	public function test_get_card_id(): void {
 		$result = Card::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Card' );
 		$this->assertEquals( 'card_1234567890', $result->get_card_id() );
 	}
@@ -185,7 +185,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::get_customer_id
 	 * @return void
 	 */
-	public function test_get_customer_id() : void {
+	public function test_get_customer_id(): void {
 		$result = Card::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Card' );
 		$this->assertEquals( 'customer_1234567890', $result->get_customer_id() );
 	}
@@ -196,7 +196,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::is_active
 	 * @return void
 	 */
-	public function test_is_active_returns_true() : void {
+	public function test_is_active_returns_true(): void {
 		$result = Card::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Card' );
 		$this->assertTrue( $result->is_active() );
 	}
@@ -207,7 +207,7 @@ class CardTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Card::is_active
 	 * @return void
 	 */
-	public function test_is_active_returns_false() : void {
+	public function test_is_active_returns_false(): void {
 		$response_data            = $this->get_test_response_data( 'success' );
 		$response_data->is_active = false;
 

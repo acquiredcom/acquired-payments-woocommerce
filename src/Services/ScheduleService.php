@@ -37,7 +37,7 @@ class ScheduleService {
 	 * @return void
 	 * @throws Exception
 	 */
-	public function schedule( string $hook, array $args ) : void {
+	public function schedule( string $hook, array $args ): void {
 		$action = as_schedule_single_action(
 			time() + $this->delay,
 			$hook,

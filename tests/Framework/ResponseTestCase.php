@@ -32,7 +32,7 @@ abstract class ResponseTestCase extends TestCase {
 	 *
 	 * @return array
 	 */
-	private function get_test_data_invalid_parameters() : array {
+	private function get_test_data_invalid_parameters(): array {
 		return [
 			(object) [
 				'parameter' => 'amount',
@@ -50,7 +50,7 @@ abstract class ResponseTestCase extends TestCase {
 	 *
 	 * @return array
 	 */
-	private function get_test_data_errors() : array {
+	private function get_test_data_errors(): array {
 		return [
 			'error_validation'    => [
 				'status'             => 'error',
@@ -72,7 +72,7 @@ abstract class ResponseTestCase extends TestCase {
 	 * @param array $data
 	 * @return void
 	 */
-	protected function set_test_response_data( array $data ) : void {
+	protected function set_test_response_data( array $data ): void {
 		$this->response_test_data = $data;
 	}
 
@@ -82,7 +82,7 @@ abstract class ResponseTestCase extends TestCase {
 	 * @param string $status
 	 * @return stdClass
 	 */
-	protected function get_test_response_data( string $status ) : stdClass {
+	protected function get_test_response_data( string $status ): stdClass {
 		$data = array_merge( $this->response_test_data, $this->get_test_data_errors() );
 
 		return (object) $data[ $status ] ?? (object) $data['error_authorization'];

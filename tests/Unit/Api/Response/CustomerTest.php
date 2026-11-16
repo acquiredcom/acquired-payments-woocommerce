@@ -23,7 +23,7 @@ class CustomerTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -41,7 +41,7 @@ class CustomerTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Customer::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = Customer::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Customer' );
 
 		// Test if we get a Customer instance.
@@ -58,7 +58,7 @@ class CustomerTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Customer::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_reference() : void {
+	public function test_validate_data_missing_reference(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->reference );
 
@@ -80,7 +80,7 @@ class CustomerTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Customer::set_status
 	 * @return void
 	 */
-	public function test_set_status_success() : void {
+	public function test_set_status_success(): void {
 		$result = Customer::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Customer' );
 		$this->assertEquals( 'success', $result->get_status() );
 	}
@@ -91,7 +91,7 @@ class CustomerTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Customer::set_status
 	 * @return void
 	 */
-	public function test_set_status_error() : void {
+	public function test_set_status_error(): void {
 		$result = Customer::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'Customer' );
 		$this->assertEquals( 'error', $result->get_status() );
 	}

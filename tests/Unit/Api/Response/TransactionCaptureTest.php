@@ -21,7 +21,7 @@ class TransactionCaptureTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -39,7 +39,7 @@ class TransactionCaptureTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionCapture::is_captured
 	 * @return void
 	 */
-	public function test_is_captured_success() : void {
+	public function test_is_captured_success(): void {
 		$result = TransactionCapture::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'TransactionCapture' );
 		$this->assertTrue( $result->is_captured() );
 	}
@@ -50,7 +50,7 @@ class TransactionCaptureTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionCapture::is_captured
 	 * @return void
 	 */
-	public function test_is_captured_error() : void {
+	public function test_is_captured_error(): void {
 		$result = TransactionCapture::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'TransactionCapture' );
 		$this->assertFalse( $result->is_captured() );
 	}

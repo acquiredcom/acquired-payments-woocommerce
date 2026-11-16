@@ -21,30 +21,42 @@
   },
   "require": {
     "php": "^8.1",
-    "php-di/php-di": "^7.0",
-    "guzzlehttp/guzzle": "^7.9"
+    "guzzlehttp/guzzle": "^7.16.1",
+    "php-di/php-di": "^7.1"
   },
   "require-dev": {
-    "neuralab/coding-standards": "^1.0",
-    "brain/monkey": "2.*",
-    "phpunit/phpunit": "^10.5"
+    "brain/monkey": "^2.7",
+    "php-stubs/woocommerce-stubs": "^11.2",
+    "phpstan/phpstan": "^2.3.5",
+    "phpunit/phpunit": "^11.5.57",
+    "szepeviktor/phpstan-wordpress": "^2.0.4",
+    "wp-coding-standards/wpcs": "^3.4"
   },
   "config": {
-    "optimize-autoloader": true,
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    },
+    "optimize-autoloader": true,
+    "policy": {
+      "cooldown": {
+        "period": "7 days"
+      }
+    },
+    "sort-packages": true
   },
   "scripts": {
-    "lint": "php ./vendor/bin/phpcs . --report=source",
-    "test": "php ./vendor/bin/phpunit --testdox --display-warnings --display-skipped --display-incomplete",
+    "lint": "@php ./vendor/bin/phpcs .",
+    "lint-source": "@php ./vendor/bin/phpcs . --report=source",
+    "fix": "@php ./vendor/bin/phpcbf .",
+    "analyse": "@php ./vendor/bin/phpstan analyse",
+    "test": "@php ./vendor/bin/phpunit --testdox --display-warnings --display-skipped --display-incomplete",
     "test-coverage": [
       "@putenv XDEBUG_MODE=coverage",
-      "php ./vendor/bin/phpunit --coverage-text"
+      "@php ./vendor/bin/phpunit --coverage-text"
     ],
     "test-coverage-report": [
       "@putenv XDEBUG_MODE=coverage",
-      "php ./vendor/bin/phpunit --coverage-html coverage-report"
+      "@php ./vendor/bin/phpunit --coverage-html coverage-report"
     ],
     "create-pot": "wp i18n make-pot . languages/acquired-com-for-woocommerce.pot --domain=acquired-com-for-woocommerce"
   }

@@ -1,12 +1,14 @@
 /.git
 /.github
 /node_modules
+/stubs
 /tests
 /.wordpress-org
 /.editorconfig
 /.eslintrc.json
 /.gitattributes
 /.gitignore
+/AGENTS.md
 /CHANGELOG.md
 /composer.json
 /composer.lock
@@ -14,6 +16,7 @@
 /package-lock.json
 /patchwork.json
 /phpcs.xml
+/phpstan.neon
 /phpunit.xml
 /README.md
 /webpack.mix.js

@@ -23,7 +23,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -41,7 +41,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\CustomerCreate::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = CustomerCreate::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'CustomerCreate' );
 
 		// Test if we get a CustomerCreate instance.
@@ -58,7 +58,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\CustomerCreate::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_customer_type() : void {
+	public function test_validate_data_missing_customer_type(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->customer_id );
 
@@ -80,7 +80,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\CustomerCreate::set_status
 	 * @return void
 	 */
-	public function test_set_status_success() : void {
+	public function test_set_status_success(): void {
 		$result = CustomerCreate::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'CustomerCreate' );
 		$this->assertEquals( 'success', $result->get_status() );
 	}
@@ -91,7 +91,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\CustomerCreate::set_status
 	 * @return void
 	 */
-	public function test_set_status_error() : void {
+	public function test_set_status_error(): void {
 		$result = CustomerCreate::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'CustomerCreate' );
 		$this->assertEquals( 'error', $result->get_status() );
 	}
@@ -103,7 +103,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\CustomerCreate::get_customer_id
 	 * @return void
 	 */
-	public function test_customer_data_success() : void {
+	public function test_customer_data_success(): void {
 		$result = CustomerCreate::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'CustomerCreate' );
 		$this->assertTrue( $result->is_created() );
 		$this->assertEquals( 'customer_1234567890', $result->get_customer_id() );
@@ -116,7 +116,7 @@ class CustomerCreateTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\CustomerCreate::get_customer_id
 	 * @return void
 	 */
-	public function test_customer_data_error() : void {
+	public function test_customer_data_error(): void {
 		$result = CustomerCreate::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'CustomerCreate' );
 		$this->assertFalse( $result->is_created() );
 		$this->assertNull( $result->get_customer_id() );

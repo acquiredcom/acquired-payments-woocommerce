@@ -7,6 +7,10 @@ declare( strict_types = 1 );
 
 namespace AcquiredComForWooCommerce\Api\Response;
 
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\RequestException;
+use Exception;
+
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 /**
@@ -20,7 +24,7 @@ class TransactionCancel extends TransactionAction {
 	 *
 	 * @return bool
 	 */
-	public function is_cancelled() : bool {
+	public function is_cancelled(): bool {
 		return $this->action_is_successful();
 	}
 }

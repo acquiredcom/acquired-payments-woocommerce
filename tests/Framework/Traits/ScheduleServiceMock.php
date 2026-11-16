@@ -27,7 +27,7 @@ trait ScheduleServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_schedule_service() : void {
+	protected function mock_schedule_service(): void {
 		$this->schedule_service = Mockery::mock( ScheduleService::class, [ $this->config['plugin_id'] ] );
 	}
 
@@ -36,7 +36,7 @@ trait ScheduleServiceMock {
 	 *
 	 * @return MockInterface&ScheduleService
 	 */
-	public function get_schedule_service() : MockInterface {
+	public function get_schedule_service(): MockInterface {
 		return $this->schedule_service;
 	}
 }

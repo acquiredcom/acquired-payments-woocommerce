@@ -77,14 +77,14 @@ class WC_Payment_Gateway {
 	 *
 	 * @return void
 	 */
-	public function init_settings() : void {}
+	public function init_settings(): void {}
 
 	/**
 	 * Generate settings HTML.
 	 *
 	 * @return string
 	 */
-	public function generate_settings_html() : string {
+	public function generate_settings_html(): string {
 		return '';
 	}
 
@@ -93,7 +93,7 @@ class WC_Payment_Gateway {
 	 *
 	 * @return bool
 	 */
-	public function is_available() : bool {
+	public function is_available(): bool {
 		return true;
 	}
 
@@ -103,7 +103,7 @@ class WC_Payment_Gateway {
 	 * @param WC_Payment_Token $token Payment token.
 	 * @return string
 	 */
-	public function get_saved_payment_method_option_html( $token ) {
+	public function get_saved_payment_method_option_html( $token ) { // phpcs:ignore Squiz.Commenting.FunctionComment.TypeHintMissing, Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		return '<div>Test payment method HTML</div>';
 	}
 
@@ -121,7 +121,7 @@ class WC_Payment_Gateway {
 	 *
 	 * @return array
 	 */
-	public function get_tokens() : array {
+	public function get_tokens(): array {
 		return $this->tokens;
 	}
 
@@ -150,7 +150,7 @@ class WC_Payment_Gateway {
 	 * @param mixed $value
 	 * @return bool
 	 */
-	public function validate_select_field( $key, $value ) {
+	public function validate_select_field( $key, $value ) { // phpcs:ignore Squiz.Commenting.FunctionComment.TypeHintMissing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		return true;
 	}
 

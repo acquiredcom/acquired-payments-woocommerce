@@ -29,7 +29,7 @@ trait AdminServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_admin_service() : void {
+	protected function mock_admin_service(): void {
 		$this->admin_service = Mockery::mock(
 			AdminService::class,
 			[
@@ -44,7 +44,7 @@ trait AdminServiceMock {
 	 *
 	 * @return MockInterface&AdminService
 	 */
-	public function get_admin_service() : MockInterface {
+	public function get_admin_service(): MockInterface {
 		return $this->admin_service;
 	}
 }

@@ -28,7 +28,7 @@ class CustomerObserver implements ObserverInterface {
 	 *
 	 * @return void
 	 */
-	public function init_hooks() : void {
+	public function init_hooks(): void {
 		add_action( 'woocommerce_customer_object_updated_props', [ $this, 'customer_updated' ] );
 	}
 
@@ -38,7 +38,7 @@ class CustomerObserver implements ObserverInterface {
 	 * @param WC_Customer $customer
 	 * @return void
 	 */
-	public function customer_updated( WC_Customer $customer ) : void {
+	public function customer_updated( WC_Customer $customer ): void {
 		if ( is_account_page() && $customer->get_changes() && $customer->get_meta( '_acfw_customer_id' ) ) {
 			$this->customer_service->update_customer_in_my_account( $customer );
 		}

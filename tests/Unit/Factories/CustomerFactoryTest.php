@@ -33,8 +33,10 @@ class CustomerFactoryTest extends TestCase {
 
 	/**
 	 * Set up the test case.
+	 *
+	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->test_class = new CustomerFactory();
@@ -46,8 +48,9 @@ class CustomerFactoryTest extends TestCase {
 	 *
 	 * @runInSeparateProcess
 	 * @covers \AcquiredComForWooCommerce\Factories\CustomerFactory::get_wc_customer
+	 * @return void
 	 */
-	public function test_get_wc_customer_success() : void {
+	public function test_get_wc_customer_success(): void {
 		// Mock WC_Customer constructor.
 		$customer = Mockery::mock( 'overload:WC_Customer' );
 		$customer->shouldReceive( '__construct' )->with( 123 )->once();
@@ -64,8 +67,9 @@ class CustomerFactoryTest extends TestCase {
 	 *
 	 * @runInSeparateProcess
 	 * @covers \AcquiredComForWooCommerce\Factories\CustomerFactory::get_wc_customer
+	 * @return void
 	 */
-	public function test_get_wc_customer_failure() : void {
+	public function test_get_wc_customer_failure(): void {
 		$customer = Mockery::mock( 'overload:WC_Customer' );
 		$customer->shouldReceive( '__construct' )->with( 123 )->andThrow( new Exception( 'Invalid customer' ) );
 		$customer->shouldReceive( 'get_id' )->never();

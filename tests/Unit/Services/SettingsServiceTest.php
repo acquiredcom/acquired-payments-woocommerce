@@ -74,7 +74,7 @@ class SettingsServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	private function set_test_options( string $environment = 'staging', array $modified_options = [] ) : void {
+	private function set_test_options( string $environment = 'staging', array $modified_options = [] ): void {
 		$options = [
 			'enabled'                 => 'no',
 			'title'                   => 'Acquired.com for WooCommerce',
@@ -114,7 +114,7 @@ class SettingsServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		Functions\stubs(
@@ -142,7 +142,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::__construct
 	 * @return void
 	 */
-	public function test_constructor() : void {
+	public function test_constructor(): void {
 		// Test if constructor sets the expected properties to the right values.
 
 		$this->assertEquals(
@@ -162,7 +162,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::set_api_credentials_validation_status
 	 * @return void
 	 */
-	public function test_set_api_credentials_validation_status() : void {
+	public function test_set_api_credentials_validation_status(): void {
 		// Test setting API credentials validation status to valid.
 
 		Functions\expect( 'update_option' )
@@ -188,7 +188,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::are_api_credentials_valid
 	 * @return void
 	 */
-	public function test_api_credentials_validation() : void {
+	public function test_api_credentials_validation(): void {
 		// Test when API credentials are not valid.
 
 		Functions\expect( 'get_option' )
@@ -221,7 +221,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::is_enabled
 	 * @return void
 	 */
-	public function test_is_enabled() : void {
+	public function test_is_enabled(): void {
 		// Test fields that return true or false.
 		$this->set_test_options( 'staging' );
 		$this->assertFalse( $this->service->is_enabled( 'enabled' ) );
@@ -235,7 +235,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::is_environment_production
 	 * @return void
 	 */
-	public function test_environment_checks() : void {
+	public function test_environment_checks(): void {
 		// Test staging environment.
 		$this->set_test_options( 'staging' );
 		$this->assertTrue( $this->service->is_environment_staging() );
@@ -262,7 +262,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_pay_url
 	 * @return void
 	 */
-	public function test_get_api_urls() : void {
+	public function test_get_api_urls(): void {
 		// Test staging environment URL's.
 		$this->set_test_options( 'staging' );
 		$this->assertEquals( 'https://test-api.acquired.com/v1/', $this->service->get_api_url() );
@@ -288,7 +288,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_hub_url
 	 * @return void
 	 */
-	public function test_get_hub_url() : void {
+	public function test_get_hub_url(): void {
 
 		$this->assertEquals( 'https://qahub.acquired.com/', $this->get_private_method_value( 'get_hub_url', 'staging' ) );
 		$this->assertEquals( 'https://hub.acquired.com/', $this->get_private_method_value( 'get_hub_url', 'production' ) );
@@ -300,7 +300,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_company_id
 	 * @return void
 	 */
-	public function test_get_company_id() : void {
+	public function test_get_company_id(): void {
 		// Test staging environment.
 		$this->set_test_options( 'staging' );
 		$this->assertEquals( 'staging-company-id', $this->service->get_company_id() );
@@ -323,7 +323,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_api_credentials
 	 * @return void
 	 */
-	public function test_get_api_credentials() : void {
+	public function test_get_api_credentials(): void {
 		// Test staging environment credentials.
 		$this->set_test_options( 'staging' );
 		$credentials = $this->service->get_api_credentials();
@@ -370,7 +370,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_app_key
 	 * @return void
 	 */
-	public function test_get_app_key() : void {
+	public function test_get_app_key(): void {
 		// Test staging environment app key.
 		$this->set_test_options( 'staging' );
 		$this->assertEquals( 'staging-app-key', $this->service->get_app_key() );
@@ -397,7 +397,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_payment_reference
 	 * @return void
 	 */
-	public function test_get_payment_reference() : void {
+	public function test_get_payment_reference(): void {
 		// Test default payment reference.
 		$this->set_test_options( 'staging' );
 		$this->assertEquals( 'Test Store', $this->service->get_payment_reference() );
@@ -410,12 +410,72 @@ class SettingsServiceTest extends TestCase {
 	}
 
 	/**
+	 * Test set signing key issue.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::set_signing_key_issue
+	 * @return void
+	 */
+	public function test_set_signing_key_issue(): void {
+		// Test setting signing key issue.
+
+		Functions\expect( 'update_option' )
+			->once()
+			->with( 'acfw_signing_key_issue', 'invalid', false )
+			->andReturn( true );
+
+		$this->service->set_signing_key_issue( 'invalid' );
+	}
+
+	/**
+	 * Test get signing key issue.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_signing_key_issue
+	 * @return void
+	 */
+	public function test_get_signing_key_issue(): void {
+		// Test when there is no signing key issue.
+
+		Functions\expect( 'get_option' )
+			->once()
+			->with( 'acfw_signing_key_issue', '' )
+			->andReturn( '' );
+
+		$this->assertEquals( '', $this->service->get_signing_key_issue() );
+
+		// Test when there is a signing key issue.
+
+		Functions\expect( 'get_option' )
+			->once()
+			->with( 'acfw_signing_key_issue', '' )
+			->andReturn( 'invalid' );
+
+		$this->assertEquals( 'invalid', $this->service->get_signing_key_issue() );
+	}
+
+	/**
+	 * Test clear signing key issue.
+	 *
+	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::clear_signing_key_issue
+	 * @return void
+	 */
+	public function test_clear_signing_key_issue(): void {
+		// Test clearing signing key issue.
+
+		Functions\expect( 'delete_option' )
+			->once()
+			->with( 'acfw_signing_key_issue' )
+			->andReturn( true );
+
+		$this->service->clear_signing_key_issue();
+	}
+
+	/**
 	 * Test get WooCommerce API endpoint.
 	 *
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_wc_api_endpoint
 	 * @return void
 	 */
-	public function test_get_wc_api_endpoint() : void {
+	public function test_get_wc_api_endpoint(): void {
 		// Test WooCommerce API endpoints.
 		$this->assertEquals(
 			'acquired-com-for-woocommerce-webhook',
@@ -437,7 +497,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_wc_api_url
 	 * @return void
 	 */
-	public function test_get_wc_api_url() : void {
+	public function test_get_wc_api_url(): void {
 		// Test WooCommerce API URL's return the site URL with the path to WooCommerce API and plugin endpoints.
 		$this->assertEquals(
 			'https://example.com/wc-api/acquired-com-for-woocommerce-webhook',
@@ -459,7 +519,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_shop_currency
 	 * @return void
 	 */
-	public function test_get_shop_currency() : void {
+	public function test_get_shop_currency(): void {
 		// Test WooCommerce shop currency.
 		Functions\expect( 'get_woocommerce_currency' )
 			->once()
@@ -474,7 +534,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_payment_link_expiration_time
 	 * @return void
 	 */
-	public function test_get_payment_link_expiration_time() : void {
+	public function test_get_payment_link_expiration_time(): void {
 		// Test default link expiration time.
 		$this->assertEquals( 300, $this->service->get_payment_link_expiration_time() );
 	}
@@ -485,7 +545,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_payment_link_max_expiration_time
 	 * @return void
 	 */
-	public function test_get_payment_link_max_expiration_time() : void {
+	public function test_get_payment_link_max_expiration_time(): void {
 		// Test maximum link expiration time.
 		$this->assertEquals( 2678400, $this->service->get_payment_link_max_expiration_time() );
 	}
@@ -496,7 +556,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_admin_settings_url
 	 * @return void
 	 */
-	public function test_get_admin_settings_url() : void {
+	public function test_get_admin_settings_url(): void {
 		// Test admin settings URL has the right structure.
 		Functions\expect( 'admin_url' )
 			->once()
@@ -514,7 +574,7 @@ class SettingsServiceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_get_wc_hold_stock_time() : void {
+	public function test_get_wc_hold_stock_time(): void {
 		// Test WooCommerce hold stock time when stick management is enabled.
 
 		Functions\expect( 'get_option' )
@@ -564,12 +624,12 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_hub_link
 	 * @return void
 	 */
-	public function test_get_hub_link() : void {
+	public function test_get_hub_link(): void {
 		$result = $this->get_private_method_value( 'get_hub_link' );
 
 		// Test if we have the expected link structure.
 		$this->assertStringContainsString( 'class="acfw-env-link"', $result );
-		$this->assertStringContainsString( 'href=" https://hub.acquired.com/"', $result );
+		$this->assertStringContainsString( 'href="https://hub.acquired.com/"', $result );
 		$this->assertStringContainsString( 'data-env-href-production="https://hub.acquired.com/"', $result );
 		$this->assertStringContainsString( 'data-env-href-staging="https://qahub.acquired.com/"', $result );
 		$this->assertStringContainsString( 'target="_blank"', $result );
@@ -582,7 +642,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_fields
 	 * @return void
 	 */
-	public function test_get_fields() : void {
+	public function test_get_fields(): void {
 		$this->set_test_options( 'staging' );
 		$fields = $this->service->get_fields();
 
@@ -611,7 +671,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_fields
 	 * @return void
 	 */
-	public function test_fields_structure() : void {
+	public function test_fields_structure(): void {
 		$this->set_test_options( 'staging' );
 		$fields = $this->service->get_fields();
 
@@ -650,29 +710,29 @@ class SettingsServiceTest extends TestCase {
 		$this->assertArrayHasKey( 'default', $fields['transaction_type'] );
 		$this->assertEquals( 'capture', $fields['transaction_type']['default'] );
 
-		// Test payment_reference field
+		// Test payment_reference field.
 		$this->assertArrayHasKey( 'type', $fields['payment_reference'] );
 		$this->assertEquals( 'text', $fields['payment_reference']['type'] );
 		$this->assertArrayHasKey( 'custom_attributes', $fields['payment_reference'] );
 		$this->assertArrayHasKey( 'maxlength', $fields['payment_reference']['custom_attributes'] );
 		$this->assertEquals( '18', $fields['payment_reference']['custom_attributes']['maxlength'] );
 
-		// Test debug_log field
+		// Test debug_log field.
 		$this->assertArrayHasKey( 'type', $fields['debug_log'] );
 		$this->assertEquals( 'checkbox', $fields['debug_log']['type'] );
 		$this->assertEquals( 'no', $fields['debug_log']['default'] );
 
-		// Test tokenization field
+		// Test tokenization field.
 		$this->assertArrayHasKey( 'type', $fields['tokenization'] );
 		$this->assertEquals( 'checkbox', $fields['tokenization']['type'] );
 		$this->assertEquals( 'no', $fields['tokenization']['default'] );
 
-		// Test 3d_secure field
+		// Test 3d_secure field.
 		$this->assertArrayHasKey( 'type', $fields['3d_secure'] );
 		$this->assertEquals( 'checkbox', $fields['3d_secure']['type'] );
 		$this->assertEquals( 'yes', $fields['3d_secure']['default'] );
 
-		// Test challenge_preferences field
+		// Test challenge_preferences field.
 		$this->assertArrayHasKey( 'type', $fields['challenge_preferences'] );
 		$this->assertEquals( 'select', $fields['challenge_preferences']['type'] );
 		$this->assertArrayHasKey( 'options', $fields['challenge_preferences'] );
@@ -683,12 +743,12 @@ class SettingsServiceTest extends TestCase {
 		$this->assertArrayHasKey( 'no_preference', $fields['challenge_preferences']['options'] );
 		$this->assertEquals( 'no_preference', $fields['challenge_preferences']['default'] );
 
-		// Test contact_url field
+		// Test contact_url field.
 		$this->assertArrayHasKey( 'type', $fields['contact_url'] );
 		$this->assertEquals( 'url', $fields['contact_url']['type'] );
 		$this->assertArrayHasKey( 'default', $fields['contact_url'] );
 
-		// Test submit_type field
+		// Test submit_type field.
 		$this->assertArrayHasKey( 'type', $fields['submit_type'] );
 		$this->assertEquals( 'select', $fields['submit_type']['type'] );
 		$this->assertArrayHasKey( 'options', $fields['submit_type'] );
@@ -701,7 +761,7 @@ class SettingsServiceTest extends TestCase {
 		$this->assertArrayHasKey( 'subscribe', $fields['submit_type']['options'] );
 		$this->assertEquals( 'pay', $fields['submit_type']['default'] );
 
-		// Test update_card_webhook_url field
+		// Test update_card_webhook_url field.
 		$this->assertArrayHasKey( 'type', $fields['update_card_webhook_url'] );
 		$this->assertEquals( 'url', $fields['update_card_webhook_url']['type'] );
 		$this->assertArrayHasKey( 'custom_attributes', $fields['update_card_webhook_url'] );
@@ -715,7 +775,7 @@ class SettingsServiceTest extends TestCase {
 	 * @covers \AcquiredComForWooCommerce\Services\SettingsService::get_field
 	 * @return void
 	 */
-	public function test_get_field() : void {
+	public function test_get_field(): void {
 		// Test if single field is an array.
 		$this->set_test_options( 'staging' );
 		$field = $this->service->get_field( 'environment' );

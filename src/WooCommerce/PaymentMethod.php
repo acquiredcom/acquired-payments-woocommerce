@@ -26,6 +26,10 @@ class PaymentMethod extends AbstractPaymentMethodType {
 
 	/**
 	 * Constructor.
+	 *
+	 * @param PaymentGateway $gateway
+	 * @param AssetsService $assets_service
+	 * @param SettingsService $settings_service
 	 */
 	public function __construct(
 		private PaymentGateway $gateway,
@@ -39,9 +43,9 @@ class PaymentMethod extends AbstractPaymentMethodType {
 	/**
 	 * Settings.
 	 *
-	 * @var array
+	 * @return void
 	 */
-	public function initialize() : void {
+	public function initialize(): void {
 		$this->settings = $this->settings_service->get_options();
 	}
 
@@ -50,7 +54,7 @@ class PaymentMethod extends AbstractPaymentMethodType {
 	 *
 	 * @return boolean
 	 */
-	public function is_active() : bool {
+	public function is_active(): bool {
 		return $this->gateway->is_available();
 	}
 
@@ -59,7 +63,7 @@ class PaymentMethod extends AbstractPaymentMethodType {
 	 *
 	 * @return array
 	 */
-	public function get_payment_method_script_handles() : array {
+	public function get_payment_method_script_handles(): array {
 		wp_register_script(
 			$this->script_handle,
 			$this->assets_service->get_asset_uri( sprintf( 'js/%s.js', $this->script_handle ) ),
@@ -80,7 +84,7 @@ class PaymentMethod extends AbstractPaymentMethodType {
 	 *     supports: string[]
 	 * }
 	 */
-	public function get_payment_method_data() : array {
+	public function get_payment_method_data(): array {
 		return [
 			'title'       => $this->gateway->title,
 			'description' => $this->gateway->description,

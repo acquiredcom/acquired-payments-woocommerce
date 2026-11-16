@@ -27,7 +27,7 @@ trait AssetsServiceMock {
 	 *
 	 * @return void
 	 */
-	protected function mock_assets_service() : void {
+	protected function mock_assets_service(): void {
 		$this->assets_service = Mockery::mock(
 			AssetsService::class,
 			[
@@ -43,7 +43,7 @@ trait AssetsServiceMock {
 	 *
 	 * @return MockInterface&AssetsService
 	 */
-	public function get_assets_service() : MockInterface {
+	public function get_assets_service(): MockInterface {
 		return $this->assets_service;
 	}
 }

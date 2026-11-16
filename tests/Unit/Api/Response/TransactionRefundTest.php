@@ -21,7 +21,7 @@ class TransactionRefundTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -39,7 +39,7 @@ class TransactionRefundTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionRefund::is_refunded
 	 * @return void
 	 */
-	public function test_is_refunded_success() : void {
+	public function test_is_refunded_success(): void {
 		$result = TransactionRefund::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'TransactionRefund' );
 		$this->assertTrue( $result->is_refunded() );
 	}
@@ -50,7 +50,7 @@ class TransactionRefundTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\TransactionRefund::is_refunded
 	 * @return void
 	 */
-	public function test_is_refunded_error() : void {
+	public function test_is_refunded_error(): void {
 		$result = TransactionRefund::make( $this->mock_response( 400, 'Bad Request', $this->get_test_response_data( 'error_validation' ) ), [], 'TransactionRefund' );
 		$this->assertFalse( $result->is_refunded() );
 	}

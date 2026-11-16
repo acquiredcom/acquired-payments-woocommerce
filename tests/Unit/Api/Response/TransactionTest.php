@@ -23,7 +23,7 @@ class TransactionTest extends ResponseTestCase {
 	 *
 	 * @return void
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$test_data = [
@@ -54,7 +54,7 @@ class TransactionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_success() : void {
+	public function test_validate_data_success(): void {
 		$result = Transaction::make( $this->mock_response( 200, 'OK', $this->get_test_response_data( 'success' ) ), [], 'Transaction' );
 
 		// Test if we get a Transaction instance.
@@ -71,7 +71,7 @@ class TransactionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_transaction_id() : void {
+	public function test_validate_data_missing_transaction_id(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->transaction_id );
 
@@ -93,7 +93,7 @@ class TransactionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::validate_data
 	 * @return void
 	 */
-	public function test_validate_data_missing_transaction_status() : void {
+	public function test_validate_data_missing_transaction_status(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 		unset( $response_data->status );
 
@@ -120,7 +120,7 @@ class TransactionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::get_created_timestamp
 	 * @return void
 	 */
-	public function test_transaction_success() : void {
+	public function test_transaction_success(): void {
 		$response_data = $this->get_test_response_data( 'success' );
 
 		$result     = Transaction::make( $this->mock_response( 200, 'OK', $response_data ), [], 'Transaction' );
@@ -147,7 +147,7 @@ class TransactionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::get_created_timestamp
 	 * @return void
 	 */
-	public function test_transaction_decline() : void {
+	public function test_transaction_decline(): void {
 		$response_data = $this->get_test_response_data( 'decline' );
 
 		$result     = Transaction::make( $this->mock_response( 200, 'OK', $response_data ), [], 'Transaction' );
@@ -175,7 +175,7 @@ class TransactionTest extends ResponseTestCase {
 	 * @covers \AcquiredComForWooCommerce\Api\Response\Transaction::get_created_timestamp
 	 * @return void
 	 */
-	public function test_transaction_fail() : void {
+	public function test_transaction_fail(): void {
 		$response_data = $this->get_test_response_data( 'error_authorization' );
 
 		$result     = Transaction::make( $this->mock_response( 400, 'Bad Request', $response_data ), [], 'Transaction' );

@@ -64,6 +64,19 @@ Our UK-based support team is available to help you. [Contact support](https://ww
 
 == Changelog ==
 
+= 2.2.0 - YYYY/MM/DD =
+* Feature: Confirm order payments with the Acquired.com API when a redirect can't be verified with the signing key (missing, inactive or wrong key), instead of failing the order. An admin notice explains the signing key issue.
+* Tweak: Clearer notice for invalid API credentials, including the reminder to whitelist the server IP address in the Acquired Hub.
+* Tweak: Remove Pay by Bank from the default gateway description.
+* Tweak: Redact date of birth and IP address in debug logs.
+* Tweak: Require WordPress 7.0. Tested up to WordPress 7.1.4 and WooCommerce 11.3.0.
+* Fixed: Show signing key fields only for the selected environment.
+* Fixed: Send the currency to Acquired.com in uppercase.
+* Fixed: Unslash the webhook hash and admin screen request values.
+* Fixed: Extra space in the Acquired Hub links on the settings page.
+* Fixed: Typos and inconsistencies in notices and admin texts.
+* Dev: Add PHPStan, fix coding standards violations and update dependencies.
+
 = 2.1.0 - 2026/01/22 =
 * Feature: Update to support the release of signing keys and multiple APP IDs.
 
